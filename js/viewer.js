@@ -12,6 +12,8 @@ import {
 const table =
   document.getElementById("viewerTable");
 
+/* LOAD DATA */
+
 async function loadData() {
 
   table.innerHTML = "";
@@ -31,9 +33,13 @@ async function loadData() {
       <tr>
 
         <td>${data.facadeId}</td>
+
         <td>${data.stage}</td>
+
         <td>${data.employee}</td>
+
         <td>${data.note || ""}</td>
+
         <td>${data.timestamp}</td>
 
       </tr>
@@ -43,6 +49,8 @@ async function loadData() {
   });
 
 }
+
+/* SEARCH */
 
 window.searchData = async function () {
 
