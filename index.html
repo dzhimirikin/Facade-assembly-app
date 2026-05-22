@@ -35,13 +35,12 @@
         Assembly
       </button>
 
-      <button class="menu-btn">
-        Viewer
-      </button>
-
-      <button class="menu-btn">
+      <a
+        href="admin.html"
+        class="menu-btn"
+      >
         Admin
-      </button>
+      </a>
 
     </nav>
 
@@ -55,7 +54,7 @@
 
   <main class="layout">
 
-    <!-- LEFT PANEL -->
+    <!-- LEFT -->
 
     <section class="input-panel">
 
@@ -63,11 +62,9 @@
 
       <label>Facade ID</label>
 
-      <input
-        type="text"
-        id="elementId"
-        placeholder="KF1_1"
-      />
+      <select id="elementId">
+
+      </select>
 
       <label>Operation</label>
 
@@ -136,7 +133,7 @@
 
     </section>
 
-    <!-- RIGHT PANEL -->
+    <!-- RIGHT -->
 
     <section class="viewer-panel">
 
@@ -149,7 +146,7 @@
           <input
             type="text"
             id="searchInput"
-            placeholder="Enter Facade ID"
+            placeholder="Search facade"
           />
 
           <button onclick="searchData()">
@@ -168,7 +165,7 @@
 
             <tr>
 
-              <th>Facade ID</th>
+              <th>Facade</th>
               <th>Operation</th>
               <th>Employee</th>
               <th>Note</th>
