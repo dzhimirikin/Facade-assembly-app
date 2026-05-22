@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0"
   />
 
-  <title>Assembly Viewer</title>
+  <title>Facade Viewer</title>
 
   <link
     rel="stylesheet"
@@ -26,7 +26,7 @@
   <header class="topbar">
 
     <div class="logo">
-      Facade Control System
+      Facade Viewer
     </div>
 
     <nav class="menu">
@@ -35,44 +35,47 @@
         href="index.html"
         class="menu-btn"
       >
-        Assembly
+        Worker
       </a>
 
       <button class="menu-btn active">
         Viewer
       </button>
 
-      <button class="menu-btn">
+      <a
+        href="admin.html"
+        class="menu-btn"
+      >
         Admin
-      </button>
+      </a>
 
     </nav>
 
-    <div class="user-panel">
-      Worker
+    <div class="user-role">
+      QC / Engineering
     </div>
 
   </header>
 
   <!-- MAIN -->
 
-  <main class="viewer-page">
+  <main class="viewer-only-layout">
 
-    <section class="card viewer-full">
+    <section class="viewer-panel full-view">
 
       <div class="viewer-header">
 
-        <h2>Assembly Viewer</h2>
+        <h2>Assembly Tracking</h2>
 
         <div class="search-box">
 
           <input
             type="text"
             id="searchInput"
-            placeholder="Enter Element ID"
+            placeholder="Search facade"
           />
 
-          <button onclick="searchElement()">
+          <button onclick="searchData()">
             Search
           </button>
 
@@ -88,9 +91,10 @@
 
             <tr>
 
-              <th>Element ID</th>
-              <th>Stage</th>
+              <th>Facade</th>
+              <th>Operation</th>
               <th>Employee</th>
+              <th>Note</th>
               <th>Time</th>
 
             </tr>
@@ -114,7 +118,7 @@
   <footer class="footer">
 
     <div>
-      Version 1.0
+      Viewer Mode
     </div>
 
     <div>
