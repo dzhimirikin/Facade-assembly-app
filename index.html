@@ -6,11 +6,12 @@
   <title>Facade Assembly Control</title>
 
   <style>
+
     body {
       font-family: Arial, sans-serif;
       background: #f3f4f6;
-      padding: 20px;
       margin: 0;
+      padding: 20px;
     }
 
     .container {
@@ -24,6 +25,7 @@
 
     h1 {
       margin-top: 0;
+      margin-bottom: 24px;
       font-size: 24px;
     }
 
@@ -34,22 +36,24 @@
       font-weight: bold;
     }
 
-    input, select {
+    input,
+    select {
       width: 100%;
       padding: 12px;
       border-radius: 8px;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      font-size: 16px;
     }
 
     button {
-      margin-top: 24px;
       width: 100%;
+      margin-top: 24px;
       padding: 14px;
       border: none;
+      border-radius: 8px;
       background: black;
       color: white;
-      border-radius: 8px;
       font-size: 16px;
       cursor: pointer;
     }
@@ -63,60 +67,63 @@
       color: green;
       font-weight: bold;
     }
+
   </style>
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
 
-  <h1>Facade Assembly</h1>
+    <h1>Facade Assembly</h1>
 
-  <label>Element ID</label>
-  <input type="text" id="elementId" placeholder="EF-001">
+    <form id="assemblyForm">
 
-  <label>Stage</label>
-  <select id="stage">
-    <option>Frame assembly</option>
-    <option>EPDM</option>
-    <option>Hardware</option>
-    <option>Sealant</option>
-    <option>QC</option>
-    <option>Packing</option>
-  </select>
+      <label>Element ID</label>
+      <input
+        type="text"
+        id="elementId"
+        placeholder="EF-001"
+        required
+      >
 
-  <label>Employee</label>
-  <input type="text" id="employee" placeholder="Name">
+      <label>Stage</label>
+      <select id="stage">
 
-  <label>Photo</label>
-  <input type="file" id="photo">
+        <option>Frame assembly</option>
+        <option>EPDM</option>
+        <option>Hardware</option>
+        <option>Sealant</option>
+        <option>QC</option>
+        <option>Packing</option>
 
-  <button onclick="saveData()">Submit</button>
+      </select>
 
-  <div class="success" id="success"></div>
+      <label>Employee</label>
+      <input
+        type="text"
+        id="employee"
+        placeholder="Name"
+        required
+      >
 
-</div>
+      <label>Photo</label>
+      <input
+        type="file"
+        id="photo"
+      >
 
-<script>
+      <button type="submit">
+        Submit
+      </button>
 
-async function saveData() {
+    </form>
 
-  const elementId = document.getElementById("elementId").value;
-  const stage = document.getElementById("stage").value;
-  const employee = document.getElementById("employee").value;
+    <div class="success" id="success"></div>
 
-  console.log({
-    elementId,
-    stage,
-    employee
-  });
+  </div>
 
-  document.getElementById("success").innerText =
-    "Data saved successfully";
-
-}
-
-</script>
+  <script type="module" src="js/app.js"></script>
 
 </body>
 </html>
