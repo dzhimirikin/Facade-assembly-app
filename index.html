@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Facade Assembly</title>
+  <title>Facade Control System</title>
 
   <link rel="stylesheet" href="css/style.css">
 
@@ -13,68 +13,177 @@
 
 <body>
 
-  <div class="container">
+<div class="app">
 
-    <div class="nav">
+  <div class="topbar">
 
-      <a href="index.html">Assembly</a>
-      <a href="viewer.html">Viewer</a>
+    <div class="logo">
+      Facade Control System
+    </div>
+
+    <div class="tabs">
+
+      <button class="tab active"
+              onclick="showTab('assembly')">
+        Assembly
+      </button>
+
+      <button class="tab"
+              onclick="showTab('viewer')">
+        Viewer
+      </button>
+
+      <button class="tab admin-only"
+              id="adminTab"
+              onclick="showTab('admin')"
+              style="display:none;">
+        Admin 🔒
+      </button>
 
     </div>
 
-    <h1>Facade Assembly</h1>
+  </div>
 
-    <form id="assemblyForm">
+  <!-- ASSEMBLY -->
 
-      <label>Element ID</label>
+  <div class="content tab-content active"
+       id="assembly">
 
-      <input
-        type="text"
-        id="elementId"
-        placeholder="EF-001"
-        required
-      >
+    <div class="card">
 
-      <label>Stage</label>
+      <h2>Assembly Input</h2>
 
-      <select id="stage">
+      <form id="assemblyForm">
 
-        <option>Frame assembly</option>
-        <option>EPDM</option>
-        <option>Hardware</option>
-        <option>Sealant</option>
-        <option>QC</option>
-        <option>Packing</option>
+        <label>Element ID</label>
 
-      </select>
+        <input
+          type="text"
+          id="elementId"
+          placeholder="EF-001"
+          required
+        >
 
-      <label>Employee</label>
+        <label>Stage</label>
 
-      <input
-        type="text"
-        id="employee"
-        placeholder="Name"
-        required
-      >
+        <select id="stage">
 
-      <label>Photo</label>
+          <option>Frame assembly</option>
+          <option>EPDM</option>
+          <option>Hardware</option>
+          <option>Sealant</option>
+          <option>QC</option>
+          <option>Packing</option>
 
-      <input
-        type="file"
-        id="photo"
-      >
+        </select>
 
-      <button type="submit">
-        Submit
-      </button>
+        <label>Employee</label>
 
-    </form>
+        <input
+          type="text"
+          id="employee"
+          placeholder="Name"
+          required
+        >
 
-    <div class="success" id="success"></div>
+        <label>Photo</label>
+
+        <input
+          type="file"
+          id="photo"
+        >
+
+        <button type="submit">
+          Submit
+        </button>
+
+      </form>
+
+      <div class="success"
+           id="success">
+      </div>
+
+    </div>
 
   </div>
 
-  <script type="module" src="js/app.js"></script>
+  <!-- VIEWER -->
+
+  <div class="content tab-content"
+       id="viewer">
+
+    <div class="card">
+
+      <h2>Assembly Viewer</h2>
+
+      <input
+        type="text"
+        id="searchId"
+        placeholder="Enter Element ID"
+      >
+
+      <button onclick="loadData()">
+        Search
+      </button>
+
+      <table>
+
+        <thead>
+
+          <tr>
+            <th>Element</th>
+            <th>Stage</th>
+            <th>Employee</th>
+            <th>Time</th>
+          </tr>
+
+        </thead>
+
+        <tbody id="results">
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+  <!-- ADMIN -->
+
+  <div class="content tab-content"
+       id="admin">
+
+    <div class="card">
+
+      <h2>Admin Panel 🔒</h2>
+
+      <div class="admin-grid">
+
+        <button>
+          Manage Users
+        </button>
+
+        <button>
+          Export PDF
+        </button>
+
+        <button>
+          Statistics
+        </button>
+
+        <button>
+          System Settings
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script type="module" src="js/app.js"></script>
 
 </body>
 </html>
