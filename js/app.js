@@ -1,5 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyA7cHiDj4BAMbw1LoTpgbxXIcrhDnm0lX8",
@@ -12,21 +17,44 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 const db = getFirestore(app);
 
-document.querySelector("form").addEventListener("submit", async (e) => {
+const form = document.getElementById("assemblyForm");
+
+form.addEventListener("submit", async (e) => {
+
   e.preventDefault();
 
-  const elementId = document.querySelector("#elementId").value;
-  const stage = document.querySelector("#stage").value;
-  const employee = document.querySelector("#employee").value;
+  const elementId = document.getElementById("elementId").value;
 
-  await addDoc(collection(db, "assemblyLogs"), {
-    elementId,
-    stage,
-    employee,
-    timestamp: new Date()
-  });
+  const stage = document.getElementById("stage").value;
 
-  alert("Saved to Firebase");
+  const employee = document.getElementById("employee").value;
+
+  try {
+
+    await addDoc(collection(db, "assemblyLogs"), {
+
+      elementId: elementId,
+      stage: stage,
+      employee: employee,
+      timestamp: new Date()
+
+    });
+
+    document.getElementById("success").innerText =
+      "Saved successfully";
+
+    form.reset();
+
+  } catch (error) {
+
+    console.error(error);
+
+    document.getElementById("success").innerText =
+      "Error saving data";
+
+  }
+
 });
