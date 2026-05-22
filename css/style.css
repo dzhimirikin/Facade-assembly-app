@@ -1,42 +1,81 @@
 body {
 
-  font-family: Arial, sans-serif;
-  background: #f3f4f6;
   margin: 0;
-  padding: 20px;
+  background: #f3f4f6;
+  font-family: Arial, sans-serif;
 
 }
 
-.container {
+.app {
 
-  max-width: 800px;
+  min-height: 100vh;
+
+}
+
+.topbar {
+
+  background: white;
+  padding: 16px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+
+}
+
+.logo {
+
+  font-size: 22px;
+  font-weight: bold;
+
+}
+
+.tabs {
+
+  display: flex;
+  gap: 12px;
+
+}
+
+.tab {
+
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background: #e5e7eb;
+  cursor: pointer;
+  font-weight: bold;
+
+}
+
+.tab.active {
+
+  background: black;
+  color: white;
+
+}
+
+.content {
+
+  padding: 24px;
+  display: none;
+
+}
+
+.content.active {
+
+  display: block;
+
+}
+
+.card {
+
+  max-width: 900px;
   margin: auto;
   background: white;
   padding: 24px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-
-}
-
-.nav {
-
-  display: flex;
-  gap: 16px;
-  margin-bottom: 24px;
-
-}
-
-.nav a {
-
-  text-decoration: none;
-  color: black;
-  font-weight: bold;
-
-}
-
-h1 {
-
-  margin-top: 0;
 
 }
 
@@ -57,27 +96,18 @@ select {
   border-radius: 8px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  font-size: 16px;
 
 }
 
 button {
 
-  width: 100%;
-  margin-top: 24px;
-  padding: 14px;
+  margin-top: 20px;
+  padding: 12px 18px;
   border: none;
   border-radius: 8px;
   background: black;
   color: white;
-  font-size: 16px;
   cursor: pointer;
-
-}
-
-button:hover {
-
-  opacity: 0.9;
 
 }
 
@@ -106,8 +136,10 @@ td {
 
 }
 
-th {
+.admin-grid {
 
-  background: #f5f5f5;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
 
 }
