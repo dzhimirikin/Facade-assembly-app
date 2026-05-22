@@ -3,17 +3,14 @@ import { db } from "./firebase.js";
 import {
 
   collection,
-
   addDoc
 
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* SAVE DATA */
-
 window.saveData = async function () {
 
-  const elementId =
+  const facadeId =
     document.getElementById("elementId").value;
 
   const stage =
@@ -34,7 +31,7 @@ window.saveData = async function () {
   const photo3 =
     document.getElementById("photo3").files[0];
 
-  if (!elementId || !employee) {
+  if (!facadeId || !employee) {
 
     alert("Fill required fields");
 
@@ -49,7 +46,7 @@ window.saveData = async function () {
 
       {
 
-        facadeId: elementId,
+        facadeId,
 
         stage,
 
@@ -93,37 +90,3 @@ window.saveData = async function () {
   }
 
 };
-
-/* RESIZER */
-
-const resizer =
-  document.getElementById("resizer");
-
-const leftPanel =
-  document.querySelector(".input-panel");
-
-let isResizing = false;
-
-resizer.addEventListener("mousedown", () => {
-
-  isResizing = true;
-
-  document.body.style.cursor =
-    "col-resize";
-});
-
-document.addEventListener("mousemove", (e) => {
-
-  if (!isResizing) return;
-
-  leftPanel.style.width =
-    e.clientX + "px";
-});
-
-document.addEventListener("mouseup", () => {
-
-  isResizing = false;
-
-  document.body.style.cursor =
-    "default";
-});
