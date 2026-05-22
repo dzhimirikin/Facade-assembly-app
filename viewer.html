@@ -1,58 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
 
-  <title>Facade Viewer</title>
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
 
-  <link rel="stylesheet" href="css/style.css">
+  <title>Assembly Viewer</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
 
 </head>
 
 <body>
 
-<div class="container">
+  <!-- TOPBAR -->
 
-  <div class="nav">
+  <header class="topbar">
 
-    <a href="index.html">Assembly</a>
-    <a href="viewer.html">Viewer</a>
+    <div class="logo">
+      Facade Control System
+    </div>
 
-  </div>
+    <nav class="menu">
 
-  <h1>Facade Assembly Viewer</h1>
+      <a
+        href="index.html"
+        class="menu-btn"
+      >
+        Assembly
+      </a>
 
-  <input
-    type="text"
-    id="searchId"
-    placeholder="Enter Element ID (EF-001)"
-  >
+      <button class="menu-btn active">
+        Viewer
+      </button>
 
-  <button onclick="loadData()">
-    Search
-  </button>
+      <button class="menu-btn">
+        Admin
+      </button>
 
-  <table>
+    </nav>
 
-    <thead>
-      <tr>
-        <th>Element ID</th>
-        <th>Stage</th>
-        <th>Employee</th>
-        <th>Time</th>
-      </tr>
-    </thead>
+    <div class="user-panel">
+      Worker
+    </div>
 
-    <tbody id="results">
-    </tbody>
+  </header>
 
-  </table>
+  <!-- MAIN -->
 
-</div>
+  <main class="viewer-page">
 
-<script type="module" src="js/viewer.js"></script>
+    <section class="card viewer-full">
+
+      <div class="viewer-header">
+
+        <h2>Assembly Viewer</h2>
+
+        <div class="search-box">
+
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Enter Element ID"
+          />
+
+          <button onclick="searchElement()">
+            Search
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Element ID</th>
+              <th>Stage</th>
+              <th>Employee</th>
+              <th>Time</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="viewerTable">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div>
+      Version 1.0
+    </div>
+
+    <div>
+      Firebase Connected
+    </div>
+
+  </footer>
+
+  <script
+    type="module"
+    src="js/viewer.js"
+  ></script>
 
 </body>
+
 </html>
