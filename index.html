@@ -21,6 +21,8 @@
 
 <body>
 
+  <!-- TOPBAR -->
+
   <header class="topbar">
 
     <div class="logo">
@@ -34,7 +36,7 @@
       </button>
 
       <button class="menu-btn">
-        Viewer
+        Tracking
       </button>
 
       <button class="menu-btn">
@@ -48,6 +50,8 @@
     </div>
 
   </header>
+
+  <!-- MAIN -->
 
   <main class="layout">
 
@@ -132,13 +136,20 @@
 
     </section>
 
+    <!-- RESIZER -->
+
+    <div
+      class="resizer"
+      id="resizer"
+    ></div>
+
     <!-- RIGHT PANEL -->
 
     <section class="viewer-panel">
 
       <div class="viewer-header">
 
-        <h2>Assembly Viewer</h2>
+        <h2>Assembly Tracking</h2>
 
         <div class="search-box">
 
@@ -156,37 +167,47 @@
 
       </div>
 
-      <table>
+      <div class="table-wrapper">
 
-        <thead>
+        <table>
 
-          <tr>
+          <thead>
 
-            <th>Facade ID</th>
-            <th>Operation</th>
-            <th>Employee</th>
-            <th>Note</th>
-            <th>Time</th>
+            <tr>
 
-          </tr>
+              <th>Facade ID</th>
+              <th>Operation</th>
+              <th>Employee</th>
+              <th>Note</th>
+              <th>Time</th>
 
-        </thead>
+            </tr>
 
-        <tbody id="viewerTable">
+          </thead>
 
-        </tbody>
+          <tbody id="viewerTable">
 
-      </table>
+          </tbody>
+
+        </table>
+
+      </div>
 
     </section>
 
   </main>
 
+  <!-- FOOTER -->
+
   <footer class="footer">
 
-    <div>Version 1.0</div>
+    <div>
+      Version 1.0
+    </div>
 
-    <div>Firebase Connected</div>
+    <div>
+      Firebase Connected
+    </div>
 
   </footer>
 
