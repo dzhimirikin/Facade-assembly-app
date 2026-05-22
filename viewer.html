@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Facade Viewer</title>
+
+  <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="nav">
+
+    <a href="index.html">Assembly</a>
+    <a href="viewer.html">Viewer</a>
+
+  </div>
+
+  <h1>Facade Assembly Viewer</h1>
+
+  <input
+    type="text"
+    id="searchId"
+    placeholder="Enter Element ID (EF-001)"
+  >
+
+  <button onclick="loadData()">
+    Search
+  </button>
+
+  <table>
+
+    <thead>
+      <tr>
+        <th>Element ID</th>
+        <th>Stage</th>
+        <th>Employee</th>
+        <th>Time</th>
+      </tr>
+    </thead>
+
+    <tbody id="results">
+    </tbody>
+
+  </table>
+
+</div>
+
+<script type="module" src="js/viewer.js"></script>
+
+</body>
+</html>
