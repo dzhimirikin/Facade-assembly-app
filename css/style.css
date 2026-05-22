@@ -248,3 +248,11 @@ td {
   }
 
 }
+
+.viewer-page {
+  padding: 24px;
+}
+
+.viewer-full {
+  min-height: calc(100vh - 180px);
+}
