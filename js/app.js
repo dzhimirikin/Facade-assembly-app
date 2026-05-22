@@ -1,41 +1,67 @@
-import { db } from "./firebase.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
+  getFirestore,
   collection,
   addDoc,
+  getDocs,
   query,
-  where,
-  getDocs
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-window.showTab = function(tabName) {
+/* FIREBASE */
 
-  document
-    .querySelectorAll(".tab-content")
-    .forEach(tab => {
-      tab.classList.remove("active");
-    });
+const firebaseConfig = {
 
-  document
-    .querySelectorAll(".tab")
-    .forEach(tab => {
-      tab.classList.remove("active");
-    });
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_DOMAIN",
+  projectId: "facade-assembly",
+  storageBucket: "facade-assembly.appspot.com",
+  messagingSenderId: "XXXX",
+  appId: "XXXX"
 
-  document
-    .getElementById(tabName)
-    .classList.add("active");
+};
 
-  event.target.classList.add("active");
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+/* IMAGE PREVIEW */
+
+const photoInput = document.getElementById("photo");
+
+if (photoInput) {
+
+  photoInput.addEventListener("change", (e) => {
+
+    const file = e.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+      const preview =
+        document.getElementById("preview");
+
+      preview.src = event.target.result;
+
+      preview.style.display = "block";
+
+    };
+
+    reader.readAsDataURL(file);
+
+  });
 
 }
 
-const form =
-  document.getElementById("assemblyForm");
+/* SAVE */
 
-form.addEventListener("submit", async (e) => {
-
-  e.preventDefault();
+window.saveData = async function() {
 
   const elementId =
     document.getElementById("elementId").value;
@@ -46,77 +72,123 @@ form.addEventListener("submit", async (e) => {
   const employee =
     document.getElementById("employee").value;
 
+  if (!elementId || !employee) {
+
+    alert("Fill all fields");
+
+    return;
+
+  }
+
   try {
 
-    await addDoc(collection(db, "assemblyLogs"), {
+    await addDoc(
+      collection(db, "assembly"),
+      {
 
-      elementId,
-      stage,
-      employee,
-      timestamp: new Date()
+        elementId,
+        stage,
+        employee,
 
-    });
+        time:
+          new Date().toLocaleString()
+
+      }
+    );
 
     document.getElementById("success").innerText =
       "Saved successfully";
 
-    form.reset();
-
-  } catch (error) {
-
-    console.error(error);
-
-    document.getElementById("success").innerText =
-      "Error saving data";
+    loadViewer();
 
   }
 
-});
+  catch (error) {
 
-window.loadData = async function () {
+    console.error(error);
 
-  const searchId =
-    document.getElementById("searchId").value;
+    alert("Error saving data");
 
-  const results =
-    document.getElementById("results");
+  }
 
-  results.innerHTML = "";
+};
 
-  const q = query(
-    collection(db, "assemblyLogs"),
-    where("elementId", "==", searchId)
-  );
+/* VIEWER */
 
-  const querySnapshot = await getDocs(q);
+async function loadViewer() {
 
-  querySnapshot.forEach((doc) => {
+  const table =
+    document.getElementById("viewerTable");
+
+  if (!table) return;
+
+  table.innerHTML = "";
+
+  const snapshot =
+    await getDocs(
+      collection(db, "assembly")
+    );
+
+  snapshot.forEach((doc) => {
 
     const data = doc.data();
 
-    const row = `
+    table.innerHTML += `
+
       <tr>
+
         <td>${data.elementId}</td>
         <td>${data.stage}</td>
         <td>${data.employee}</td>
-        <td>${new Date(data.timestamp.seconds * 1000).toLocaleString()}</td>
-      </tr>
-    `;
+        <td>${data.time}</td>
 
-    results.innerHTML += row;
+      </tr>
+
+    `;
 
   });
 
 }
 
-// TEMP ADMIN ACCESS
+loadViewer();
 
-const isAdmin = true;
+/* SEARCH */
 
-if (isAdmin) {
+window.searchElement = async function() {
 
-  document
-    .getElementById("adminTab")
-    .style.display = "inline-block";
+  const search =
+    document.getElementById("searchInput").value;
 
-}
+  const table =
+    document.getElementById("viewerTable");
+
+  table.innerHTML = "";
+
+  const q = query(
+    collection(db, "assembly"),
+    where("elementId", "==", search)
+  );
+
+  const snapshot =
+    await getDocs(q);
+
+  snapshot.forEach((doc) => {
+
+    const data = doc.data();
+
+    table.innerHTML += `
+
+      <tr>
+
+        <td>${data.elementId}</td>
+        <td>${data.stage}</td>
+        <td>${data.employee}</td>
+        <td>${data.time}</td>
+
+      </tr>
+
+    `;
+
+  });
+
+};
