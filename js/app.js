@@ -1,36 +1,25 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
 import {
-  getFirestore,
   collection,
   addDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyA7cHiDj4BAMbw1LoTpgbxXIcrhDnm0lX8",
-  authDomain: "facade-assembly.firebaseapp.com",
-  projectId: "facade-assembly",
-  storageBucket: "facade-assembly.firebasestorage.app",
-  messagingSenderId: "676074892011",
-  appId: "1:676074892011:web:792ebcdf46e2098f972cae",
-  measurementId: "G-ZVSZ1L3FQZ"
-};
+import { db } from "./firebase.js";
 
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-const form = document.getElementById("assemblyForm");
+const form =
+  document.getElementById("assemblyForm");
 
 form.addEventListener("submit", async (e) => {
 
   e.preventDefault();
 
-  const elementId = document.getElementById("elementId").value;
+  const elementId =
+    document.getElementById("elementId").value;
 
-  const stage = document.getElementById("stage").value;
+  const stage =
+    document.getElementById("stage").value;
 
-  const employee = document.getElementById("employee").value;
+  const employee =
+    document.getElementById("employee").value;
 
   try {
 
