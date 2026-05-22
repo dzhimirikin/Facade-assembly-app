@@ -1,106 +1,83 @@
-import {
-  initializeApp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { db } from "./firebase.js";
 
 import {
-  getFirestore,
+
   collection,
-  getDocs,
-  query,
-  where
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* FIREBASE */
+  getDocs
 
-const firebaseConfig = {
+} from
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  apiKey: "YOUR_API_KEY",
-  authDomain: "facade-assembly.firebaseapp.com",
-  projectId: "facade-assembly",
-  storageBucket: "facade-assembly.appspot.com",
-  messagingSenderId: "XXXX",
-  appId: "XXXX"
+const table =
+  document.getElementById("viewerTable");
 
-};
-
-const app = initializeApp(firebaseConfig);
-
-const db = getFirestore(app);
-
-/* LOAD ALL */
-
-async function loadViewer() {
-
-  const table =
-    document.getElementById("viewerTable");
+async function loadData() {
 
   table.innerHTML = "";
 
-  const snapshot =
+  const querySnapshot =
     await getDocs(
       collection(db, "assembly")
     );
 
-  snapshot.forEach((doc) => {
+  querySnapshot.forEach((doc) => {
 
     const data = doc.data();
 
-    table.innerHTML += `
+    const row = `
 
       <tr>
 
-        <td>${data.elementId}</td>
+        <td>${data.facadeId}</td>
+
         <td>${data.stage}</td>
+
         <td>${data.employee}</td>
-        <td>${data.time}</td>
+
+        <td>${data.note || ""}</td>
+
+        <td>${data.timestamp}</td>
 
       </tr>
 
     `;
+
+    table.innerHTML += row;
 
   });
 
 }
 
-loadViewer();
-
-/* SEARCH */
-
-window.searchElement = async function() {
+window.searchData = async function () {
 
   const search =
-    document.getElementById("searchInput").value;
+    document.getElementById("searchInput")
+      .value
+      .toLowerCase();
 
-  const table =
-    document.getElementById("viewerTable");
+  const rows =
+    table.getElementsByTagName("tr");
 
-  table.innerHTML = "";
+  for (let row of rows) {
 
-  const q = query(
-    collection(db, "assembly"),
-    where("elementId", "==", search)
-  );
+    const id =
+      row.cells[0]
+        .innerText
+        .toLowerCase();
 
-  const snapshot =
-    await getDocs(q);
+    if (
+      id.includes(search)
+    ) {
 
-  snapshot.forEach((doc) => {
+      row.style.display = "";
 
-    const data = doc.data();
+    } else {
 
-    table.innerHTML += `
-
-      <tr>
-
-        <td>${data.elementId}</td>
-        <td>${data.stage}</td>
-        <td>${data.employee}</td>
-        <td>${data.time}</td>
-
-      </tr>
-
-    `;
-
-  });
+      row.style.display = "none";
+    }
+  }
 
 };
+
+loadData();
