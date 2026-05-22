@@ -305,3 +305,19 @@ td {
 
   font-size: 12px;
 }
+
+/* VIEWER PAGE */
+
+.viewer-only-layout {
+
+  flex: 1;
+
+  padding: 16px;
+
+  overflow: hidden;
+}
+
+.full-view {
+
+  height: 100%;
+}
