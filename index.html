@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Facade Assembly Control</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 24px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      background: black;
+      color: white;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .success {
+      margin-top: 16px;
+      color: green;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>Facade Assembly</h1>
+
+  <label>Element ID</label>
+  <input type="text" id="elementId" placeholder="EF-001">
+
+  <label>Stage</label>
+  <select id="stage">
+    <option>Frame assembly</option>
+    <option>EPDM</option>
+    <option>Hardware</option>
+    <option>Sealant</option>
+    <option>QC</option>
+    <option>Packing</option>
+  </select>
+
+  <label>Employee</label>
+  <input type="text" id="employee" placeholder="Name">
+
+  <label>Photo</label>
+  <input type="file" id="photo">
+
+  <button onclick="saveData()">Submit</button>
+
+  <div class="success" id="success"></div>
+
+</div>
+
+<script>
+
+async function saveData() {
+
+  const elementId = document.getElementById("elementId").value;
+  const stage = document.getElementById("stage").value;
+  const employee = document.getElementById("employee").value;
+
+  console.log({
+    elementId,
+    stage,
+    employee
+  });
+
+  document.getElementById("success").innerText =
+    "Data saved successfully";
+
+}
+
+</script>
+
+</body>
+</html>
