@@ -1,12 +1,52 @@
-import { db } from "./firebase.js";
+import { db }
+from "./firebase.js";
 
 import {
 
   collection,
-  addDoc
+  addDoc,
+  getDocs
 
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* LOAD FACADES */
+
+async function loadFacades() {
+
+  const select =
+    document.getElementById("elementId");
+
+  select.innerHTML = "";
+
+  const snapshot =
+    await getDocs(
+      collection(db, "facades")
+    );
+
+  snapshot.forEach((doc) => {
+
+    const data =
+      doc.data();
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      data.name;
+
+    option.textContent =
+      data.name;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+loadFacades();
+
+/* SAVE */
 
 window.saveData = async function () {
 
@@ -30,13 +70,6 @@ window.saveData = async function () {
 
   const photo3 =
     document.getElementById("photo3").files[0];
-
-  if (!facadeId || !employee) {
-
-    alert("Fill required fields");
-
-    return;
-  }
 
   try {
 
@@ -78,7 +111,7 @@ window.saveData = async function () {
     );
 
     document.getElementById("success").innerText =
-      "Data saved successfully";
+      "Saved successfully";
 
   }
 
