@@ -1,9 +1,9 @@
-import { db } from "./firebase.js";
+import { db }
+from "./firebase.js";
 
 import {
 
   collection,
-
   getDocs
 
 } from
@@ -16,34 +16,29 @@ async function loadData() {
 
   table.innerHTML = "";
 
-  const querySnapshot =
+  const snapshot =
     await getDocs(
       collection(db, "assembly")
     );
 
-  querySnapshot.forEach((doc) => {
+  snapshot.forEach((doc) => {
 
-    const data = doc.data();
+    const data =
+      doc.data();
 
-    const row = `
+    table.innerHTML += `
 
       <tr>
 
         <td>${data.facadeId}</td>
-
         <td>${data.stage}</td>
-
         <td>${data.employee}</td>
-
         <td>${data.note || ""}</td>
-
         <td>${data.timestamp}</td>
 
       </tr>
 
     `;
-
-    table.innerHTML += row;
 
   });
 
@@ -52,7 +47,8 @@ async function loadData() {
 window.searchData = async function () {
 
   const search =
-    document.getElementById("searchInput")
+    document
+      .getElementById("searchInput")
       .value
       .toLowerCase();
 
@@ -61,21 +57,13 @@ window.searchData = async function () {
 
   for (let row of rows) {
 
-    const id =
-      row.cells[0]
-        .innerText
-        .toLowerCase();
+    const text =
+      row.innerText.toLowerCase();
 
-    if (
-      id.includes(search)
-    ) {
-
-      row.style.display = "";
-
-    } else {
-
-      row.style.display = "none";
-    }
+    row.style.display =
+      text.includes(search)
+        ? ""
+        : "none";
   }
 
 };
