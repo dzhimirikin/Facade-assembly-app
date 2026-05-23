@@ -4,7 +4,10 @@ import {
 
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  doc,
+  setDoc,
+  getDoc
 
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
