@@ -1,8 +1,10 @@
 /* =====================================================
-   STYLE.CSS - STRUCTURE AND LAYOUT ONLY
-   COLORS ARE REFERENCED FROM theme-reynaers.css
+   style.css - Layout and Structure
+   Colors are loaded from reynaers-theme.css
 ===================================================== */
+@import url("theme-reynaers.css");
 
+/* GLOBAL */
 * {
   margin: 0;
   padding: 0;
@@ -30,14 +32,17 @@ body {
   background: var(--reynaers-blue);
   color: var(--reynaers-white);
 }
+
 .logo {
   font-size: 20px;
   font-weight: bold;
 }
+
 .menu {
   display: flex;
   gap: 10px;
 }
+
 .menu-btn {
   text-decoration: none;
   border: 1px solid var(--reynaers-lightblue);
@@ -46,10 +51,12 @@ body {
   transition: 0.2s;
   color: var(--reynaers-white);
 }
+
 .menu-btn:hover,
 .menu-btn.active {
   background: var(--reynaers-lightblue);
 }
+
 .user-role {
   font-size: 14px;
 }
@@ -88,6 +95,7 @@ body {
   align-items: center;
   justify-content: center;
 }
+
 .splitter::before {
   content: "";
   width: 4px;
@@ -96,9 +104,11 @@ body {
   background: var(--reynaers-lightgray);
   transition: 0.15s;
 }
+
 .splitter:hover::before {
   background: var(--reynaers-gray);
 }
+
 .splitter.active::before {
   background: var(--reynaers-accent);
 }
@@ -131,6 +141,7 @@ label {
   margin-bottom: 8px;
   font-weight: bold;
 }
+
 input,
 select,
 textarea {
@@ -141,28 +152,30 @@ textarea {
   font-size: 14px;
   background: var(--reynaers-white);
 }
+
 textarea {
   min-height: 140px;
   resize: vertical;
 }
 
 /* BUTTONS */
+button,
 .submit-btn {
-  width: 100%;
-  margin-top: 22px;
   border: none;
-  padding: 15px;
   border-radius: 12px;
+  padding: 14px 20px;
   cursor: pointer;
   transition: 0.2s;
   background: var(--reynaers-blue);
   color: var(--reynaers-white);
 }
+
+button:hover,
 .submit-btn:hover {
   background: var(--reynaers-lightblue);
 }
 
-/* SUCCESS */
+/* SUCCESS MESSAGE */
 .success-message {
   margin-top: 14px;
   padding: 12px;
@@ -179,11 +192,13 @@ textarea {
   border: 1px solid var(--reynaers-lightgray);
   border-radius: 12px;
 }
+
 table {
   width: 100%;
   border-collapse: collapse;
   min-width: 800px;
 }
+
 th {
   text-align: left;
   padding: 14px;
@@ -193,14 +208,17 @@ th {
   background: var(--reynaers-blue);
   color: var(--reynaers-white);
 }
+
 td {
   padding: 14px;
   border-top: 1px solid var(--reynaers-lightgray);
 }
+
 tr:hover {
   background: var(--reynaers-lightblue);
   color: var(--reynaers-white);
 }
+
 .assembly-row.selected {
   background: var(--reynaers-accent);
   color: var(--reynaers-white);
@@ -239,4 +257,16 @@ tr:hover {
   .search-box input {
     width: 100%;
   }
+}
+
+/* FACADES LIST */
+.facade-list {
+  display: grid;
+  gap: 10px;
+}
+
+.facade-item {
+  padding: 12px;
+  background: var(--reynaers-lightgray);
+  border-radius: 10px;
 }
