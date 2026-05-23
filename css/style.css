@@ -450,7 +450,3 @@ tr:hover {
     width: 100%;
   }
 }
-
-.assembly-row.selected {
-  background-color: #fde68a; /* светло-жёлтая подсветка */
-}
