@@ -82,21 +82,16 @@ function loadViewer() {
 
         /* ROW */
 
-        const row =
-          document.createElement("tr");
+        // Считаем количество фото
+        const photoCount = (data.photos || []).filter(p => p).length;
 
         row.innerHTML = `
-
           <td>${data.facadeId || ""}</td>
-
           <td>${data.subElementId || ""}</td>
-
           <td>${data.stage || ""}</td>
-
           <td>${data.employee || ""}</td>
-
           <td>${data.note || ""}</td>
-
+          <td>${photoCount}</td>
           <td>${data.timestamp || ""}</td>
 
         `;
