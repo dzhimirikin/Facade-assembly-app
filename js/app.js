@@ -224,11 +224,17 @@ async function loadEmployees() {
 
 }
 
-loadFacades();
+async function init() {
 
-loadElements();
+  await loadFacades();
 
-loadEmployees();
+  await loadElements();
+
+  await loadEmployees();
+
+}
+
+init();
 
 document
   .getElementById("elementId")
