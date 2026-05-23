@@ -1,14 +1,10 @@
-import { initializeApp }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { getFirestore }
-from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
 
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyA7cHiDj4BAMbw1LoTpgbxXIcrhDnm0lX8",
 
   authDomain:
     "facade-assembly.firebaseapp.com",
@@ -23,7 +19,7 @@ const firebaseConfig = {
     "676074892011",
 
   appId:
-    "YOUR_APP_ID"
+    "1:676074892011:web:792ebcdf46e2098f972cae"
 
 };
 
