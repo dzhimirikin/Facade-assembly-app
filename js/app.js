@@ -1,5 +1,7 @@
 import { db } from "./firebase.js";
 
+console.log("APP START");
+
 import {
 
   collection,
