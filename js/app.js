@@ -17,35 +17,40 @@ import {
 
 async function loadFacades() {
 
-  const select =
-    document.getElementById("elementId");
-
-  if (!select) return;
-
-  select.innerHTML = "";
-
   try {
+
+    const select =
+      document.getElementById("elementId");
+
+    if (!select) return;
+
+    select.innerHTML = "";
 
     /* CURRENT PROJECT */
 
-    const settingsDoc =
+    const settingsSnapshot =
       await getDoc(
         doc(db, "settings", "currentProject")
       );
 
-    const currentProject =
-      settingsDoc.data()?.name;
-
-    if (!currentProject) {
+    if (!settingsSnapshot.exists()) {
 
       console.log(
-        "No current project"
+        "Current project not found"
       );
 
       return;
     }
 
-    /* FACADES */
+    const currentProject =
+      settingsSnapshot.data().name;
+
+    console.log(
+      "Current project:",
+      currentProject
+    );
+
+    /* LOAD FACADES */
 
     const snapshot =
       await getDocs(
@@ -57,7 +62,7 @@ async function loadFacades() {
       const data =
         docItem.data();
 
-      /* FILTER */
+      console.log(data);
 
       if (
         data.projectId !== currentProject
@@ -88,8 +93,6 @@ async function loadFacades() {
   }
 
 }
-
-loadFacades();
 
 /* =========================
    SAVE DATA
