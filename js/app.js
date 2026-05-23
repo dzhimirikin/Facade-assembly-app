@@ -93,6 +93,86 @@ async function loadFacades() {
 
 }
 
+loadElements();
+
+/* =========================
+   LOAD ELEMENTS
+========================= */
+
+async function loadElements() {
+
+  const facadeSelect =
+    document.getElementById("elementId");
+
+  const elementSelect =
+    document.getElementById("subElementId");
+
+  if (!facadeSelect || !elementSelect)
+    return;
+
+  elementSelect.innerHTML = "";
+
+  try {
+
+    /* CURRENT PROJECT */
+
+    const settingsSnapshot =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
+
+    const currentProject =
+      settingsSnapshot.data()?.name;
+
+    const currentFacade =
+      facadeSelect.value;
+
+    /* LOAD ELEMENTS */
+
+    const snapshot =
+      await getDocs(
+        collection(db, "elements")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      if (
+        data.projectId !== currentProject
+      ) return;
+
+      if (
+        data.facadeId !== currentFacade
+      ) return;
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      elementSelect.appendChild(option);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Element load error:",
+      error
+    );
+
+  }
+
+}
+
 /* =========================
    LOAD EMPLOYEES
 ========================= */
@@ -146,7 +226,23 @@ async function loadEmployees() {
 
 loadFacades();
 
+loadElements();
+
 loadEmployees();
+
+document
+  .getElementById("elementId")
+  ?.addEventListener(
+
+    "change",
+
+    () => {
+
+      loadElements();
+
+    }
+
+  );
 
 /* =========================
    SAVE DATA
