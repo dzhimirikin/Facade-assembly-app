@@ -95,6 +95,59 @@ async function loadFacades() {
 }
 
 /* =========================
+   LOAD EMPLOYEES
+========================= */
+
+async function loadEmployees() {
+
+  const select =
+    document.getElementById("employee");
+
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(db, "employees")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Employee load error:",
+      error
+    );
+
+  }
+
+}
+
+loadEmployees();
+
+/* =========================
    SAVE DATA
 ========================= */
 
