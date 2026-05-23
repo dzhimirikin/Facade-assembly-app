@@ -12,27 +12,57 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* =========================
+   PROJECTS
+========================= */
+
 window.addProject = async function () {
 
+  const input =
+    document.getElementById("projectName");
+
   const name =
-    document.getElementById("projectName").value;
+    input.value.trim();
 
-  if (!name) return;
+  if (!name) {
 
-  await addDoc(
+    alert("Enter project name");
 
-    collection(db, "projects"),
+    return;
+  }
 
-    {
-      name
-    }
+  try {
 
-  );
+    await addDoc(
 
-  loadProjects();
+      collection(db, "projects"),
+
+      {
+        name
+      }
+
+    );
+
+    input.value = "";
+
+    loadProjects();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Project add error:",
+      error
+    );
+
+  }
 
 };
 
+/* =========================
+   LOAD PROJECTS
+========================= */
 
 async function loadProjects() {
 
@@ -43,52 +73,90 @@ async function loadProjects() {
 
   select.innerHTML = "";
 
-  const snapshot =
-    await getDocs(
-      collection(db, "projects")
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(db, "projects")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Project load error:",
+      error
     );
 
-  snapshot.forEach((docItem) => {
-
-    const data =
-      docItem.data();
-
-    const option =
-      document.createElement("option");
-
-    option.value =
-      data.name;
-
-    option.textContent =
-      data.name;
-
-    select.appendChild(option);
-
-  });
+  }
 
 }
 
 loadProjects();
 
+/* =========================
+   SET CURRENT PROJECT
+========================= */
 
 window.setCurrentProject = async function () {
 
   const project =
     document.getElementById("projectSelect").value;
 
-  await setDoc(
+  if (!project) {
 
-    doc(db, "settings", "currentProject"),
+    alert("Select project");
 
-    {
-      name: project
-    }
+    return;
+  }
 
-  );
+  try {
 
-  alert(
-    `Current project: ${project}`
-  );
+    await setDoc(
+
+      doc(db, "settings", "currentProject"),
+
+      {
+        name: project
+      }
+
+    );
+
+    alert(
+      `Current project: ${project}`
+    );
+
+    loadFacades();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Set project error:",
+      error
+    );
+
+  }
 
 };
 
@@ -107,15 +175,35 @@ async function loadFacades() {
 
   try {
 
+    /* CURRENT PROJECT */
+
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
+
+    const currentProject =
+      settingsDoc.data()?.name;
+
+    if (!currentProject) return;
+
+    /* LOAD FACADES */
+
     const snapshot =
       await getDocs(
         collection(db, "facades")
       );
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach((docItem) => {
 
       const data =
-        doc.data();
+        docItem.data();
+
+      /* FILTER */
+
+      if (
+        data.projectId !== currentProject
+      ) return;
 
       const row =
         document.createElement("div");
@@ -138,6 +226,7 @@ async function loadFacades() {
       "Load error:",
       error
     );
+
   }
 
 }
@@ -145,7 +234,7 @@ async function loadFacades() {
 loadFacades();
 
 /* =========================
-   ADD MANUALLY
+   ADD FACADE
 ========================= */
 
 window.addFacade = async function () {
@@ -165,12 +254,38 @@ window.addFacade = async function () {
 
   try {
 
+    /* CURRENT PROJECT */
+
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
+
+    const currentProject =
+      settingsDoc.data()?.name;
+
+    if (!currentProject) {
+
+      alert(
+        "Set current project first"
+      );
+
+      return;
+    }
+
+    /* SAVE */
+
     await addDoc(
 
       collection(db, "facades"),
 
       {
-        name: value
+
+        name: value,
+
+        projectId:
+          currentProject
+
       }
 
     );
@@ -184,9 +299,10 @@ window.addFacade = async function () {
   catch (error) {
 
     console.error(
-      "Add error:",
+      "Add facade error:",
       error
     );
+
   }
 
 };
@@ -213,76 +329,69 @@ window.importTxt = function () {
   const reader =
     new FileReader();
 
-reader.onload =
-  async function (event) {
+  reader.onload =
+    async function (event) {
 
-    try {
+      try {
 
-      /* CURRENT PROJECT */
+        /* CURRENT PROJECT */
 
-      const settingsDoc =
-        await getDoc(
-          doc(db, "settings", "currentProject")
-        );
+        const settingsDoc =
+          await getDoc(
+            doc(db, "settings", "currentProject")
+          );
 
-      const currentProject =
-        settingsDoc.data().name;
+        const currentProject =
+          settingsDoc.data()?.name;
 
-      /* TXT CONTENT */
+        if (!currentProject) {
 
-      const text =
-        event.target.result;
+          alert(
+            "Set current project first"
+          );
 
-      const lines =
-        text
-          .split(/\r?\n/)
-          .map(line => line.trim())
-          .filter(line => line !== "");
+          return;
+        }
 
-      /* SAVE FACADES */
+        /* TXT CONTENT */
 
-      for (const line of lines) {
+        const text =
+          event.target.result;
 
-        await addDoc(
+        const lines =
+          text
+            .split(/\r?\n/)
+            .map(line => line.trim())
+            .filter(line => line !== "");
 
-          collection(db, "facades"),
+        /* SAVE FACADES */
 
-          {
+        for (const line of lines) {
 
-            name: line,
+          await addDoc(
 
-            projectId:
-              currentProject
+            collection(db, "facades"),
 
-          }
+            {
 
-        );
+              name: line,
 
-      }
+              projectId:
+                currentProject
 
-      loadFacades();
+            }
 
-      alert(
-        "TXT imported successfully"
-      );
+          );
 
-    }
-
-    catch (error) {
-
-      console.error(error);
-
-      alert("Import error");
-
-    }
-
-  };
-
-        alert("TXT imported successfully");
+        }
 
         fileInput.value = "";
 
         loadFacades();
+
+        alert(
+          "TXT imported successfully"
+        );
 
       }
 
@@ -294,6 +403,7 @@ reader.onload =
         );
 
         alert("TXT import failed");
+
       }
 
     };
