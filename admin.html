@@ -132,27 +132,76 @@
       placeholder="Dmitry"
     />
 
-    <button onclick="addEmployee()">
-      Add Employee
+<button onclick="addEmployee()">
+  Add Employee
+</button>
+
+</div>
+
+<div
+  class="facade-list"
+  id="employeeList"
+></div>
+
+</section>
+
+<!-- ELEMENTS -->
+
+<section class="admin-card">
+
+  <h2>Elements</h2>
+
+  <label>Select Facade</label>
+
+  <select id="facadeSelect">
+
+  </select>
+
+  <label>Element Name</label>
+
+  <div class="add-row">
+
+    <input
+      type="text"
+      id="newElement"
+      placeholder="M1"
+    />
+
+    <button onclick="addElement()">
+      Add
     </button>
 
   </div>
 
+  <label>Import TXT</label>
+
+  <input
+    type="file"
+    id="elementTxt"
+    accept=".txt"
+  />
+
+  <button onclick="importElementsTxt()">
+    Import Elements TXT
+  </button>
+
   <div
     class="facade-list"
-    id="employeeList"
+    id="elementList"
   ></div>
 
 </section>
 
-    <section class="admin-card">
+<!-- FACADE LIST -->
 
-      <h2>Facade List</h2>
+<section class="admin-card">
 
-      <div
-        class="facade-list"
-        id="facadeList"
-      >
+  <h2>Facade List</h2>
+
+  <div
+    class="facade-list"
+    id="facadeList"
+  >
 
       </div>
 
