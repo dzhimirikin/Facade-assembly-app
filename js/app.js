@@ -253,6 +253,9 @@ window.saveData = async function () {
   const facadeId =
     document.getElementById("elementId").value;
 
+  const subElementId =
+  document.getElementById("subElementId").value;
+
   const stage =
     document.getElementById("stage").value;
 
@@ -302,6 +305,8 @@ window.saveData = async function () {
           currentProject,
 
         facadeId,
+
+        subElementId,
 
         stage,
 
