@@ -1,5 +1,4 @@
-import { db }
-from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 
@@ -25,46 +24,59 @@ async function loadFacades() {
 
   select.innerHTML = "";
 
-  /* CURRENT PROJECT */
+  try {
 
-  const settingsDoc =
-    await getDoc(
-      doc(db, "settings", "currentProject")
-    );
+    /* CURRENT PROJECT */
 
-  const currentProject =
-    settingsDoc.data().name;
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
 
-  /* FACADES */
+    const currentProject =
+      settingsDoc.data()?.name;
 
-  const snapshot =
-    await getDocs(
-      collection(db, "facades")
-    );
+    if (!currentProject) {
 
-  snapshot.forEach((docItem) => {
+      console.log(
+        "No current project"
+      );
 
-    const data =
-      docItem.data();
+      return;
+    }
 
-    if (
-      data.projectId !== currentProject
-    ) return;
+    /* FACADES */
 
-    const option =
-      document.createElement("option");
+    const snapshot =
+      await getDocs(
+        collection(db, "facades")
+      );
 
-    option.value =
-      data.name;
+    snapshot.forEach((docItem) => {
 
-    option.textContent =
-      data.name;
+      const data =
+        docItem.data();
 
-    select.appendChild(option);
+      /* FILTER */
 
-  });
+      if (
+        data.projectId !== currentProject
+      ) return;
 
-}
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
 
   catch (error) {
 
@@ -72,6 +84,7 @@ async function loadFacades() {
       "Error loading facades:",
       error
     );
+
   }
 
 }
@@ -114,11 +127,26 @@ window.saveData = async function () {
 
   try {
 
+    /* CURRENT PROJECT */
+
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
+
+    const currentProject =
+      settingsDoc.data()?.name;
+
+    /* SAVE */
+
     await addDoc(
 
       collection(db, "assembly"),
 
       {
+
+        projectId:
+          currentProject,
 
         facadeId,
 
@@ -161,6 +189,7 @@ window.saveData = async function () {
     console.error(error);
 
     alert("Error saving data");
+
   }
 
 };
