@@ -1,137 +1,119 @@
-<!DOCTYPE html>
-<html lang="en">
+import { db } from "./firebase.js";
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<head>
+const table = document.getElementById("viewerTable");
+const facadeSelect = document.getElementById("elementId");
+const elementSelect = document.getElementById("subElementId");
 
-  <meta charset="UTF-8" />
+let unsubscribe = null;
+let selectedRow = null;
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
+/* =====================================================
+   LOAD VIEWER
+===================================================== */
+function loadViewer() {
+  if (!table) return;
 
-  <title>Facade Viewer</title>
+  const currentFacade = facadeSelect?.value;
+  const currentElement = elementSelect?.value;
 
-  <link
-    rel="stylesheet"
-    href="css/style.css"
-  />
+  // Remove old listener
+  if (unsubscribe) unsubscribe();
 
-</head>
+  // Query assembly collection ordered by timestamp descending
+  const assemblyQuery = query(
+    collection(db, "assembly"),
+    orderBy("timestamp", "desc")
+  );
 
-<body>
+  // Realtime listener
+  unsubscribe = onSnapshot(
+    assemblyQuery,
+    (snapshot) => {
+      table.innerHTML = "";
 
-  <!-- TOPBAR -->
+      snapshot.forEach((docItem) => {
+        const data = docItem.data();
 
-  <header class="topbar">
+        // Filter by current facade and element
+        if (data.facadeId !== currentFacade) return;
+        if (data.subElementId !== currentElement) return;
 
-    <div class="logo">
-      Facade Viewer
-    </div>
+        const row = document.createElement("tr");
+        row.dataset.docId = docItem.id;
+        row.classList.add("assembly-row");
 
-    <nav class="menu">
+        row.innerHTML = `
+          <td>${data.facadeId || ""}</td>
+          <td>${data.subElementId || ""}</td>
+          <td>${data.stage || ""}</td>
+          <td>${data.employee || ""}</td>
+          <td>${data.note || ""}</td>
+          <td>${data.timestamp || ""}</td>
+        `;
 
-      <a
-        href="index.html"
-        class="menu-btn"
-      >
-        Worker
-      </a>
+        // Click -> select
+        row.addEventListener("click", () => {
+          if (selectedRow) selectedRow.classList.remove("selected");
+          selectedRow = row;
+          row.classList.add("selected");
+        });
 
-      <button class="menu-btn active">
-        Viewer
-      </button>
+        // Double-click -> edit
+        row.addEventListener("dblclick", () => {
+          if (selectedRow) selectedRow.classList.remove("selected");
+          selectedRow = row;
+          row.classList.add("selected");
 
-      <a
-        href="admin.html"
-        class="menu-btn"
-      >
-        Admin
-      </a>
+          // Load row data into input panel
+          document.getElementById("elementId").value = data.facadeId;
+          document.getElementById("subElementId").value = data.subElementId;
+          document.getElementById("stage").value = data.stage;
+          document.getElementById("employee").value = data.employee;
+          document.getElementById("note").value = data.note || "";
 
-    </nav>
+          // Clear photo inputs
+          document.getElementById("photo1").value = "";
+          document.getElementById("photo2").value = "";
+          document.getElementById("photo3").value = "";
 
-    <div class="user-role">
-      QC / Engineering
-    </div>
+          // Save current docId for editing
+          window.editDocId = docItem.id;
+        });
 
-  </header>
+        table.appendChild(row);
+      });
+    },
+    (error) => {
+      console.error("Viewer realtime error:", error);
+    }
+  );
+}
 
-  <!-- MAIN -->
+/* =====================================================
+   EVENTS
+===================================================== */
+facadeSelect?.addEventListener("change", () => setTimeout(loadViewer, 200));
+elementSelect?.addEventListener("change", loadViewer);
 
-  <main class="viewer-only-layout">
+/* =====================================================
+   SEARCH
+===================================================== */
+window.searchData = function () {
+  const search = document.getElementById("searchInput").value.toLowerCase();
+  const rows = table.querySelectorAll("tr");
+  rows.forEach((row) => {
+    const text = row.innerText.toLowerCase();
+    row.style.display = text.includes(search) ? "" : "none";
+  });
+};
 
-    <section class="viewer-panel full-view">
-
-      <div class="viewer-header">
-
-        <h2>Assembly Tracking</h2>
-
-        <div class="search-box">
-
-          <input
-            type="text"
-            id="searchInput"
-            placeholder="Search facade"
-          />
-
-          <button onclick="searchData()">
-            Search
-          </button>
-
-        </div>
-
-      </div>
-
-      <div class="table-wrapper">
-
-        <table>
-
-          <thead>
-
-            <tr>
-
-              <th>Facade</th>
-              <th>Operation</th>
-              <th>Employee</th>
-              <th>Note</th>
-              <th>Time</th>
-
-            </tr>
-
-          </thead>
-
-          <tbody id="viewerTable">
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </section>
-
-  </main>
-
-  <!-- FOOTER -->
-
-  <footer class="footer">
-
-    <div>
-      Viewer Mode
-    </div>
-
-    <div>
-      Firebase Connected
-    </div>
-
-  </footer>
-
-  <script
-    type="module"
-    src="js/viewer.js"
-  ></script>
-
-</body>
-
-</html>
+/* =====================================================
+   INIT
+===================================================== */
+setTimeout(loadViewer, 500);
