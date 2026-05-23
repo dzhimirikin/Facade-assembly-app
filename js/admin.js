@@ -408,3 +408,69 @@ window.importTxt = function () {
   reader.readAsText(file);
 
 };
+
+/* =========================
+   EMPLOYEES
+========================= */
+
+async function loadEmployees() {
+
+  const list =
+    document.getElementById("employeeList");
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  const snapshot =
+    await getDocs(
+      collection(db, "employees")
+    );
+
+  snapshot.forEach((docItem) => {
+
+    const data =
+      docItem.data();
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "facade-item";
+
+    row.textContent =
+      data.name;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+loadEmployees();
+
+window.addEmployee = async function () {
+
+  const input =
+    document.getElementById("employeeName");
+
+  const value =
+    input.value.trim();
+
+  if (!value) return;
+
+  await addDoc(
+
+    collection(db, "employees"),
+
+    {
+      name: value
+    }
+
+  );
+
+  input.value = "";
+
+  loadEmployees();
+
+};
