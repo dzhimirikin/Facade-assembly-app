@@ -1,58 +1,88 @@
-import { db }
-from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
-
   collection,
-  getDocs
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+/* =====================================================
+   REALTIME VIEWER
+===================================================== */
 
 const table =
   document.getElementById("viewerTable");
 
-/* LOAD DATA */
+/* QUERY */
 
-async function loadData() {
+const assemblyQuery =
+  query(
 
-  table.innerHTML = "";
+    collection(db, "assembly"),
 
-  const snapshot =
-    await getDocs(
-      collection(db, "assembly")
-    );
+    orderBy("timestamp", "desc")
 
-  snapshot.forEach((doc) => {
+  );
 
-    const data =
-      doc.data();
+/* REALTIME LISTENER */
 
-    table.innerHTML += `
+onSnapshot(
 
-      <tr>
+  assemblyQuery,
 
-        <td>${data.facadeId}</td>
+  (snapshot) => {
 
-        <td>${data.stage}</td>
+    if (!table) return;
 
-        <td>${data.employee}</td>
+    table.innerHTML = "";
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${data.facadeId || ""}</td>
+
+        <td>${data.subElementId || ""}</td>
+
+        <td>${data.stage || ""}</td>
+
+        <td>${data.employee || ""}</td>
 
         <td>${data.note || ""}</td>
 
-        <td>${data.timestamp}</td>
+        <td>${data.timestamp || ""}</td>
 
-      </tr>
+      `;
 
-    `;
+      table.appendChild(row);
 
-  });
+    });
 
-}
+  },
 
-/* SEARCH */
+  (error) => {
 
-window.searchData = async function () {
+    console.error(
+      "Viewer realtime error:",
+      error
+    );
+
+  }
+
+);
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+window.searchData = function () {
 
   const search =
     document
@@ -61,9 +91,9 @@ window.searchData = async function () {
       .toLowerCase();
 
   const rows =
-    table.getElementsByTagName("tr");
+    table.querySelectorAll("tr");
 
-  for (let row of rows) {
+  rows.forEach((row) => {
 
     const text =
       row.innerText.toLowerCase();
@@ -72,8 +102,7 @@ window.searchData = async function () {
       text.includes(search)
         ? ""
         : "none";
-  }
+
+  });
 
 };
-
-loadData();
