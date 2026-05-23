@@ -474,3 +474,157 @@ window.addEmployee = async function () {
   loadEmployees();
 
 };
+
+/* =========================
+   LOAD FACADE SELECT
+========================= */
+
+async function loadFacadeSelect() {
+
+  const select =
+    document.getElementById("facadeSelect");
+
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  const settingsDoc =
+    await getDoc(
+      doc(db, "settings", "currentProject")
+    );
+
+  const currentProject =
+    settingsDoc.data()?.name;
+
+  const snapshot =
+    await getDocs(
+      collection(db, "facades")
+    );
+
+  snapshot.forEach((docItem) => {
+
+    const data =
+      docItem.data();
+
+    if (
+      data.projectId !== currentProject
+    ) return;
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      data.name;
+
+    option.textContent =
+      data.name;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+loadFacadeSelect();
+
+/* =========================
+   ADD ELEMENT
+========================= */
+
+window.addElement = async function () {
+
+  const facadeId =
+    document.getElementById("facadeSelect").value;
+
+  const name =
+    document.getElementById("newElement").value;
+
+  const settingsDoc =
+    await getDoc(
+      doc(db, "settings", "currentProject")
+    );
+
+  const currentProject =
+    settingsDoc.data()?.name;
+
+  await addDoc(
+
+    collection(db, "elements"),
+
+    {
+
+      projectId:
+        currentProject,
+
+      facadeId,
+
+      name
+
+    }
+
+  );
+
+  loadElementsList();
+
+};
+
+/* =========================
+   LOAD ELEMENTS LIST
+========================= */
+
+async function loadElementsList() {
+
+  const list =
+    document.getElementById("elementList");
+
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  const facadeId =
+    document.getElementById("facadeSelect").value;
+
+  const snapshot =
+    await getDocs(
+      collection(db, "elements")
+    );
+
+  snapshot.forEach((docItem) => {
+
+    const data =
+      docItem.data();
+
+    if (
+      data.facadeId !== facadeId
+    ) return;
+
+    const row =
+      document.createElement("div");
+
+    row.className =
+      "facade-item";
+
+    row.textContent =
+      data.name;
+
+    list.appendChild(row);
+
+  });
+
+}
+
+document
+  .getElementById("facadeSelect")
+  ?.addEventListener(
+
+    "change",
+
+    () => {
+
+      loadElementsList();
+
+    }
+
+  );
+
+loadElementsList();
