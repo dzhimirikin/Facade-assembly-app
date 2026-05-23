@@ -95,8 +95,9 @@ row.innerHTML = `
   <td>${data.stage || ""}</td>
   <td>${data.employee || ""}</td>
   <td>${data.note || ""}</td>
-  <td>${data.timestamp || ""}</td>
   <td>${photoCount}</td>
+  <td>${data.timestamp || ""}</td>
+
 `;
 
         table.appendChild(row);
