@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Facade Viewer</title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+
+  <header class="topbar">
+
+    <div class="logo">
+      Facade Viewer
+    </div>
+
+    <nav class="menu">
+
+      <a
+        href="index.html"
+        class="menu-btn"
+      >
+        Worker
+      </a>
+
+      <button class="menu-btn active">
+        Viewer
+      </button>
+
+      <a
+        href="admin.html"
+        class="menu-btn"
+      >
+        Admin
+      </a>
+
+    </nav>
+
+    <div class="user-role">
+      QC / Engineering
+    </div>
+
+  </header>
+
+  <!-- MAIN -->
+
+  <main class="viewer-only-layout">
+
+    <section class="viewer-panel full-view">
+
+      <div class="viewer-header">
+
+        <h2>Assembly Tracking</h2>
+
+        <div class="search-box">
+
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search facade"
+          />
+
+          <button onclick="searchData()">
+            Search
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Facade</th>
+              <th>Operation</th>
+              <th>Employee</th>
+              <th>Note</th>
+              <th>Time</th>
+
+            </tr>
+
+          </thead>
+
+          <tbody id="viewerTable">
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+
+    <div>
+      Viewer Mode
+    </div>
+
+    <div>
+      Firebase Connected
+    </div>
+
+  </footer>
+
+  <script
+    type="module"
+    src="js/viewer.js"
+  ></script>
+
+</body>
+
+</html>
