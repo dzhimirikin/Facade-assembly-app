@@ -144,9 +144,6 @@ async function loadEmployees() {
 
 }
 
-}
-
-
 loadFacades();
 
 loadEmployees();
