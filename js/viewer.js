@@ -82,24 +82,22 @@ function loadViewer() {
 
         /* ROW */
 
-        const row =
-          document.createElement("tr");
+const row = document.createElement("tr");
+row.dataset.docId = docItem.id;
+row.classList.add("assembly-row");
 
-        row.innerHTML = `
+// Считаем количество фото
+const photoCount = (data.photos || []).filter(p => p).length;
 
-          <td>${data.facadeId || ""}</td>
-
-          <td>${data.subElementId || ""}</td>
-
-          <td>${data.stage || ""}</td>
-
-          <td>${data.employee || ""}</td>
-
-          <td>${data.note || ""}</td>
-
-          <td>${data.timestamp || ""}</td>
-
-        `;
+row.innerHTML = `
+  <td>${data.facadeId || ""}</td>
+  <td>${data.subElementId || ""}</td>
+  <td>${data.stage || ""}</td>
+  <td>${data.employee || ""}</td>
+  <td>${data.note || ""}</td>
+  <td>${data.timestamp || ""}</td>
+  <td>${photoCount}</td>
+`;
 
         table.appendChild(row);
 
