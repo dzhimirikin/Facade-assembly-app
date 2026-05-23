@@ -1,44 +1,31 @@
-import { db } from "./firebase.js";
-import {
-  collection,
-  query,
-  orderBy,
-  onSnapshot,
-  doc,
-  updateDoc,
-  serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const table = document.getElementById("viewerTable");
-const facadeSelect = document.getElementById("elementId");
-const elementSelect = document.getElementById("subElementId");
-
-let unsubscribe = null;
+// GLOBALS
 let selectedRow = null;
 window.editDocId = null;
 
-/* =========================
-   LOAD VIEWER
-========================= */
+// Function to load Assembly Viewer
 function loadViewer() {
+  const table = document.getElementById("viewerTable");
+  const facadeSelect = document.getElementById("elementId");
+  const elementSelect = document.getElementById("subElementId");
+
   if (!table) return;
 
   const currentFacade = facadeSelect?.value;
   const currentElement = elementSelect?.value;
 
-  if (unsubscribe) unsubscribe();
-
+  // Firestore query
   const assemblyQuery = query(
     collection(db, "assembly"),
     orderBy("timestamp", "desc")
   );
 
-  unsubscribe = onSnapshot(assemblyQuery, snapshot => {
+  onSnapshot(assemblyQuery, (snapshot) => {
     table.innerHTML = "";
 
-    snapshot.forEach(docItem => {
+    snapshot.forEach((docItem) => {
       const data = docItem.data();
 
+      // Filter current facade and element
       if (data.facadeId !== currentFacade) return;
       if (data.subElementId !== currentElement) return;
 
@@ -52,23 +39,23 @@ function loadViewer() {
         <td>${data.stage || ""}</td>
         <td>${data.employee || ""}</td>
         <td>${data.note || ""}</td>
-        <td>${data.photos?.length || 0}</td>
         <td>${data.timestamp || ""}</td>
       `;
 
-      // Click -> select
+      // Single click -> select row
       row.addEventListener("click", () => {
         if (selectedRow) selectedRow.classList.remove("selected");
         selectedRow = row;
         row.classList.add("selected");
       });
 
-      // Double-click -> edit
+      // Double click -> load for editing
       row.addEventListener("dblclick", () => {
         if (selectedRow) selectedRow.classList.remove("selected");
         selectedRow = row;
         row.classList.add("selected");
 
+        // Load data into input panel
         document.getElementById("elementId").value = data.facadeId;
         document.getElementById("subElementId").value = data.subElementId;
         document.getElementById("stage").value = data.stage;
@@ -79,74 +66,18 @@ function loadViewer() {
         document.getElementById("photo2").value = "";
         document.getElementById("photo3").value = "";
 
+        // Keep current docId for saving
         window.editDocId = docItem.id;
       });
 
       table.appendChild(row);
     });
-  }, error => {
-    console.error("Viewer realtime error:", error);
   });
 }
 
-/* =========================
-   SAVE DATA (EDIT)
-========================= */
-window.saveData = async function () {
-  const facadeId = document.getElementById("elementId").value;
-  const elementId = document.getElementById("subElementId").value;
-  const stage = document.getElementById("stage").value;
-  const employee = document.getElementById("employee").value;
-  const note = document.getElementById("note").value;
+// Attach listeners
+document.getElementById("elementId")?.addEventListener("change", loadViewer);
+document.getElementById("subElementId")?.addEventListener("change", loadViewer);
 
-  if (!facadeId || !employee) {
-    alert("Fill required fields");
-    return;
-  }
-
-  try {
-    if (window.editDocId) {
-      const docRef = doc(db, "assembly", window.editDocId);
-
-      await updateDoc(docRef, {
-        facadeId,
-        subElementId: elementId,
-        stage,
-        employee,
-        note,
-        timestamp: serverTimestamp()
-      });
-
-      window.editDocId = null;
-      alert("Entry updated successfully!");
-    } else {
-      // обычное сохранение, если это новая запись
-    }
-  } catch (error) {
-    console.error("Error saving data:", error);
-    alert("Error saving data");
-  }
-};
-
-/* =========================
-   EVENTS
-========================= */
-facadeSelect?.addEventListener("change", () => setTimeout(loadViewer, 200));
-elementSelect?.addEventListener("change", loadViewer);
-
-/* =========================
-   SEARCH
-========================= */
-window.searchData = function () {
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const rows = table.querySelectorAll("tr");
-  rows.forEach(row => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(search) ? "" : "none";
-  });
-};
-
-/* =========================
-   INIT
-========================= */
+// Initial load
 setTimeout(loadViewer, 500);
