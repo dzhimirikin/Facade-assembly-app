@@ -9,9 +9,9 @@ import {
   getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* =========================
+/* =====================================================
    PROJECTS
-========================= */
+===================================================== */
 
 window.addProject = async function () {
 
@@ -26,6 +26,7 @@ window.addProject = async function () {
     alert("Enter project name");
 
     return;
+
   }
 
   try {
@@ -42,7 +43,7 @@ window.addProject = async function () {
 
     input.value = "";
 
-    loadProjects();
+    await loadProjects();
 
   }
 
@@ -57,9 +58,9 @@ window.addProject = async function () {
 
 };
 
-/* =========================
+/* =====================================================
    LOAD PROJECTS
-========================= */
+===================================================== */
 
 async function loadProjects() {
 
@@ -108,11 +109,9 @@ async function loadProjects() {
 
 }
 
-loadProjects();
-
-/* =========================
+/* =====================================================
    SET CURRENT PROJECT
-========================= */
+===================================================== */
 
 window.setCurrentProject = async function () {
 
@@ -124,6 +123,7 @@ window.setCurrentProject = async function () {
     alert("Select project");
 
     return;
+
   }
 
   try {
@@ -142,14 +142,18 @@ window.setCurrentProject = async function () {
       `Current project: ${project}`
     );
 
-    loadFacades();
+    await loadFacades();
+
+    await loadFacadeSelect();
+
+    await loadElementsList();
 
   }
 
   catch (error) {
 
     console.error(
-      "Set project error:",
+      "Set current project error:",
       error
     );
 
@@ -157,9 +161,9 @@ window.setCurrentProject = async function () {
 
 };
 
-/* =========================
+/* =====================================================
    LOAD FACADES
-========================= */
+===================================================== */
 
 async function loadFacades() {
 
@@ -172,8 +176,6 @@ async function loadFacades() {
 
   try {
 
-    /* CURRENT PROJECT */
-
     const settingsDoc =
       await getDoc(
         doc(db, "settings", "currentProject")
@@ -184,8 +186,6 @@ async function loadFacades() {
 
     if (!currentProject) return;
 
-    /* LOAD FACADES */
-
     const snapshot =
       await getDocs(
         collection(db, "facades")
@@ -195,8 +195,6 @@ async function loadFacades() {
 
       const data =
         docItem.data();
-
-      /* FILTER */
 
       if (
         data.projectId !== currentProject
@@ -220,7 +218,7 @@ async function loadFacades() {
   catch (error) {
 
     console.error(
-      "Load error:",
+      "Facade load error:",
       error
     );
 
@@ -228,11 +226,9 @@ async function loadFacades() {
 
 }
 
-loadFacades();
-
-/* =========================
+/* =====================================================
    ADD FACADE
-========================= */
+===================================================== */
 
 window.addFacade = async function () {
 
@@ -247,11 +243,10 @@ window.addFacade = async function () {
     alert("Enter facade name");
 
     return;
+
   }
 
   try {
-
-    /* CURRENT PROJECT */
 
     const settingsDoc =
       await getDoc(
@@ -268,28 +263,25 @@ window.addFacade = async function () {
       );
 
       return;
-    }
 
-    /* SAVE */
+    }
 
     await addDoc(
 
       collection(db, "facades"),
 
       {
-
         name: value,
-
-        projectId:
-          currentProject
-
+        projectId: currentProject
       }
 
     );
 
     input.value = "";
 
-    loadFacades();
+    await loadFacades();
+
+    await loadFacadeSelect();
 
   }
 
@@ -304,9 +296,9 @@ window.addFacade = async function () {
 
 };
 
-/* =========================
-   IMPORT TXT
-========================= */
+/* =====================================================
+   IMPORT FACADES TXT
+===================================================== */
 
 window.importTxt = function () {
 
@@ -321,6 +313,7 @@ window.importTxt = function () {
     alert("Select TXT file");
 
     return;
+
   }
 
   const reader =
@@ -330,8 +323,6 @@ window.importTxt = function () {
     async function (event) {
 
       try {
-
-        /* CURRENT PROJECT */
 
         const settingsDoc =
           await getDoc(
@@ -348,9 +339,8 @@ window.importTxt = function () {
           );
 
           return;
-        }
 
-        /* TXT CONTENT */
+        }
 
         const text =
           event.target.result;
@@ -361,8 +351,6 @@ window.importTxt = function () {
             .map(line => line.trim())
             .filter(line => line !== "");
 
-        /* SAVE FACADES */
-
         for (const line of lines) {
 
           await addDoc(
@@ -370,12 +358,8 @@ window.importTxt = function () {
             collection(db, "facades"),
 
             {
-
               name: line,
-
-              projectId:
-                currentProject
-
+              projectId: currentProject
             }
 
           );
@@ -384,7 +368,9 @@ window.importTxt = function () {
 
         fileInput.value = "";
 
-        loadFacades();
+        await loadFacades();
+
+        await loadFacadeSelect();
 
         alert(
           "TXT imported successfully"
@@ -395,11 +381,13 @@ window.importTxt = function () {
       catch (error) {
 
         console.error(
-          "Import error:",
+          "TXT import error:",
           error
         );
 
-        alert("TXT import failed");
+        alert(
+          "TXT import failed"
+        );
 
       }
 
@@ -409,9 +397,9 @@ window.importTxt = function () {
 
 };
 
-/* =========================
+/* =====================================================
    EMPLOYEES
-========================= */
+===================================================== */
 
 async function loadEmployees() {
 
@@ -422,32 +410,43 @@ async function loadEmployees() {
 
   list.innerHTML = "";
 
-  const snapshot =
-    await getDocs(
-      collection(db, "employees")
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(db, "employees")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "facade-item";
+
+      row.textContent =
+        data.name;
+
+      list.appendChild(row);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Employee load error:",
+      error
     );
 
-  snapshot.forEach((docItem) => {
-
-    const data =
-      docItem.data();
-
-    const row =
-      document.createElement("div");
-
-    row.className =
-      "facade-item";
-
-    row.textContent =
-      data.name;
-
-    list.appendChild(row);
-
-  });
+  }
 
 }
-
-loadEmployees();
 
 window.addEmployee = async function () {
 
@@ -459,25 +458,38 @@ window.addEmployee = async function () {
 
   if (!value) return;
 
-  await addDoc(
+  try {
 
-    collection(db, "employees"),
+    await addDoc(
 
-    {
-      name: value
-    }
+      collection(db, "employees"),
 
-  );
+      {
+        name: value
+      }
 
-  input.value = "";
+    );
 
-  loadEmployees();
+    input.value = "";
+
+    await loadEmployees();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Employee add error:",
+      error
+    );
+
+  }
 
 };
 
-/* =========================
+/* =====================================================
    LOAD FACADE SELECT
-========================= */
+===================================================== */
 
 async function loadFacadeSelect() {
 
@@ -488,89 +500,224 @@ async function loadFacadeSelect() {
 
   select.innerHTML = "";
 
-  const settingsDoc =
-    await getDoc(
-      doc(db, "settings", "currentProject")
+  try {
+
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
+
+    const currentProject =
+      settingsDoc.data()?.name;
+
+    if (!currentProject) return;
+
+    const snapshot =
+      await getDocs(
+        collection(db, "facades")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      if (
+        data.projectId !== currentProject
+      ) return;
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Facade select load error:",
+      error
     );
 
-  const currentProject =
-    settingsDoc.data()?.name;
-
-  const snapshot =
-    await getDocs(
-      collection(db, "facades")
-    );
-
-  snapshot.forEach((docItem) => {
-
-    const data =
-      docItem.data();
-
-    if (
-      data.projectId !== currentProject
-    ) return;
-
-    const option =
-      document.createElement("option");
-
-    option.value =
-      data.name;
-
-    option.textContent =
-      data.name;
-
-    select.appendChild(option);
-
-  });
+  }
 
 }
 
-loadFacadeSelect();
-
-/* =========================
+/* =====================================================
    ADD ELEMENT
-========================= */
+===================================================== */
 
 window.addElement = async function () {
 
   const facadeId =
     document.getElementById("facadeSelect").value;
 
-  const name =
-    document.getElementById("newElement").value;
+  const input =
+    document.getElementById("newElement");
 
-  const settingsDoc =
-    await getDoc(
-      doc(db, "settings", "currentProject")
+  const name =
+    input.value.trim();
+
+  if (!facadeId || !name) {
+
+    alert(
+      "Fill all fields"
     );
 
-  const currentProject =
-    settingsDoc.data()?.name;
+    return;
 
-  await addDoc(
+  }
 
-    collection(db, "elements"),
+  try {
 
-    {
+    const settingsDoc =
+      await getDoc(
+        doc(db, "settings", "currentProject")
+      );
 
-      projectId:
-        currentProject,
+    const currentProject =
+      settingsDoc.data()?.name;
 
-      facadeId,
+    await addDoc(
 
-      name
+      collection(db, "elements"),
 
-    }
+      {
+        projectId: currentProject,
+        facadeId,
+        name
+      }
 
-  );
+    );
 
-  loadElementsList();
+    input.value = "";
+
+    await loadElementsList();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Add element error:",
+      error
+    );
+
+  }
 
 };
 
-/* =========================
+/* =====================================================
+   IMPORT ELEMENTS TXT
+===================================================== */
+
+window.importElementsTxt = function () {
+
+  const fileInput =
+    document.getElementById("elementTxt");
+
+  const file =
+    fileInput.files[0];
+
+  if (!file) {
+
+    alert("Select TXT file");
+
+    return;
+
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    async function (event) {
+
+      try {
+
+        const facadeId =
+          document.getElementById("facadeSelect").value;
+
+        if (!facadeId) {
+
+          alert(
+            "Select facade"
+          );
+
+          return;
+
+        }
+
+        const settingsDoc =
+          await getDoc(
+            doc(db, "settings", "currentProject")
+          );
+
+        const currentProject =
+          settingsDoc.data()?.name;
+
+        const text =
+          event.target.result;
+
+        const lines =
+          text
+            .split(/\r?\n/)
+            .map(line => line.trim())
+            .filter(line => line !== "");
+
+        for (const line of lines) {
+
+          await addDoc(
+
+            collection(db, "elements"),
+
+            {
+              projectId: currentProject,
+              facadeId,
+              name: line
+            }
+
+          );
+
+        }
+
+        fileInput.value = "";
+
+        await loadElementsList();
+
+        alert(
+          "Elements imported"
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Elements import error:",
+          error
+        );
+
+      }
+
+    };
+
+  reader.readAsText(file);
+
+};
+
+/* =====================================================
    LOAD ELEMENTS LIST
-========================= */
+===================================================== */
 
 async function loadElementsList() {
 
@@ -581,37 +728,56 @@ async function loadElementsList() {
 
   list.innerHTML = "";
 
-  const facadeId =
-    document.getElementById("facadeSelect").value;
+  try {
 
-  const snapshot =
-    await getDocs(
-      collection(db, "elements")
+    const facadeId =
+      document.getElementById("facadeSelect")?.value;
+
+    if (!facadeId) return;
+
+    const snapshot =
+      await getDocs(
+        collection(db, "elements")
+      );
+
+    snapshot.forEach((docItem) => {
+
+      const data =
+        docItem.data();
+
+      if (
+        data.facadeId !== facadeId
+      ) return;
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "facade-item";
+
+      row.textContent =
+        data.name;
+
+      list.appendChild(row);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Elements load error:",
+      error
     );
 
-  snapshot.forEach((docItem) => {
-
-    const data =
-      docItem.data();
-
-    if (
-      data.facadeId !== facadeId
-    ) return;
-
-    const row =
-      document.createElement("div");
-
-    row.className =
-      "facade-item";
-
-    row.textContent =
-      data.name;
-
-    list.appendChild(row);
-
-  });
+  }
 
 }
+
+/* =====================================================
+   EVENTS
+===================================================== */
 
 document
   .getElementById("facadeSelect")
@@ -619,12 +785,30 @@ document
 
     "change",
 
-    () => {
+    async () => {
 
-      loadElementsList();
+      await loadElementsList();
 
     }
 
   );
 
-loadElementsList();
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+
+async function init() {
+
+  await loadProjects();
+
+  await loadFacades();
+
+  await loadFacadeSelect();
+
+  await loadEmployees();
+
+  await loadElementsList();
+
+}
+
+init();
