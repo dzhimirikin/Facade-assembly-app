@@ -12,6 +12,27 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+window.addProject = async function () {
+
+  const name =
+    document.getElementById("projectName").value;
+
+  if (!name) return;
+
+  await addDoc(
+
+    collection(db, "projects"),
+
+    {
+      name
+    }
+
+  );
+
+  loadProjects();
+
+};
+
 /* =========================
    LOAD FACADES
 ========================= */
