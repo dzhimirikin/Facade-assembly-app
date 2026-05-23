@@ -1,5 +1,4 @@
-import { db }
-from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 
@@ -10,87 +9,78 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* LOAD LIST */
+/* =========================
+   LOAD FACADES
+========================= */
 
 async function loadFacades() {
 
-  const container =
+  const list =
     document.getElementById("facadeList");
 
-  container.innerHTML = "";
+  if (!list) return;
 
-  const snapshot =
-    await getDocs(
-      collection(db, "facades")
+  list.innerHTML = "";
+
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(db, "facades")
+      );
+
+    snapshot.forEach((doc) => {
+
+      const data =
+        doc.data();
+
+      const row =
+        document.createElement("div");
+
+      row.className =
+        "facade-item";
+
+      row.textContent =
+        data.name;
+
+      list.appendChild(row);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Load error:",
+      error
     );
-
-  snapshot.forEach((doc) => {
-
-    const data =
-      doc.data();
-
-    container.innerHTML += `
-
-      <div class="facade-item">
-
-        ${data.name}
-
-      </div>
-
-    `;
-
-  });
+  }
 
 }
 
 loadFacades();
 
-/* ADD */
+/* =========================
+   ADD MANUALLY
+========================= */
 
 window.addFacade = async function () {
 
+  const input =
+    document.getElementById("newFacade");
+
   const value =
-    document.getElementById("newFacade").value;
+    input.value.trim();
 
-  if (!value) return;
+  if (!value) {
 
-  await addDoc(
+    alert("Enter facade name");
 
-    collection(db, "facades"),
+    return;
+  }
 
-    {
-      name: value
-    }
-
-  );
-
-  document.getElementById("newFacade").value = "";
-
-  loadFacades();
-
-};
-
-/* IMPORT TXT */
-
-window.importTxt = async function () {
-
-  const file =
-    document.getElementById("txtFile").files[0];
-
-  if (!file) return;
-
-  const text =
-    await file.text();
-
-  const lines =
-    text.split("\n");
-
-  for (const line of lines) {
-
-    const value =
-      line.trim();
-
-    if (!value) continue;
+  try {
 
     await addDoc(
 
@@ -102,10 +92,92 @@ window.importTxt = async function () {
 
     );
 
+    input.value = "";
+
+    loadFacades();
+
   }
 
-  alert("Import complete");
+  catch (error) {
 
-  loadFacades();
+    console.error(
+      "Add error:",
+      error
+    );
+  }
+
+};
+
+/* =========================
+   IMPORT TXT
+========================= */
+
+window.importTxt = function () {
+
+  const fileInput =
+    document.getElementById("txtFile");
+
+  const file =
+    fileInput.files[0];
+
+  if (!file) {
+
+    alert("Select TXT file");
+
+    return;
+  }
+
+  const reader =
+    new FileReader();
+
+  reader.onload =
+    async function (event) {
+
+      try {
+
+        const text =
+          event.target.result;
+
+        const lines =
+          text
+            .split(/\r?\n/)
+            .map(line => line.trim())
+            .filter(line => line !== "");
+
+        for (const line of lines) {
+
+          await addDoc(
+
+            collection(db, "facades"),
+
+            {
+              name: line
+            }
+
+          );
+
+        }
+
+        alert("TXT imported successfully");
+
+        fileInput.value = "";
+
+        loadFacades();
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Import error:",
+          error
+        );
+
+        alert("TXT import failed");
+      }
+
+    };
+
+  reader.readAsText(file);
 
 };
