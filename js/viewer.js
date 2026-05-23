@@ -8,71 +8,145 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* =====================================================
-   REALTIME VIEWER
+   ELEMENT VIEWER
 ===================================================== */
 
 const table =
   document.getElementById("viewerTable");
 
-/* QUERY */
+const facadeSelect =
+  document.getElementById("elementId");
 
-const assemblyQuery =
-  query(
+const elementSelect =
+  document.getElementById("subElementId");
 
-    collection(db, "assembly"),
+let unsubscribe = null;
 
-    orderBy("timestamp", "desc")
+/* =====================================================
+   LOAD VIEWER
+===================================================== */
+
+function loadViewer() {
+
+  if (!table) return;
+
+  const currentFacade =
+    facadeSelect?.value;
+
+  const currentElement =
+    elementSelect?.value;
+
+  /* REMOVE OLD LISTENER */
+
+  if (unsubscribe) {
+
+    unsubscribe();
+
+  }
+
+  /* QUERY */
+
+  const assemblyQuery =
+    query(
+
+      collection(db, "assembly"),
+
+      orderBy("timestamp", "desc")
+
+    );
+
+  /* REALTIME */
+
+  unsubscribe = onSnapshot(
+
+    assemblyQuery,
+
+    (snapshot) => {
+
+      table.innerHTML = "";
+
+      snapshot.forEach((docItem) => {
+
+        const data =
+          docItem.data();
+
+        /* FILTER */
+
+        if (
+          data.facadeId !== currentFacade
+        ) return;
+
+        if (
+          data.subElementId !== currentElement
+        ) return;
+
+        /* ROW */
+
+        const row =
+          document.createElement("tr");
+
+        row.innerHTML = `
+
+          <td>${data.facadeId || ""}</td>
+
+          <td>${data.subElementId || ""}</td>
+
+          <td>${data.stage || ""}</td>
+
+          <td>${data.employee || ""}</td>
+
+          <td>${data.note || ""}</td>
+
+          <td>${data.timestamp || ""}</td>
+
+        `;
+
+        table.appendChild(row);
+
+      });
+
+    },
+
+    (error) => {
+
+      console.error(
+        "Viewer error:",
+        error
+      );
+
+    }
 
   );
 
-/* REALTIME LISTENER */
+}
 
-onSnapshot(
+/* =====================================================
+   EVENTS
+===================================================== */
 
-  assemblyQuery,
+facadeSelect?.addEventListener(
 
-  (snapshot) => {
+  "change",
 
-    if (!table) return;
+  () => {
 
-    table.innerHTML = "";
+    setTimeout(() => {
 
-    snapshot.forEach((docItem) => {
+      loadViewer();
 
-      const data =
-        docItem.data();
+    }, 200);
 
-      const row =
-        document.createElement("tr");
+  }
 
-      row.innerHTML = `
+);
 
-        <td>${data.facadeId || ""}</td>
+elementSelect?.addEventListener(
 
-        <td>${data.subElementId || ""}</td>
+  "change",
 
-        <td>${data.stage || ""}</td>
+  () => {
 
-        <td>${data.employee || ""}</td>
-
-        <td>${data.note || ""}</td>
-
-        <td>${data.timestamp || ""}</td>
-
-      `;
-
-      table.appendChild(row);
-
-    });
-
-  },
-
-  (error) => {
-
-    console.error(
-      "Viewer realtime error:",
-      error
-    );
+    loadViewer();
 
   }
 
@@ -106,3 +180,13 @@ window.searchData = function () {
   });
 
 };
+
+/* =====================================================
+   INIT
+===================================================== */
+
+setTimeout(() => {
+
+  loadViewer();
+
+}, 500);
