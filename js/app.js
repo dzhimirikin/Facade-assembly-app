@@ -23,32 +23,46 @@ async function loadFacades() {
 
   select.innerHTML = "";
 
-  try {
+  /* CURRENT PROJECT */
 
-    const snapshot =
-      await getDocs(
-        collection(db, "facades")
-      );
+  const settingsDoc =
+    await getDoc(
+      doc(db, "settings", "currentProject")
+    );
 
-    snapshot.forEach((doc) => {
+  const currentProject =
+    settingsDoc.data().name;
 
-      const data =
-        doc.data();
+  /* FACADES */
 
-      const option =
-        document.createElement("option");
+  const snapshot =
+    await getDocs(
+      collection(db, "facades")
+    );
 
-      option.value =
-        data.name;
+  snapshot.forEach((docItem) => {
 
-      option.textContent =
-        data.name;
+    const data =
+      docItem.data();
 
-      select.appendChild(option);
+    if (
+      data.projectId !== currentProject
+    ) return;
 
-    });
+    const option =
+      document.createElement("option");
 
-  }
+    option.value =
+      data.name;
+
+    option.textContent =
+      data.name;
+
+    select.appendChild(option);
+
+  });
+
+}
 
   catch (error) {
 
