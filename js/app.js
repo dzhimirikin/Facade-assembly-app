@@ -10,43 +10,61 @@ import {
 } from
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* LOAD FACADES */
+/* =========================
+   LOAD FACADES
+========================= */
 
 async function loadFacades() {
 
   const select =
     document.getElementById("elementId");
 
+  if (!select) return;
+
   select.innerHTML = "";
 
-  const snapshot =
-    await getDocs(
-      collection(db, "facades")
+  try {
+
+    const snapshot =
+      await getDocs(
+        collection(db, "facades")
+      );
+
+    snapshot.forEach((doc) => {
+
+      const data =
+        doc.data();
+
+      const option =
+        document.createElement("option");
+
+      option.value =
+        data.name;
+
+      option.textContent =
+        data.name;
+
+      select.appendChild(option);
+
+    });
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Error loading facades:",
+      error
     );
-
-  snapshot.forEach((doc) => {
-
-    const data =
-      doc.data();
-
-    const option =
-      document.createElement("option");
-
-    option.value =
-      data.name;
-
-    option.textContent =
-      data.name;
-
-    select.appendChild(option);
-
-  });
+  }
 
 }
 
 loadFacades();
 
-/* SAVE */
+/* =========================
+   SAVE DATA
+========================= */
 
 window.saveData = async function () {
 
@@ -70,6 +88,13 @@ window.saveData = async function () {
 
   const photo3 =
     document.getElementById("photo3").files[0];
+
+  if (!facadeId || !employee) {
+
+    alert("Fill required fields");
+
+    return;
+  }
 
   try {
 
@@ -111,7 +136,7 @@ window.saveData = async function () {
     );
 
     document.getElementById("success").innerText =
-      "Saved successfully";
+      "Data saved successfully";
 
   }
 
