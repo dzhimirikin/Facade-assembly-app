@@ -1,3 +1,72 @@
+:root {
+  --reynaers-blue: #002f6c;
+  --reynaers-lightblue: #0072ce;
+  --reynaers-white: #ffffff;
+  --reynaers-lightgray: #f4f4f4;
+  --reynaers-gray: #444444;
+  --reynaers-darkgray: #222222;
+  --reynaers-accent: #00adef;
+  --reynaers-selected: #0072ce;
+}
+
+/* Общие цвета */
+body {
+  background: var(--reynaers-lightgray);
+  color: var(--reynaers-darkgray);
+}
+
+.topbar {
+  background: var(--reynaers-blue);
+  color: var(--reynaers-white);
+}
+
+.menu-btn {
+  color: var(--reynaers-white);
+  border-color: var(--reynaers-lightblue);
+}
+
+.menu-btn:hover,
+.menu-btn.active {
+  background: var(--reynaers-lightblue);
+}
+
+button,
+.submit-btn {
+  background: var(--reynaers-blue);
+  color: var(--reynaers-white);
+}
+
+button:hover,
+.submit-btn:hover {
+  background: var(--reynaers-lightblue);
+}
+
+/* Таблица */
+th {
+  background: var(--reynaers-blue);
+  color: var(--reynaers-white);
+}
+
+tr:hover {
+  background: var(--reynaers-lightblue);
+  color: var(--reynaers-white);
+}
+
+.assembly-row.selected {
+  background: var(--reynaers-selected);
+  color: var(--reynaers-white);
+}
+
+/* Фоны карточек admin */
+.admin-card,
+.input-panel,
+.viewer-panel {
+  background: var(--reynaers-white);
+  border-color: var(--reynaers-lightgray);
+}
+
+
+/* style.css */
 * {
 
   margin: 0;
@@ -449,4 +518,126 @@ tr:hover {
 
     width: 100%;
   }
+}
+
+
+/* admin.css */
+body {
+
+  font-family: Arial, sans-serif;
+
+  background: #f3f4f6;
+
+  margin: 0;
+}
+
+.topbar {
+
+  height: 70px;
+
+  background: black;
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 0 24px;
+}
+
+.logo {
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+.menu-btn {
+
+  color: white;
+
+  text-decoration: none;
+
+  border: 1px solid #333;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+}
+
+.admin-layout {
+
+  padding: 24px;
+
+  display: grid;
+
+  gap: 24px;
+}
+
+.admin-card {
+
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 24px;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-card h2 {
+
+  margin-bottom: 20px;
+}
+
+.add-row {
+
+  display: flex;
+
+  gap: 12px;
+}
+
+input {
+
+  width: 100%;
+
+  padding: 14px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 12px;
+}
+
+button {
+
+  background: black;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 12px;
+
+  padding: 14px 20px;
+
+  cursor: pointer;
+}
+
+.facade-list {
+
+  display: grid;
+
+  gap: 10px;
+}
+
+.facade-item {
+
+  padding: 12px;
+
+  background: #f3f4f6;
+
+  border-radius: 10px;
 }
