@@ -33,6 +33,65 @@ window.addProject = async function () {
 
 };
 
+
+async function loadProjects() {
+
+  const select =
+    document.getElementById("projectSelect");
+
+  if (!select) return;
+
+  select.innerHTML = "";
+
+  const snapshot =
+    await getDocs(
+      collection(db, "projects")
+    );
+
+  snapshot.forEach((docItem) => {
+
+    const data =
+      docItem.data();
+
+    const option =
+      document.createElement("option");
+
+    option.value =
+      data.name;
+
+    option.textContent =
+      data.name;
+
+    select.appendChild(option);
+
+  });
+
+}
+
+loadProjects();
+
+
+window.setCurrentProject = async function () {
+
+  const project =
+    document.getElementById("projectSelect").value;
+
+  await setDoc(
+
+    doc(db, "settings", "currentProject"),
+
+    {
+      name: project
+    }
+
+  );
+
+  alert(
+    `Current project: ${project}`
+  );
+
+};
+
 /* =========================
    LOAD FACADES
 ========================= */
