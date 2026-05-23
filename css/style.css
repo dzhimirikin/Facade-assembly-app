@@ -450,3 +450,9 @@ tr:hover {
     width: 100%;
   }
 }
+
+/* Выделение выбранной строки */
+.assembly-row.selected {
+  background-color: #ffcc00; /* яркий контрастный цвет */
+  color: #000;               /* цвет текста */
+}
