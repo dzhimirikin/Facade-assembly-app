@@ -1,86 +1,191 @@
 import { db } from "./firebase.js";
-import { collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const table = document.getElementById("viewerTable");
-const facadeSelect = document.getElementById("elementId");
-const elementSelect = document.getElementById("subElementId");
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* =====================================================
+   ELEMENT VIEWER
+===================================================== */
+
+const table =
+  document.getElementById("viewerTable");
+
+const facadeSelect =
+  document.getElementById("elementId");
+
+const elementSelect =
+  document.getElementById("subElementId");
+
 let unsubscribe = null;
-let selectedRow = null;
+
+/* =====================================================
+   LOAD VIEWER
+===================================================== */
 
 function loadViewer() {
+
   if (!table) return;
 
-  const currentFacade = facadeSelect?.value;
-  const currentElement = elementSelect?.value;
+  const currentFacade =
+    facadeSelect?.value;
 
-  if (unsubscribe) unsubscribe();
+  const currentElement =
+    elementSelect?.value;
 
-  const assemblyQuery = query(collection(db, "assembly"), orderBy("timestamp", "desc"));
+  /* REMOVE OLD LISTENER */
 
-  unsubscribe = onSnapshot(assemblyQuery, snapshot => {
-    table.innerHTML = "";
+  if (unsubscribe) {
 
-    snapshot.forEach(docItem => {
-      const data = docItem.data();
+    unsubscribe();
 
-      if (data.facadeId !== currentFacade) return;
-      if (data.subElementId !== currentElement) return;
+  }
 
-      const row = document.createElement("tr");
-      row.dataset.docId = docItem.id;
-      row.classList.add("assembly-row");
-      row.innerHTML = `
-        <td>${data.facadeId || ""}</td>
-        <td>${data.subElementId || ""}</td>
-        <td>${data.stage || ""}</td>
-        <td>${data.employee || ""}</td>
-        <td>${data.note || ""}</td>
-        <td>${data.photos?.filter(p => p).length || 0}</td>
-        <td>${data.timestamp || ""}</td>
-      `;
+  /* QUERY */
 
-      // Click select
-      row.addEventListener("click", () => {
-        if (selectedRow) selectedRow.classList.remove("selected");
-        selectedRow = row;
-        row.classList.add("selected");
+  const assemblyQuery =
+    query(
+
+      collection(db, "assembly"),
+
+      orderBy("timestamp", "desc")
+
+    );
+
+  /* REALTIME */
+
+  unsubscribe = onSnapshot(
+
+    assemblyQuery,
+
+    (snapshot) => {
+
+      table.innerHTML = "";
+
+      snapshot.forEach((docItem) => {
+
+        const data =
+          docItem.data();
+
+        /* FILTER */
+
+        if (
+          data.facadeId !== currentFacade
+        ) return;
+
+        if (
+          data.subElementId !== currentElement
+        ) return;
+
+        /* ROW */
+
+const row = document.createElement("tr");
+row.dataset.docId = docItem.id;
+row.classList.add("assembly-row");
+
+// Считаем количество фото
+const photoCount = (data.photos || []).filter(p => p).length;
+
+row.innerHTML = `
+  <td>${data.facadeId || ""}</td>
+  <td>${data.subElementId || ""}</td>
+  <td>${data.stage || ""}</td>
+  <td>${data.employee || ""}</td>
+  <td>${data.note || ""}</td>
+  <td>${photoCount}</td>
+  <td>${data.timestamp || ""}</td>
+
+`;
+
+        table.appendChild(row);
+
       });
 
-      // Double-click edit
-      row.addEventListener("dblclick", () => {
-        if (selectedRow) selectedRow.classList.remove("selected");
-        selectedRow = row;
-        row.classList.add("selected");
+    },
 
-        document.getElementById("elementId").value = data.facadeId;
-        document.getElementById("subElementId").value = data.subElementId;
-        document.getElementById("stage").value = data.stage;
-        document.getElementById("employee").value = data.employee;
-        document.getElementById("note").value = data.note || "";
+    (error) => {
 
-        document.getElementById("photo1").value = "";
-        document.getElementById("photo2").value = "";
-        document.getElementById("photo3").value = "";
+      console.error(
+        "Viewer error:",
+        error
+      );
 
-        window.editDocId = docItem.id;
-      });
+    }
 
-      table.appendChild(row);
-    });
-  }, error => console.error("Viewer realtime error:", error));
+  );
+
 }
 
-facadeSelect?.addEventListener("change", () => {
-  loadElements(); // обновляем список элементов
-  setTimeout(loadViewer, 200);
-});
-elementSelect?.addEventListener("change", loadViewer);
+/* =====================================================
+   EVENTS
+===================================================== */
 
-window.searchData = function() {
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  table.querySelectorAll("tr").forEach(row => {
-    row.style.display = row.innerText.toLowerCase().includes(search) ? "" : "none";
+facadeSelect?.addEventListener(
+
+  "change",
+
+  () => {
+
+    setTimeout(() => {
+
+      loadViewer();
+
+    }, 200);
+
+  }
+
+);
+
+elementSelect?.addEventListener(
+
+  "change",
+
+  () => {
+
+    loadViewer();
+
+  }
+
+);
+
+/* =====================================================
+   SEARCH
+===================================================== */
+
+window.searchData = function () {
+
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase();
+
+  const rows =
+    table.querySelectorAll("tr");
+
+  rows.forEach((row) => {
+
+    const text =
+      row.innerText.toLowerCase();
+
+    row.style.display =
+      text.includes(search)
+        ? ""
+        : "none";
+
   });
+
 };
 
-setTimeout(loadViewer, 500);
+/* =====================================================
+   INIT
+===================================================== */
+
+setTimeout(() => {
+
+  loadViewer();
+
+}, 500);
