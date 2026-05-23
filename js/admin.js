@@ -213,33 +213,70 @@ window.importTxt = function () {
   const reader =
     new FileReader();
 
-  reader.onload =
-    async function (event) {
+reader.onload =
+  async function (event) {
 
-      try {
+    try {
 
-        const text =
-          event.target.result;
+      /* CURRENT PROJECT */
 
-        const lines =
-          text
-            .split(/\r?\n/)
-            .map(line => line.trim())
-            .filter(line => line !== "");
+      const settingsDoc =
+        await getDoc(
+          doc(db, "settings", "currentProject")
+        );
 
-        for (const line of lines) {
+      const currentProject =
+        settingsDoc.data().name;
 
-          await addDoc(
+      /* TXT CONTENT */
 
-            collection(db, "facades"),
+      const text =
+        event.target.result;
 
-            {
-              name: line
-            }
+      const lines =
+        text
+          .split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(line => line !== "");
 
-          );
+      /* SAVE FACADES */
 
-        }
+      for (const line of lines) {
+
+        await addDoc(
+
+          collection(db, "facades"),
+
+          {
+
+            name: line,
+
+            projectId:
+              currentProject
+
+          }
+
+        );
+
+      }
+
+      loadFacades();
+
+      alert(
+        "TXT imported successfully"
+      );
+
+    }
+
+    catch (error) {
+
+      console.error(error);
+
+      alert("Import error");
+
+    }
+
+  };
 
         alert("TXT imported successfully");
 
