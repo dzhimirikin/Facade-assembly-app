@@ -1,4 +1,5 @@
 import { db } from "./firebase.js";
+
 import {
   collection,
   query,
@@ -6,88 +7,186 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const table = document.getElementById("viewerTable");
-const facadeSelect = document.getElementById("elementId");
-const elementSelect = document.getElementById("subElementId");
+/* =====================================================
+   ELEMENT VIEWER
+===================================================== */
+
+const table =
+  document.getElementById("viewerTable");
+
+const facadeSelect =
+  document.getElementById("elementId");
+
+const elementSelect =
+  document.getElementById("subElementId");
 
 let unsubscribe = null;
 
+/* =====================================================
+   LOAD VIEWER
+===================================================== */
+
 function loadViewer() {
+
   if (!table) return;
 
-  const currentFacade = facadeSelect?.value;
-  const currentElement = elementSelect?.value;
+  const currentFacade =
+    facadeSelect?.value;
 
-  if (unsubscribe) unsubscribe();
+  const currentElement =
+    elementSelect?.value;
 
-  const assemblyQuery = query(
-    collection(db, "assembly"),
-    orderBy("timestamp", "desc")
-  );
+  /* REMOVE OLD LISTENER */
+
+  if (unsubscribe) {
+
+    unsubscribe();
+
+  }
+
+  /* QUERY */
+
+  const assemblyQuery =
+    query(
+
+      collection(db, "assembly"),
+
+      orderBy("timestamp", "desc")
+
+    );
+
+  /* REALTIME */
 
   unsubscribe = onSnapshot(
+
     assemblyQuery,
+
     (snapshot) => {
+
       table.innerHTML = "";
+
       snapshot.forEach((docItem) => {
-        const data = docItem.data();
-        if (data.facadeId !== currentFacade) return;
-        if (data.subElementId !== currentElement) return;
 
-        const row = document.createElement("tr");
-        row.classList.add("assembly-row");
+        const data =
+          docItem.data();
+
+        /* FILTER */
+
+        if (
+          data.facadeId !== currentFacade
+        ) return;
+
+        if (
+          data.subElementId !== currentElement
+        ) return;
+
+        /* ROW */
+
+        const row =
+          document.createElement("tr");
+
         row.innerHTML = `
+
           <td>${data.facadeId || ""}</td>
+
           <td>${data.subElementId || ""}</td>
+
           <td>${data.stage || ""}</td>
+
           <td>${data.employee || ""}</td>
+
           <td>${data.note || ""}</td>
+
           <td>${data.timestamp || ""}</td>
+
         `;
-        row.addEventListener("dblclick", () => editRow(docItem.id, data));
+
         table.appendChild(row);
+
       });
+
     },
-    (error) => console.error("Viewer error:", error)
+
+    (error) => {
+
+      console.error(
+        "Viewer error:",
+        error
+      );
+
+    }
+
   );
+
 }
 
-/* =========================
-   EDIT ROW
-========================= */
-function editRow(docId, data) {
-  // Подставляем данные в панель ввода
-  document.getElementById("elementId").value = data.facadeId;
-  document.getElementById("subElementId").value = data.subElementId;
-  document.getElementById("stage").value = data.stage;
-  document.getElementById("employee").value = data.employee;
-  document.getElementById("note").value = data.note || "";
-
-  // Для файлов оставляем пустыми (пользователь может добавить новые)
-  document.getElementById("photo1").value = "";
-  document.getElementById("photo2").value = "";
-  document.getElementById("photo3").value = "";
-
-  // Указываем редактируемый документ
-  window.editDocId = docId;
-}
-
-/* =========================
+/* =====================================================
    EVENTS
-========================= */
-facadeSelect?.addEventListener("change", loadViewer);
-elementSelect?.addEventListener("change", loadViewer);
+===================================================== */
+
+facadeSelect?.addEventListener(
+
+  "change",
+
+  () => {
+
+    setTimeout(() => {
+
+      loadViewer();
+
+    }, 200);
+
+  }
+
+);
+
+elementSelect?.addEventListener(
+
+  "change",
+
+  () => {
+
+    loadViewer();
+
+  }
+
+);
+
+/* =====================================================
+   SEARCH
+===================================================== */
 
 window.searchData = function () {
-  const search = document.getElementById("searchInput").value.toLowerCase();
-  const rows = table.querySelectorAll("tr");
+
+  const search =
+    document
+      .getElementById("searchInput")
+      .value
+      .toLowerCase();
+
+  const rows =
+    table.querySelectorAll("tr");
+
   rows.forEach((row) => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(search) ? "" : "none";
+
+    const text =
+      row.innerText.toLowerCase();
+
+    row.style.display =
+      text.includes(search)
+        ? ""
+        : "none";
+
   });
+
 };
 
-/* =========================
+/* =====================================================
    INIT
-========================= */
-loadViewer();
+===================================================== */
+
+setTimeout(() => {
+
+  loadViewer();
+
+}, 500);
