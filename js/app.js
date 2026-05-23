@@ -139,8 +139,16 @@ window.saveData = async function () {
 /* =========================
    INIT
 ========================= */
-loadFacades();
-loadElements();
-loadEmployees();
+async function init() {
+
+  await loadFacades();
+
+  await loadElements();
+
+  await loadEmployees();
+
+}
+
+init();
 
 document.getElementById("elementId")?.addEventListener("change", loadElements);
