@@ -1,17 +1,14 @@
 import { db } from "./firebase.js";
 
-console.log("APP START");
-
 import {
-
   collection,
   addDoc,
   getDocs,
   doc,
   getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-} from
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+console.log("APP START");
 
 /* =========================
    LOAD FACADES
