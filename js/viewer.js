@@ -88,10 +88,30 @@ function renderTable(dataArray) {
     const row =
       document.createElement("tr");
 
+    /* PHOTO COUNT */
+
     const photoCount =
       (data.photos || [])
-        .filter(p => p)
+        .filter((photo) => {
+
+          if (!photo)
+            return false;
+
+          /* OLD FORMAT */
+
+          if (
+            typeof photo === "string"
+          )
+            return true;
+
+          /* NEW FORMAT */
+
+          return !!photo.data;
+
+        })
         .length;
+
+    /* TIMESTAMP */
 
     let tsStr = "";
 
@@ -112,6 +132,8 @@ function renderTable(dataArray) {
         data.timestamp || "";
 
     }
+
+    /* ROW */
 
     row.innerHTML = `
 
@@ -156,7 +178,6 @@ function renderTable(dataArray) {
   });
 
 }
-
 /* =====================================================
    FILTER
 ===================================================== */
