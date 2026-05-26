@@ -6,6 +6,8 @@ body {
 
   font-family: Arial, sans-serif;
 
+  color: #111;
+
 }
 
 /* =====================================================
@@ -66,6 +68,32 @@ body {
 
   border-radius: 6px;
 
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+.print-toolbar button:hover {
+
+  opacity: 0.9;
+
+}
+
+/* =====================================================
+   REPORT TITLE
+===================================================== */
+
+.print-sheet h1 {
+
+  margin-top: 0;
+
+  margin-bottom: 40px;
+
+  font-size: 42px;
+
+  line-height: 1.1;
+
 }
 
 /* =====================================================
@@ -84,7 +112,11 @@ body {
 
 .operation-block h2 {
 
-  margin-top: 0;
+  margin: 0 0 20px 0;
+
+  font-size: 34px;
+
+  line-height: 1.2;
 
 }
 
@@ -106,13 +138,17 @@ body {
 
   border: 1px solid #ccc;
 
-  padding: 10px;
+  padding: 10px 14px;
 
   vertical-align: top;
 
   overflow-wrap: break-word;
 
   box-sizing: border-box;
+
+  font-size: 14px;
+
+  line-height: 1.4;
 
 }
 
@@ -123,6 +159,8 @@ body {
   font-weight: 600;
 
   white-space: nowrap;
+
+  background: #fafafa;
 
 }
 
@@ -138,7 +176,7 @@ body {
 
   grid-template-columns: repeat(2, 1fr);
 
-  gap: 20px;
+  gap: 14px;
 
 }
 
@@ -160,6 +198,8 @@ body {
 
   justify-content: center;
 
+  position: relative;
+
 }
 
 .photo-card img {
@@ -176,13 +216,27 @@ body {
 
 .old-photo {
 
-  font-size: 14px;
+  display: flex;
 
-  color: #555;
+  align-items: center;
+
+  justify-content: center;
+
+  width: 100%;
+
+  height: 260px;
 
   padding: 20px;
 
   text-align: center;
+
+  color: #666;
+
+  font-size: 13px;
+
+  line-height: 1.4;
+
+  box-sizing: border-box;
 
 }
 
@@ -204,14 +258,22 @@ body {
 
   }
 
-.print-sheet {
+  .print-sheet {
 
-  width: 210mm;
+    width: 210mm;
 
-  margin: 0;
+    margin: 0;
 
-  box-shadow: none;
+    padding: 15mm;
 
-}
+    box-shadow: none;
+
+  }
+
+  .operation-block {
+
+    page-break-inside: avoid;
+
+  }
 
 }
