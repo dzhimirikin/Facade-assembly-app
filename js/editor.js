@@ -28,7 +28,7 @@ const container =
   );
 
 /* =====================================================
-   LOAD
+   LOAD RECORD
 ===================================================== */
 
 async function loadRecord() {
@@ -77,46 +77,149 @@ async function loadRecord() {
 }
 
 /* =====================================================
-   RENDER
+   RENDER EDITOR
 ===================================================== */
 
 function renderEditor(data) {
 
+  const photos =
+    (data.photos || [])
+      .filter(p => p);
+
+  const freeSlots =
+    3 - photos.length;
+
   container.innerHTML = `
 
-    <table class="detail-table">
+    <div class="input-panel">
 
-      <tr>
-        <td>Facade</td>
-        <td>${data.facadeId}</td>
-      </tr>
+      <h2>Edit Record</h2>
 
-      <tr>
-        <td>Element</td>
-        <td>${data.subElementId}</td>
-      </tr>
+      <!-- FACADE -->
 
-      <tr>
-        <td>Operation</td>
-        <td>${data.stage}</td>
-      </tr>
+      <label>Facade ID</label>
 
-    </table>
+      <input
+        type="text"
+        value="${data.facadeId || ""}"
+        disabled
+      />
 
-    <br>
+      <!-- ELEMENT -->
 
-    <label>Comment</label>
+      <label>Element</label>
 
-    <textarea
-      id="editNote"
-      rows="8"
-    >${data.note || ""}</textarea>
+      <input
+        type="text"
+        value="${data.subElementId || ""}"
+        disabled
+      />
 
-    <br><br>
+      <!-- OPERATION -->
 
-    <button id="saveBtn">
-      OK
-    </button>
+      <label>Operation</label>
+
+      <input
+        type="text"
+        value="${data.stage || ""}"
+        disabled
+      />
+
+      <!-- EMPLOYEE -->
+
+      <label>Employee</label>
+
+      <input
+        type="text"
+        value="${data.employee || ""}"
+        disabled
+      />
+
+      <!-- NOTE -->
+
+      <label>Comment</label>
+
+      <textarea
+        id="editNote"
+        rows="6"
+      >${data.note || ""}</textarea>
+
+      <!-- EXISTING PHOTOS -->
+
+      <label>
+        Existing Photos
+      </label>
+
+      <div class="existing-photos">
+
+        ${photos.length
+          ? photos.map((photo, index) => `
+
+            <div class="photo-row">
+
+              <div class="photo-name">
+
+                ${photo}
+
+              </div>
+
+              <input
+                type="file"
+                class="replacePhoto"
+                data-index="${index}"
+                accept="image/*"
+              />
+
+            </div>
+
+          `).join("")
+          : "<div>No photos uploaded</div>"
+        }
+
+      </div>
+
+      <!-- FREE SLOTS -->
+
+      ${freeSlots > 0
+        ? `
+
+          <label>
+            Add Photos
+          </label>
+
+          ${Array.from(
+            { length: freeSlots },
+            (_, i) => `
+
+              <input
+                type="file"
+                class="newPhoto"
+                accept="image/*"
+              />
+
+            `
+          ).join("")}
+
+        `
+        : `
+
+          <div class="photo-limit">
+
+            Maximum 3 photos uploaded
+
+          </div>
+
+        `
+      }
+
+      <button
+        id="saveBtn"
+        class="submit-btn"
+      >
+        OK
+      </button>
+
+    </div>
 
   `;
 
@@ -124,16 +227,16 @@ function renderEditor(data) {
     .getElementById("saveBtn")
     .addEventListener(
       "click",
-      saveRecord
+      () => saveRecord(data)
     );
 
 }
 
 /* =====================================================
-   SAVE
+   SAVE RECORD
 ===================================================== */
 
-async function saveRecord() {
+async function saveRecord(data) {
 
   try {
 
@@ -142,6 +245,71 @@ async function saveRecord() {
         "editNote"
       ).value;
 
+    /* CURRENT PHOTOS */
+
+    let updatedPhotos =
+      [...(data.photos || [])];
+
+    /* REPLACE PHOTOS */
+
+    const replaceInputs =
+      document.querySelectorAll(
+        ".replacePhoto"
+      );
+
+    replaceInputs.forEach((input) => {
+
+      const file =
+        input.files[0];
+
+      const index =
+        parseInt(
+          input.dataset.index
+        );
+
+      if (file) {
+
+        updatedPhotos[index] =
+          file.name;
+
+      }
+
+    });
+
+    /* ADD NEW PHOTOS */
+
+    const newInputs =
+      document.querySelectorAll(
+        ".newPhoto"
+      );
+
+    newInputs.forEach((input) => {
+
+      const file =
+        input.files[0];
+
+      if (
+        file &&
+        updatedPhotos.length < 3
+      ) {
+
+        updatedPhotos.push(
+          file.name
+        );
+
+      }
+
+    });
+
+    /* LIMIT */
+
+    updatedPhotos =
+      updatedPhotos
+        .filter(p => p)
+        .slice(0, 3);
+
+    /* SAVE */
+
     await updateDoc(
 
       doc(db, "assembly", id),
@@ -149,6 +317,8 @@ async function saveRecord() {
       {
 
         note,
+
+        photos: updatedPhotos,
 
         timestamp: new Date()
 
