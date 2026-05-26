@@ -757,3 +757,80 @@ button {
   word-break: break-word;
 
 }
+
+
+.editor-layout {
+
+  border: 1px solid #ddd;
+
+}
+
+.preview-grid {
+
+  display: grid;
+
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+
+  gap: 20px;
+
+}
+
+.preview-card {
+
+  border: 1px solid #ccc;
+
+  border-radius: 12px;
+
+  overflow: hidden;
+
+  background: #fafafa;
+
+}
+
+.preview-card img {
+
+  width: 100%;
+
+  height: 240px;
+
+  object-fit: cover;
+
+  display: block;
+
+}
+
+.preview-name {
+
+  padding: 10px;
+
+  font-size: 13px;
+
+  word-break: break-word;
+
+}
+
+.photo-row {
+
+  margin-bottom: 15px;
+
+}
+
+.photo-name {
+
+  margin-bottom: 8px;
+
+  font-size: 13px;
+
+  word-break: break-word;
+
+}
+
+.photo-limit {
+
+  margin-top: 15px;
+
+  color: #666;
+
+  font-size: 14px;
+
+}
