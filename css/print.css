@@ -94,6 +94,8 @@ body {
 
   width: 100%;
 
+  max-width: 100%;
+
   border-collapse: collapse;
 
   margin-top: 20px;
@@ -104,21 +106,7 @@ body {
 
 .detail-table tr {
 
-  width: 100%;
-
-}
-
-.detail-table td:first-child {
-
-  width: 140px;
-
-  font-weight: 600;
-
-}
-
-.detail-table td:last-child {
-
-  width: auto;
+  display: table-row;
 
 }
 
@@ -136,11 +124,7 @@ body {
 
   box-sizing: border-box;
 
-}
-
-.detail-table tr {
-
-  width: 100%;
+  max-width: 0;
 
 }
 
