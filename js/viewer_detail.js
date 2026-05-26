@@ -20,6 +20,46 @@ const container =
   );
 
 /* =====================================================
+   FORMAT TIME
+===================================================== */
+
+function formatTimestamp(timestamp) {
+
+  try {
+
+    /* FIRESTORE OBJECT */
+
+    if (timestamp?.seconds) {
+
+      return new Date(
+        timestamp.seconds * 1000
+      ).toLocaleString();
+
+    }
+
+    /* NORMAL DATE */
+
+    if (timestamp) {
+
+      return new Date(
+        timestamp
+      ).toLocaleString();
+
+    }
+
+    return "";
+
+  }
+
+  catch {
+
+    return "";
+
+  }
+
+}
+
+/* =====================================================
    RENDER PDF
 ===================================================== */
 
@@ -61,52 +101,10 @@ function renderPdf() {
 
       ${data.map((item) => {
 
-        let tsStr = "";
-
-        try {
-
-let ts = "";
-
-try {
-
-  if (row.timestamp?.seconds) {
-
-    ts = new Date(
-      row.timestamp.seconds * 1000
-    );
-
-  }
-
-  else {
-
-    ts = new Date(row.timestamp);
-
-  }
-
-}
-
-catch {
-
-  ts = "";
-
-}
-
-const tsStr =
-  ts
-    ? ts.toLocaleString()
-    : "";
-
-          tsStr =
-            ts.toLocaleString();
-
-        }
-
-        catch {
-
-          tsStr =
-            item.timestamp || "";
-
-        }
+        const tsStr =
+          formatTimestamp(
+            item.timestamp
+          );
 
         const photos =
           (item.photos || [])
@@ -151,26 +149,34 @@ const tsStr =
 
             <div class="photo-section">
 
-              ${photos.map(photo => `
+              ${photos.map((photo) => `
 
                 <div class="photo-card">
 
                   ${
-  typeof photo === "string"
 
-    ? `
-      <div class="old-photo">
-        ${photo}
-      </div>
-    `
+                    typeof photo === "string"
 
-    : `
-      <img
-        src="${photo.data}"
-        class="pdf-photo"
-      />
-    `
-}
+                      ? `
+
+                        <div class="old-photo">
+
+                          ${photo}
+
+                        </div>
+
+                      `
+
+                      : `
+
+                        <img
+                          src="${photo.data}"
+                          class="pdf-photo"
+                        />
+
+                      `
+
+                  }
 
                 </div>
 
