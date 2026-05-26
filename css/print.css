@@ -1,6 +1,94 @@
-.print-sheet {
+body {
+
+  margin: 0;
+
+  background: #e9edf2;
+
+  font-family: Arial, sans-serif;
 
 }
+
+/* =====================================================
+   PRINT SHEET
+===================================================== */
+
+.print-sheet {
+
+  width: 210mm;
+
+  min-height: 297mm;
+
+  margin: 30px auto;
+
+  background: white;
+
+  padding: 20mm;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+
+}
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.print-toolbar {
+
+  position: sticky;
+
+  top: 0;
+
+  background: white;
+
+  padding: 15px;
+
+  border-bottom: 1px solid #ddd;
+
+  z-index: 100;
+
+}
+
+.print-toolbar button {
+
+  padding: 10px 20px;
+
+  border: none;
+
+  background: black;
+
+  color: white;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+
+}
+
+/* =====================================================
+   OPERATION BLOCK
+===================================================== */
+
+.operation-block {
+
+  margin-bottom: 60px;
+
+  padding-bottom: 40px;
+
+  border-bottom: 2px solid #ddd;
+
+}
+
+.operation-block h2 {
+
+  margin-top: 0;
+
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
 
 .detail-table {
 
@@ -18,7 +106,13 @@
 
   padding: 10px;
 
+  vertical-align: top;
+
 }
+
+/* =====================================================
+   PHOTOS
+===================================================== */
 
 .photo-section {
 
@@ -36,7 +130,7 @@
 
   border: 1px solid #ccc;
 
-  height: 200px;
+  min-height: 200px;
 
   display: flex;
 
@@ -44,21 +138,23 @@
 
   justify-content: center;
 
-}
+  background: #f7f7f7;
 
-.print-toolbar {
-
-  position: sticky;
-
-  top: 0;
-
-  background: white;
-
-  padding: 10px;
+  font-size: 14px;
 
 }
+
+/* =====================================================
+   PRINT MODE
+===================================================== */
 
 @media print {
+
+  body {
+
+    background: white;
+
+  }
 
   .print-toolbar {
 
@@ -66,9 +162,13 @@
 
   }
 
-  body {
+  .print-sheet {
 
-    background: white;
+    width: 100%;
+
+    margin: 0;
+
+    box-shadow: none;
 
   }
 
