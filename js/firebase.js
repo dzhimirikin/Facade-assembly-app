@@ -6,9 +6,9 @@ import {
   getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  getStorage
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+/* =====================================================
+   FIREBASE CONFIG
+===================================================== */
 
 const firebaseConfig = {
 
@@ -20,14 +20,20 @@ const firebaseConfig = {
 
   storageBucket: "YOUR_STORAGE_BUCKET",
 
-  messagingSenderId: "YOUR_SENDER_ID",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
 
   appId: "YOUR_APP_ID"
 
 };
 
-const app = initializeApp(firebaseConfig);
+/* =====================================================
+   INIT
+===================================================== */
 
-export const db = getFirestore(app);
+const app =
+  initializeApp(
+    firebaseConfig
+  );
 
-export const storage = getStorage(app);
+export const db =
+  getFirestore(app);
