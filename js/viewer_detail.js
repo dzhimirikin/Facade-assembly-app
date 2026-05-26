@@ -65,9 +65,36 @@ function renderPdf() {
 
         try {
 
-          const ts =
-            item.timestamp?.toDate?.()
-            || new Date(item.timestamp);
+let ts = "";
+
+try {
+
+  if (row.timestamp?.seconds) {
+
+    ts = new Date(
+      row.timestamp.seconds * 1000
+    );
+
+  }
+
+  else {
+
+    ts = new Date(row.timestamp);
+
+  }
+
+}
+
+catch {
+
+  ts = "";
+
+}
+
+const tsStr =
+  ts
+    ? ts.toLocaleString()
+    : "";
 
           tsStr =
             ts.toLocaleString();
@@ -128,7 +155,22 @@ function renderPdf() {
 
                 <div class="photo-card">
 
-                  ${photo}
+                  ${
+  typeof photo === "string"
+
+    ? `
+      <div class="old-photo">
+        ${photo}
+      </div>
+    `
+
+    : `
+      <img
+        src="${photo.data}"
+        class="pdf-photo"
+      />
+    `
+}
 
                 </div>
 
