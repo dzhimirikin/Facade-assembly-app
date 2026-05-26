@@ -6,29 +6,21 @@ import {
   getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-/* =====================================================
-   FIREBASE CONFIG
-===================================================== */
-
 const firebaseConfig = {
 
-  apiKey: "YOUR_API_KEY",
+  apiKey: "ВАШ_API_KEY",
 
-  authDomain: "YOUR_AUTH_DOMAIN",
+  authDomain: "ВАШ_AUTH_DOMAIN",
 
-  projectId: "YOUR_PROJECT_ID",
+  projectId: "ВАШ_PROJECT_ID",
 
-  storageBucket: "YOUR_STORAGE_BUCKET",
+  storageBucket: "ВАШ_STORAGE_BUCKET",
 
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  messagingSenderId: "ВАШ_MESSAGING_SENDER_ID",
 
-  appId: "YOUR_APP_ID"
+  appId: "ВАШ_APP_ID"
 
 };
-
-/* =====================================================
-   INIT
-===================================================== */
 
 const app =
   initializeApp(
