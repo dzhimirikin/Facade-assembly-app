@@ -1,6 +1,58 @@
 <!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>
+    Assembly Viewer
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  />
+
+  <link
+    rel="stylesheet"
+    href="css/viewer.css"
+  />
+
+</head>
+
+<body>
+
+  <!-- HEADER -->
+
+  <header class="topbar">
+
+    <div class="logo">
+      Facade Control System
+    </div>
+
+    <nav class="topnav">
+
+      <button
+        onclick="location.href='index.html'"
       >
-        View
+        Assembly
+      </button>
+
+      <button class="active">
+        Viewer
+      </button>
+
+      <button
+        onclick="location.href='admin.html'"
+      >
+        Admin
       </button>
 
     </nav>
@@ -11,13 +63,17 @@
 
   </header>
 
+  <!-- MAIN -->
+
   <main class="viewer-only-layout">
 
     <section class="viewer-panel full-view">
 
       <div class="viewer-header">
 
-        <h2>Assembly Tracking</h2>
+        <h2>
+          Assembly Tracking
+        </h2>
 
         <div class="search-box">
 
@@ -67,6 +123,8 @@
 
   </main>
 
+  <!-- FOOTER -->
+
   <footer class="footer">
 
     <div>
@@ -78,6 +136,8 @@
     </div>
 
   </footer>
+
+  <!-- JS -->
 
   <script
     type="module"
