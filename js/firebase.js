@@ -13,7 +13,7 @@ const firebaseConfig = {
     "facade-assembly",
 
   storageBucket:
-    "facade-assembly.firebasestorage.app",
+    "facade-assembly.appspot.com",
 
   messagingSenderId:
     "676074892011",
