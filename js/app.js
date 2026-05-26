@@ -251,6 +251,94 @@ document
   );
 
 /* =========================
+   IMAGE -> BASE64
+========================= */
+
+async function fileToBase64(file) {
+
+  return new Promise((resolve, reject) => {
+
+    const img =
+      new Image();
+
+    const reader =
+      new FileReader();
+
+    reader.onload = (e) => {
+
+      img.src =
+        e.target.result;
+
+    };
+
+    img.onload = () => {
+
+      const canvas =
+        document.createElement(
+          "canvas"
+        );
+
+      const maxWidth = 700;
+
+      let width =
+        img.width;
+
+      let height =
+        img.height;
+
+      if (width > maxWidth) {
+
+        height *=
+          maxWidth / width;
+
+        width =
+          maxWidth;
+
+      }
+
+      canvas.width =
+        width;
+
+      canvas.height =
+        height;
+
+      const ctx =
+        canvas.getContext("2d");
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        width,
+        height
+      );
+
+      const data =
+        canvas.toDataURL(
+          "image/jpeg",
+          0.35
+        );
+
+      resolve({
+
+        name: file.name,
+
+        data
+
+      });
+
+    };
+
+    reader.onerror =
+      reject;
+
+    reader.readAsDataURL(file);
+
+  });
+
+}
+
+/* =========================
    SAVE DATA
 ========================= */
 
@@ -260,7 +348,7 @@ window.saveData = async function () {
     document.getElementById("elementId").value;
 
   const subElementId =
-  document.getElementById("subElementId").value;
+    document.getElementById("subElementId").value;
 
   const stage =
     document.getElementById("stage").value;
@@ -285,6 +373,7 @@ window.saveData = async function () {
     alert("Fill required fields");
 
     return;
+
   }
 
   try {
@@ -298,6 +387,25 @@ window.saveData = async function () {
 
     const currentProject =
       settingsDoc.data()?.name;
+
+    /* PHOTOS */
+
+    const photos = [];
+
+    if (photo1)
+      photos.push(
+        await fileToBase64(photo1)
+      );
+
+    if (photo2)
+      photos.push(
+        await fileToBase64(photo2)
+      );
+
+    if (photo3)
+      photos.push(
+        await fileToBase64(photo3)
+      );
 
     /* SAVE */
 
@@ -321,23 +429,9 @@ window.saveData = async function () {
         note,
 
         timestamp:
-          new Date().toLocaleString(),
+          new Date(),
 
-        photos: [
-
-          photo1
-            ? photo1.name
-            : null,
-
-          photo2
-            ? photo2.name
-            : null,
-
-          photo3
-            ? photo3.name
-            : null
-
-        ]
+        photos
 
       }
 
@@ -345,6 +439,16 @@ window.saveData = async function () {
 
     document.getElementById("success").innerText =
       "Data saved successfully";
+
+    /* RESET */
+
+    document.getElementById("note").value = "";
+
+    document.getElementById("photo1").value = "";
+
+    document.getElementById("photo2").value = "";
+
+    document.getElementById("photo3").value = "";
 
   }
 
