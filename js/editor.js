@@ -336,15 +336,43 @@ function renderEditor(data) {
       "previewGrid"
     );
 
-  /* EXISTING PREVIEW */
+/* EXISTING PREVIEW */
 
-  photos.forEach((photo) => {
+photos.forEach((photo) => {
 
-    const card =
-      document.createElement("div");
+  const card =
+    document.createElement("div");
 
-    card.className =
-      "preview-card";
+  card.className =
+    "preview-card";
+
+  /* OLD FORMAT */
+
+  if (
+    typeof photo === "string"
+  ) {
+
+    card.innerHTML = `
+
+      <div class="old-photo">
+
+        OLD PHOTO
+
+      </div>
+
+      <div class="preview-name">
+
+        ${photo}
+
+      </div>
+
+    `;
+
+  }
+
+  /* NEW FORMAT */
+
+  else {
 
     card.innerHTML = `
 
@@ -358,9 +386,11 @@ function renderEditor(data) {
 
     `;
 
-    previewGrid.appendChild(card);
+  }
 
-  });
+  previewGrid.appendChild(card);
+
+});
 
   /* ADD PREVIEW */
 
