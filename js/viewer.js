@@ -1,4 +1,5 @@
 import { db } from "./firebase.js";
+
 import {
   collection,
   query,
@@ -7,12 +8,26 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* =====================================================
-   ELEMENT VIEWER
+   ELEMENTS
 ===================================================== */
 
-const table = document.getElementById("viewerTable");
-const facadeSelect = document.getElementById("elementId");
-const elementSelect = document.getElementById("subElementId");
+const table =
+  document.getElementById("viewerTable");
+
+const facadeSelect =
+  document.getElementById("elementId");
+
+const elementSelect =
+  document.getElementById("subElementId");
+
+const searchInput =
+  document.getElementById("searchInput");
+
+/* =====================================================
+   DATA
+===================================================== */
+
+let allRows = [];
 
 let unsubscribe = null;
 
@@ -21,92 +36,249 @@ let unsubscribe = null;
 ===================================================== */
 
 function loadViewer() {
+
   if (!table) return;
 
-  const currentFacade = facadeSelect?.value || "";
-  const currentElement = elementSelect?.value || "";
+  const currentFacade =
+    facadeSelect?.value || "";
 
-  // Убираем старый слушатель
-  if (unsubscribe) unsubscribe();
+  const currentElement =
+    elementSelect?.value || "";
 
-  // Запрос к коллекции assembly
+  if (unsubscribe)
+    unsubscribe();
+
   const assemblyQuery = query(
     collection(db, "assembly"),
     orderBy("timestamp", "desc")
   );
 
-  // Подключаем real-time слушатель
   unsubscribe = onSnapshot(
+
     assemblyQuery,
+
     (snapshot) => {
-      table.innerHTML = "";
+
+      allRows = [];
 
       snapshot.forEach((docItem) => {
-        const data = docItem.data();
 
-        // Фильтры по фасаду и элементу
-        if (currentFacade && data.facadeId !== currentFacade) return;
-        if (currentElement && data.subElementId !== currentElement) return;
+        const data =
+          docItem.data();
 
-        // Создаем строку
-        const row = document.createElement("tr");
-        row.classList.add("assembly-row");
-        row.dataset.docId = docItem.id;
+        if (
+          currentFacade &&
+          data.facadeId !== currentFacade
+        ) return;
 
-        // Количество фото
-        const photoCount = (data.photos || []).filter(p => p).length;
+        if (
+          currentElement &&
+          data.subElementId !== currentElement
+        ) return;
 
-        // Форматируем timestamp
-        const ts = data.timestamp?.toDate?.() || new Date(data.timestamp);
-        const tsStr = ts.toLocaleString();
+        allRows.push({
 
-        // Заполняем строку
-        row.innerHTML = `
-          <td>${data.facadeId || ""}</td>
-          <td>${data.subElementId || ""}</td>
-          <td>${data.stage || ""}</td>
-          <td>${data.employee || ""}</td>
-          <td>${data.note || ""}</td>
-          <td>${photoCount}</td>
-          <td>${tsStr}</td>
-        `;
+          id: docItem.id,
 
-        table.appendChild(row);
+          ...data
+
+        });
+
       });
+
+      renderTable(allRows);
+
     },
+
     (error) => {
-      console.error("Viewer error:", error);
+
+      console.error(
+        "Viewer error:",
+        error
+      );
+
     }
+
   );
+
 }
 
 /* =====================================================
-   EVENTS
+   RENDER TABLE
 ===================================================== */
 
-// Фильтры
-facadeSelect?.addEventListener("change", () => {
-  setTimeout(loadViewer, 200);
-});
+function renderTable(dataArray) {
 
-elementSelect?.addEventListener("change", loadViewer);
+  table.innerHTML = "";
+
+  dataArray.forEach((data) => {
+
+    const row =
+      document.createElement("tr");
+
+    row.classList.add(
+      "assembly-row"
+    );
+
+    row.dataset.docId =
+      data.id;
+
+    /* PHOTO COUNT */
+
+    const photoCount =
+      (data.photos || [])
+        .filter(p => p)
+        .length;
+
+    /* TIMESTAMP */
+
+    let tsStr = "";
+
+    try {
+
+      const ts =
+        data.timestamp?.toDate?.()
+        || new Date(data.timestamp);
+
+      tsStr =
+        ts.toLocaleString();
+
+    }
+
+    catch {
+
+      tsStr =
+        data.timestamp || "";
+
+    }
+
+    /* HTML */
+
+    row.innerHTML = `
+
+      <td>${data.facadeId || ""}</td>
+
+      <td>${data.subElementId || ""}</td>
+
+      <td>${data.stage || ""}</td>
+
+      <td>${data.employee || ""}</td>
+
+      <td>${data.note || ""}</td>
+
+      <td>${photoCount}</td>
+
+      <td>${tsStr}</td>
+
+    `;
+
+    /* DOUBLE CLICK */
+
+    row.addEventListener(
+
+      "dblclick",
+
+      () => {
+
+        window.open(
+
+          `viewer_detail.html?id=${data.id}`,
+
+          "_blank"
+
+        );
+
+      }
+
+    );
+
+    table.appendChild(row);
+
+  });
+
+}
 
 /* =====================================================
    SEARCH
 ===================================================== */
 
 window.searchData = function () {
-  const search = document.getElementById("searchInput")?.value.toLowerCase() || "";
-  const rows = table.querySelectorAll("tr");
 
-  rows.forEach((row) => {
-    const text = row.innerText.toLowerCase();
-    row.style.display = text.includes(search) ? "" : "none";
-  });
+  const q =
+    searchInput?.value
+      .toLowerCase()
+      .trim() || "";
+
+  if (!q) {
+
+    renderTable(allRows);
+
+    return;
+
+  }
+
+  const filtered =
+    allRows.filter((item) => {
+
+      const text = `
+
+        ${item.facadeId || ""}
+        ${item.subElementId || ""}
+        ${item.stage || ""}
+        ${item.employee || ""}
+        ${item.note || ""}
+        ${(item.photos || []).join(" ")}
+        ${item.timestamp || ""}
+
+      `
+        .toLowerCase();
+
+      return text.includes(q);
+
+    });
+
+  renderTable(filtered);
+
 };
+
+/* =====================================================
+   LIVE SEARCH
+===================================================== */
+
+searchInput?.addEventListener(
+  "input",
+  searchData
+);
+
+/* =====================================================
+   EVENTS
+===================================================== */
+
+facadeSelect?.addEventListener(
+
+  "change",
+
+  () => {
+
+    setTimeout(
+      loadViewer,
+      200
+    );
+
+  }
+
+);
+
+elementSelect?.addEventListener(
+  "change",
+  loadViewer
+);
 
 /* =====================================================
    INIT
 ===================================================== */
 
-window.addEventListener("DOMContentLoaded", loadViewer);
+window.addEventListener(
+  "DOMContentLoaded",
+  loadViewer
+);
