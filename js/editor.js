@@ -55,7 +55,7 @@ async function fileToBase64(file) {
           "canvas"
         );
 
-      const maxWidth = 1600;
+      const maxWidth = 700;
 
       let width =
         img.width;
@@ -93,7 +93,7 @@ async function fileToBase64(file) {
       const data =
         canvas.toDataURL(
           "image/jpeg",
-          0.7
+          0.35
         );
 
       resolve({
