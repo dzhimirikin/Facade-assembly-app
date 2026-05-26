@@ -12,13 +12,19 @@ import {
 ===================================================== */
 
 const table =
-  document.getElementById("viewerTable");
+  document.getElementById(
+    "viewerTable"
+  );
 
 const searchInput =
-  document.getElementById("searchInput");
+  document.getElementById(
+    "searchInput"
+  );
 
 const viewPdfBtn =
-  document.getElementById("viewPdfBtn");
+  document.getElementById(
+    "viewPdfBtn"
+  );
 
 /* =====================================================
    DATA
@@ -43,7 +49,7 @@ function loadViewer() {
 
     collection(db, "assembly"),
 
-    orderBy("timestamp", "asc")
+    orderBy("timestamp", "desc")
 
   );
 
@@ -57,21 +63,111 @@ function loadViewer() {
 
       snapshot.forEach((docItem) => {
 
-        allRows.push({
+        try {
 
-          id: docItem.id,
+          const data =
+            docItem.data();
 
-          ...docItem.data()
+          allRows.push({
 
-        });
+            id: docItem.id,
+
+            ...data
+
+          });
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "ROW ERROR:",
+            error
+          );
+
+        }
 
       });
 
+      console.log(
+        "ROWS:",
+        allRows
+      );
+
       renderTable(allRows);
+
+    },
+
+    (error) => {
+
+      console.error(
+        "SNAPSHOT ERROR:",
+        error
+      );
 
     }
 
   );
+
+}
+
+/* =====================================================
+   PHOTO COUNT
+===================================================== */
+
+function getPhotoCount(photos) {
+
+  return (photos || [])
+    .filter((photo) => {
+
+      if (!photo)
+        return false;
+
+      /* OLD FORMAT */
+
+      if (
+        typeof photo === "string"
+      )
+        return true;
+
+      /* NEW FORMAT */
+
+      return !!photo.data;
+
+    })
+    .length;
+
+}
+
+/* =====================================================
+   TIMESTAMP
+===================================================== */
+
+function formatTimestamp(timestamp) {
+
+  try {
+
+    if (!timestamp)
+      return "";
+
+    const ts =
+      timestamp?.toDate?.()
+      || new Date(timestamp);
+
+    return ts.toLocaleString();
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "TIMESTAMP ERROR:",
+      error
+    );
+
+    return "";
+
+  }
 
 }
 
@@ -85,99 +181,76 @@ function renderTable(dataArray) {
 
   dataArray.forEach((data) => {
 
-    const row =
-      document.createElement("tr");
-
-    /* PHOTO COUNT */
-
-    const photoCount =
-      (data.photos || [])
-        .filter((photo) => {
-
-          if (!photo)
-            return false;
-
-          /* OLD FORMAT */
-
-          if (
-            typeof photo === "string"
-          )
-            return true;
-
-          /* NEW FORMAT */
-
-          return !!photo.data;
-
-        })
-        .length;
-
-    /* TIMESTAMP */
-
-    let tsStr = "";
-
     try {
 
-      const ts =
-        data.timestamp?.toDate?.()
-        || new Date(data.timestamp);
+      const row =
+        document.createElement("tr");
 
-      tsStr =
-        ts.toLocaleString();
-
-    }
-
-    catch {
-
-      tsStr =
-        data.timestamp || "";
-
-    }
-
-    /* ROW */
-
-    row.innerHTML = `
-
-      <td>${data.facadeId || ""}</td>
-
-      <td>${data.subElementId || ""}</td>
-
-      <td>${data.stage || ""}</td>
-
-      <td>${data.employee || ""}</td>
-
-      <td>${data.note || ""}</td>
-
-      <td>${photoCount}</td>
-
-      <td>${tsStr}</td>
-
-    `;
-
-    /* EDIT MODE */
-
-    row.addEventListener(
-
-      "dblclick",
-
-      () => {
-
-        window.open(
-
-          `editor.html?id=${data.id}`,
-
-          "_blank"
-
+      const photoCount =
+        getPhotoCount(
+          data.photos
         );
 
-      }
+      const tsStr =
+        formatTimestamp(
+          data.timestamp
+        );
 
-    );
+      row.innerHTML = `
 
-    table.appendChild(row);
+        <td>${data.facadeId || ""}</td>
+
+        <td>${data.subElementId || ""}</td>
+
+        <td>${data.stage || ""}</td>
+
+        <td>${data.employee || ""}</td>
+
+        <td>${data.note || ""}</td>
+
+        <td>${photoCount}</td>
+
+        <td>${tsStr}</td>
+
+      `;
+
+      /* EDIT MODE */
+
+      row.addEventListener(
+
+        "dblclick",
+
+        () => {
+
+          window.open(
+
+            `editor.html?id=${data.id}`,
+
+            "_blank"
+
+          );
+
+        }
+
+      );
+
+      table.appendChild(row);
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "RENDER ERROR:",
+        error
+      );
+
+    }
 
   });
 
 }
+
 /* =====================================================
    FILTER
 ===================================================== */
@@ -191,28 +264,30 @@ window.searchData = function () {
 
   if (!q) {
 
-    filteredRows = [...allRows];
+    filteredRows =
+      [...allRows];
 
   }
 
   else {
 
-    filteredRows = allRows.filter((item) => {
+    filteredRows =
+      allRows.filter((item) => {
 
-      const text = `
+        const text = `
 
-        ${item.facadeId || ""}
-        ${item.subElementId || ""}
-        ${item.stage || ""}
-        ${item.employee || ""}
-        ${item.note || ""}
+          ${item.facadeId || ""}
+          ${item.subElementId || ""}
+          ${item.stage || ""}
+          ${item.employee || ""}
+          ${item.note || ""}
 
-      `
-        .toLowerCase();
+        `
+          .toLowerCase();
 
-      return text.includes(q);
+        return text.includes(q);
 
-    });
+      });
 
   }
 
@@ -220,9 +295,11 @@ window.searchData = function () {
 
   /* ENABLE PDF */
 
-  if (filteredRows.length > 0) {
+  if (
+    filteredRows.length > 0
+  ) {
 
-    viewPdfBtn.classList.remove(
+    viewPdfBtn?.classList.remove(
       "disabled"
     );
 
@@ -230,7 +307,7 @@ window.searchData = function () {
 
   else {
 
-    viewPdfBtn.classList.add(
+    viewPdfBtn?.classList.add(
       "disabled"
     );
 
@@ -252,7 +329,8 @@ viewPdfBtn?.addEventListener(
       viewPdfBtn.classList.contains(
         "disabled"
       )
-    ) return;
+    )
+      return;
 
     if (!filteredRows.length)
       return;
