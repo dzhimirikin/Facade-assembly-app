@@ -1,32 +1,33 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getStorage
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyA7cHiDj4BAMbw1LoTpgbxXIcrhDnm0lX8",
+  apiKey: "YOUR_API_KEY",
 
-  authDomain:
-    "facade-assembly.firebaseapp.com",
+  authDomain: "YOUR_AUTH_DOMAIN",
 
-  projectId:
-    "facade-assembly",
+  projectId: "YOUR_PROJECT_ID",
 
-  storageBucket:
-    "facade-assembly.firebasestorage.app",
+  storageBucket: "YOUR_STORAGE_BUCKET",
 
-  messagingSenderId:
-    "676074892011",
+  messagingSenderId: "YOUR_SENDER_ID",
 
-  appId:
-    "1:676074892011:web:792ebcdf46e2098f972cae"
+  appId: "YOUR_APP_ID"
 
 };
 
-const app =
-  initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const db =
-  getFirestore(app);
+export const db = getFirestore(app);
 
-export { db };
+export const storage = getStorage(app);
