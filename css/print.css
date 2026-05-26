@@ -81,22 +81,6 @@ body {
 }
 
 /* =====================================================
-   REPORT TITLE
-===================================================== */
-
-.print-sheet h1 {
-
-  margin-top: 0;
-
-  margin-bottom: 40px;
-
-  font-size: 42px;
-
-  line-height: 1.1;
-
-}
-
-/* =====================================================
    OPERATION BLOCK
 ===================================================== */
 
@@ -126,7 +110,7 @@ body {
 
 .detail-table {
 
-  width: 100%;
+  width: calc(100% - 2px);
 
   border-collapse: collapse;
 
@@ -190,7 +174,7 @@ body {
 
   box-sizing: border-box;
 
-  min-height: 260px;
+  min-height: 220px;
 
   display: flex;
 
@@ -198,15 +182,13 @@ body {
 
   justify-content: center;
 
-  position: relative;
-
 }
 
 .photo-card img {
 
   width: 100%;
 
-  height: 260px;
+  height: 220px;
 
   object-fit: cover;
 
@@ -224,7 +206,7 @@ body {
 
   width: 100%;
 
-  height: 260px;
+  height: 220px;
 
   padding: 20px;
 
