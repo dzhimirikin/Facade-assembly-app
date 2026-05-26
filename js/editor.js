@@ -245,12 +245,17 @@ async function saveRecord(data) {
         "editNote"
       ).value;
 
-    /* CURRENT PHOTOS */
+    /* =========================================
+       START WITH CLEAN ARRAY
+    ========================================= */
 
     let updatedPhotos =
-      [...(data.photos || [])];
+      [...(data.photos || [])]
+        .filter(p => p);
 
-    /* REPLACE PHOTOS */
+    /* =========================================
+       REPLACE EXISTING
+    ========================================= */
 
     const replaceInputs =
       document.querySelectorAll(
@@ -267,7 +272,11 @@ async function saveRecord(data) {
           input.dataset.index
         );
 
-      if (file) {
+      if (
+        file &&
+        index >= 0 &&
+        index < updatedPhotos.length
+      ) {
 
         updatedPhotos[index] =
           file.name;
@@ -276,7 +285,9 @@ async function saveRecord(data) {
 
     });
 
-    /* ADD NEW PHOTOS */
+    /* =========================================
+       ADD NEW
+    ========================================= */
 
     const newInputs =
       document.querySelectorAll(
@@ -288,27 +299,35 @@ async function saveRecord(data) {
       const file =
         input.files[0];
 
+      if (!file) return;
+
       if (
-        file &&
-        updatedPhotos.length < 3
-      ) {
+        updatedPhotos.length >= 3
+      ) return;
 
-        updatedPhotos.push(
-          file.name
-        );
-
-      }
+      updatedPhotos.push(
+        file.name
+      );
 
     });
 
-    /* LIMIT */
+    /* =========================================
+       FINAL CLEANUP
+    ========================================= */
 
     updatedPhotos =
       updatedPhotos
         .filter(p => p)
         .slice(0, 3);
 
-    /* SAVE */
+    console.log(
+      "UPDATED PHOTOS:",
+      updatedPhotos
+    );
+
+    /* =========================================
+       SAVE
+    ========================================= */
 
     await updateDoc(
 
