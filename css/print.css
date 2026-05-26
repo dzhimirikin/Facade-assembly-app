@@ -102,6 +102,26 @@ body {
 
 }
 
+.detail-table tr {
+
+  width: 100%;
+
+}
+
+.detail-table td:first-child {
+
+  width: 140px;
+
+  font-weight: 600;
+
+}
+
+.detail-table td:last-child {
+
+  width: auto;
+
+}
+
 .detail-table td {
 
   border: 1px solid #ccc;
@@ -113,6 +133,28 @@ body {
   word-break: break-word;
 
   overflow-wrap: break-word;
+
+  box-sizing: border-box;
+
+}
+
+.detail-table tr {
+
+  width: 100%;
+
+}
+
+.detail-table td:first-child {
+
+  width: 140px;
+
+  font-weight: 600;
+
+}
+
+.detail-table td:last-child {
+
+  width: auto;
 
 }
 
