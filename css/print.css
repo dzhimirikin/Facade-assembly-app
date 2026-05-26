@@ -94,19 +94,9 @@ body {
 
   width: 100%;
 
-  max-width: 100%;
-
   border-collapse: collapse;
 
   margin-top: 20px;
-
-  table-layout: fixed;
-
-}
-
-.detail-table tr {
-
-  display: table-row;
 
 }
 
@@ -118,13 +108,9 @@ body {
 
   vertical-align: top;
 
-  word-break: break-word;
-
   overflow-wrap: break-word;
 
   box-sizing: border-box;
-
-  max-width: 0;
 
 }
 
@@ -134,11 +120,7 @@ body {
 
   font-weight: 600;
 
-}
-
-.detail-table td:last-child {
-
-  width: auto;
+  white-space: nowrap;
 
 }
 
