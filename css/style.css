@@ -660,3 +660,22 @@ button {
   padding-bottom: 40px;
 
 }
+
+
+.disabled {
+
+  opacity: 0.4;
+
+  pointer-events: none;
+
+}
+
+.operation-block {
+
+  margin-bottom: 60px;
+
+  border-bottom: 2px solid #ccc;
+
+  padding-bottom: 40px;
+
+}
