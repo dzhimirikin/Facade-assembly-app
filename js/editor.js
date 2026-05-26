@@ -234,32 +234,36 @@ function renderEditor(data) {
 
           <div class="existing-photos">
 
-            ${photos.length
+ ${photos.length
 
-              ? photos.map((photo, index) => `
+  ? photos.map((photo, index) => `
 
-                <div class="photo-row">
+    <div class="photo-row">
 
-                  <div class="photo-name">
+      <div class="photo-name">
 
-                    ${photo.name}
+        ${
+          typeof photo === "string"
+            ? photo
+            : photo.name
+        }
 
-                  </div>
+      </div>
 
-                  <input
-                    type="file"
-                    class="replacePhoto"
-                    data-index="${index}"
-                    accept="image/*"
-                  />
+      <input
+        type="file"
+        class="replacePhoto"
+        data-index="${index}"
+        accept="image/*"
+      />
 
-                </div>
+    </div>
 
-              `).join("")
+  `).join("")
 
-              : "<div>No photos uploaded</div>"
+  : "<div>No photos uploaded</div>"
 
-            }
+}
 
           </div>
 
@@ -613,3 +617,4 @@ window.addEventListener(
   loadRecord
 
 );
+
