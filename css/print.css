@@ -98,6 +98,8 @@ body {
 
   margin-top: 20px;
 
+  table-layout: fixed;
+
 }
 
 .detail-table td {
@@ -107,6 +109,10 @@ body {
   padding: 10px;
 
   vertical-align: top;
+
+  word-break: break-word;
+
+  overflow-wrap: break-word;
 
 }
 
@@ -120,7 +126,7 @@ body {
 
   display: grid;
 
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
 
   gap: 20px;
 
@@ -130,7 +136,13 @@ body {
 
   border: 1px solid #ccc;
 
-  min-height: 200px;
+  background: #f7f7f7;
+
+  overflow: hidden;
+
+  box-sizing: border-box;
+
+  min-height: 260px;
 
   display: flex;
 
@@ -138,9 +150,29 @@ body {
 
   justify-content: center;
 
-  background: #f7f7f7;
+}
+
+.photo-card img {
+
+  width: 100%;
+
+  height: 260px;
+
+  object-fit: cover;
+
+  display: block;
+
+}
+
+.old-photo {
 
   font-size: 14px;
+
+  color: #555;
+
+  padding: 20px;
+
+  text-align: center;
 
 }
 
@@ -162,14 +194,14 @@ body {
 
   }
 
-  .print-sheet {
+.print-sheet {
 
-    width: 100%;
+  width: 210mm;
 
-    margin: 0;
+  margin: 0;
 
-    box-shadow: none;
+  box-shadow: none;
 
-  }
+}
 
 }
