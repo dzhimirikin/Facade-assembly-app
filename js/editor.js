@@ -91,137 +91,305 @@ function renderEditor(data) {
 
   container.innerHTML = `
 
-    <div class="input-panel">
+    <div class="editor-layout">
 
-      <h2>Edit Record</h2>
+      <!-- LEFT PANEL -->
 
-      <!-- FACADE -->
+      <div class="editor-left">
 
-      <label>Facade ID</label>
+        <div class="input-panel">
 
-      <input
-        type="text"
-        value="${data.facadeId || ""}"
-        disabled
-      />
+          <h2>Edit Record</h2>
 
-      <!-- ELEMENT -->
+          <!-- FACADE -->
 
-      <label>Element</label>
+          <label>Facade ID</label>
 
-      <input
-        type="text"
-        value="${data.subElementId || ""}"
-        disabled
-      />
+          <input
+            type="text"
+            value="${data.facadeId || ""}"
+            disabled
+          />
 
-      <!-- OPERATION -->
+          <!-- ELEMENT -->
 
-      <label>Operation</label>
+          <label>Element</label>
 
-      <input
-        type="text"
-        value="${data.stage || ""}"
-        disabled
-      />
+          <input
+            type="text"
+            value="${data.subElementId || ""}"
+            disabled
+          />
 
-      <!-- EMPLOYEE -->
+          <!-- OPERATION -->
 
-      <label>Employee</label>
+          <label>Operation</label>
 
-      <input
-        type="text"
-        value="${data.employee || ""}"
-        disabled
-      />
+          <input
+            type="text"
+            value="${data.stage || ""}"
+            disabled
+          />
 
-      <!-- NOTE -->
+          <!-- EMPLOYEE -->
 
-      <label>Comment</label>
+          <label>Employee</label>
 
-      <textarea
-        id="editNote"
-        rows="6"
-      >${data.note || ""}</textarea>
+          <input
+            type="text"
+            value="${data.employee || ""}"
+            disabled
+          />
 
-      <!-- EXISTING PHOTOS -->
+          <!-- NOTE -->
 
-      <label>
-        Existing Photos
-      </label>
+          <label>Comment</label>
 
-      <div class="existing-photos">
+          <textarea
+            id="editNote"
+            rows="6"
+          >${data.note || ""}</textarea>
 
-        ${photos.length
-          ? photos.map((photo, index) => `
-
-            <div class="photo-row">
-
-              <div class="photo-name">
-
-                ${photo}
-
-              </div>
-
-              <input
-                type="file"
-                class="replacePhoto"
-                data-index="${index}"
-                accept="image/*"
-              />
-
-            </div>
-
-          `).join("")
-          : "<div>No photos uploaded</div>"
-        }
-
-      </div>
-
-      <!-- FREE SLOTS -->
-
-      ${freeSlots > 0
-        ? `
+          <!-- EXISTING PHOTOS -->
 
           <label>
-            Add Photos
+            Existing Photos
           </label>
 
-          ${Array.from(
-            { length: freeSlots },
-            (_, i) => `
+          <div class="existing-photos">
 
-              <input
-                type="file"
-                class="newPhoto"
-                accept="image/*"
-              />
+            ${photos.length
 
-            `
-          ).join("")}
+              ? photos.map((photo, index) => `
 
-        `
-        : `
+                <div class="photo-row">
 
-          <div class="photo-limit">
+                  <div class="photo-name">
 
-            Maximum 3 photos uploaded
+                    ${photo}
+
+                  </div>
+
+                  <input
+                    type="file"
+                    class="replacePhoto"
+                    data-index="${index}"
+                    accept="image/*"
+                  />
+
+                </div>
+
+              `).join("")
+
+              : "<div>No photos uploaded</div>"
+
+            }
 
           </div>
 
-        `
-      }
+          <!-- FREE SLOTS -->
 
-      <button
-        id="saveBtn"
-        class="submit-btn"
-      >
-        OK
-      </button>
+          ${freeSlots > 0
+
+            ? `
+
+              <label>
+                Add Photos
+              </label>
+
+              ${Array.from(
+
+                { length: freeSlots },
+
+                () => `
+
+                  <input
+                    type="file"
+                    class="newPhoto"
+                    accept="image/*"
+                  />
+
+                `
+
+              ).join("")}
+
+            `
+
+            : `
+
+              <div class="photo-limit">
+
+                Maximum 3 photos uploaded
+
+              </div>
+
+            `
+
+          }
+
+          <!-- SAVE -->
+
+          <button
+            id="saveBtn"
+            class="submit-btn"
+          >
+            OK
+          </button>
+
+        </div>
+
+      </div>
+
+      <!-- RIGHT PANEL -->
+
+      <div class="editor-right">
+
+        <h2>
+          Photo Preview
+        </h2>
+
+        <div
+          class="preview-grid"
+          id="previewGrid"
+        ></div>
+
+      </div>
 
     </div>
 
   `;
+
+  /* =========================================
+     PREVIEW GRID
+  ========================================= */
+
+  const previewGrid =
+    document.getElementById(
+      "previewGrid"
+    );
+
+  /* EXISTING FILE PLACEHOLDERS */
+
+  photos.forEach((photo) => {
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "preview-card";
+
+    card.innerHTML = `
+
+      <div class="preview-placeholder">
+
+        Existing File
+
+      </div>
+
+      <div class="preview-name">
+
+        ${photo}
+
+      </div>
+
+    `;
+
+    previewGrid.appendChild(card);
+
+  });
+
+  /* =========================================
+     ADD PREVIEW
+  ========================================= */
+
+  function addPreview(file) {
+
+    const url =
+      URL.createObjectURL(file);
+
+    const card =
+      document.createElement("div");
+
+    card.className =
+      "preview-card";
+
+    card.innerHTML = `
+
+      <img src="${url}" />
+
+      <div class="preview-name">
+
+        ${file.name}
+
+      </div>
+
+    `;
+
+    previewGrid.appendChild(card);
+
+  }
+
+  /* =========================================
+     NEW PHOTOS
+  ========================================= */
+
+  document
+    .querySelectorAll(
+      ".newPhoto"
+    )
+    .forEach((input) => {
+
+      input.addEventListener(
+
+        "change",
+
+        () => {
+
+          const file =
+            input.files[0];
+
+          if (!file) return;
+
+          addPreview(file);
+
+        }
+
+      );
+
+    });
+
+  /* =========================================
+     REPLACE PHOTOS
+  ========================================= */
+
+  document
+    .querySelectorAll(
+      ".replacePhoto"
+    )
+    .forEach((input) => {
+
+      input.addEventListener(
+
+        "change",
+
+        () => {
+
+          const file =
+            input.files[0];
+
+          if (!file) return;
+
+          addPreview(file);
+
+        }
+
+      );
+
+    });
+
+  /* =========================================
+     SAVE BUTTON
+  ========================================= */
 
   document
     .getElementById("saveBtn")
@@ -245,17 +413,13 @@ async function saveRecord(data) {
         "editNote"
       ).value;
 
-    /* =========================================
-       START WITH CLEAN ARRAY
-    ========================================= */
+    /* CLEAN ARRAY */
 
     let updatedPhotos =
       [...(data.photos || [])]
         .filter(p => p);
 
-    /* =========================================
-       REPLACE EXISTING
-    ========================================= */
+    /* REPLACE EXISTING */
 
     const replaceInputs =
       document.querySelectorAll(
@@ -285,9 +449,7 @@ async function saveRecord(data) {
 
     });
 
-    /* =========================================
-       ADD NEW
-    ========================================= */
+    /* ADD NEW */
 
     const newInputs =
       document.querySelectorAll(
@@ -311,23 +473,14 @@ async function saveRecord(data) {
 
     });
 
-    /* =========================================
-       FINAL CLEANUP
-    ========================================= */
+    /* FINAL CLEANUP */
 
     updatedPhotos =
       updatedPhotos
         .filter(p => p)
         .slice(0, 3);
 
-    console.log(
-      "UPDATED PHOTOS:",
-      updatedPhotos
-    );
-
-    /* =========================================
-       SAVE
-    ========================================= */
+    /* SAVE */
 
     await updateDoc(
 
