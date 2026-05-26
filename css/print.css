@@ -14,19 +14,21 @@ body {
 
 .print-sheet {
 
-  width: 190mm;
+  width: 210mm;
 
-  min-height: 277mm;
+  min-height: 297mm;
 
   margin: 30px auto;
 
   background: white;
 
-  padding: 10mm;
+  padding: 20mm;
 
   box-sizing: border-box;
 
   box-shadow: 0 0 20px rgba(0,0,0,0.15);
+
+  overflow: hidden;
 
 }
 
