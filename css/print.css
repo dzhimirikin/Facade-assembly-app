@@ -106,13 +106,27 @@ body {
    TABLE
 ===================================================== */
 
+/* =====================================================
+   TABLE
+===================================================== */
+
 .detail-table {
 
-  width: calc(100% - 2px);
+  width: 100%;
+
+  max-width: 100%;
 
   border-collapse: collapse;
 
   margin-top: 20px;
+
+  table-layout: auto;
+
+}
+
+.detail-table tr {
+
+  width: 100%;
 
 }
 
@@ -126,6 +140,8 @@ body {
 
   overflow-wrap: break-word;
 
+  word-break: normal;
+
   box-sizing: border-box;
 
   font-size: 14px;
@@ -137,6 +153,10 @@ body {
 .detail-table td:first-child {
 
   width: 140px;
+
+  min-width: 140px;
+
+  max-width: 140px;
 
   font-weight: 600;
 
