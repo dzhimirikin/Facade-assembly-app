@@ -1,176 +1,75 @@
-import { db } from "./firebase.js";
-
-import {
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-/* =====================================================
-   GET ID
-===================================================== */
-
 const params =
-  new URLSearchParams(
-    window.location.search
-  );
 
-const id =
-  params.get("id");
+          tsStr =
+            ts.toLocaleString();
 
-/* =====================================================
-   ELEMENTS
-===================================================== */
+        }
 
-const container =
-  document.getElementById(
-    "detailContainer"
-  );
+        catch {
 
-/* =====================================================
-   LOAD DETAIL
-===================================================== */
+          tsStr =
+            item.timestamp || "";
 
-async function loadDetail() {
+        }
 
-  if (!id) {
+        const photos =
+          (item.photos || [])
+            .filter(p => p);
 
-    container.innerHTML =
-      "Record ID not found";
+        return `
 
-    return;
+          <div class="operation-block">
 
-  }
+            <h2>
+              ${item.stage || ""}
+            </h2>
 
-  try {
+            <table class="detail-table">
 
-    const docRef =
-      doc(db, "assembly", id);
+              <tr>
+                <td>Facade</td>
+                <td>${item.facadeId || ""}</td>
+              </tr>
 
-    const snapshot =
-      await getDoc(docRef);
+              <tr>
+                <td>Element</td>
+                <td>${item.subElementId || ""}</td>
+              </tr>
 
-    if (!snapshot.exists()) {
+              <tr>
+                <td>Employee</td>
+                <td>${item.employee || ""}</td>
+              </tr>
 
-      container.innerHTML =
-        "Record not found";
+              <tr>
+                <td>Time</td>
+                <td>${tsStr}</td>
+              </tr>
 
-      return;
+              <tr>
+                <td>Note</td>
+                <td>${item.note || ""}</td>
+              </tr>
 
-    }
+            </table>
 
-    const data =
-      snapshot.data();
+            <div class="photo-section">
 
-    renderDetail(data);
+              ${photos.map(photo => `
 
-  }
+                <div class="photo-card">
+                  ${photo}
+                </div>
 
-  catch (error) {
+              `).join("")}
 
-    console.error(error);
-
-    container.innerHTML =
-      "Load error";
-
-  }
-
-}
-
-/* =====================================================
-   RENDER DETAIL
-===================================================== */
-
-function renderDetail(data) {
-
-  let tsStr = "";
-
-  try {
-
-    const ts =
-      data.timestamp?.toDate?.()
-      || new Date(data.timestamp);
-
-    tsStr =
-      ts.toLocaleString();
-
-  }
-
-  catch {
-
-    tsStr =
-      data.timestamp || "";
-
-  }
-
-  const photos =
-    (data.photos || [])
-      .filter(p => p);
-
-  container.innerHTML = `
-
-    <div class="print-toolbar">
-
-      <button onclick="window.print()">
-        Print / PDF
-      </button>
-
-    </div>
-
-    <div class="print-sheet">
-
-      <h1>
-        Assembly Record
-      </h1>
-
-      <table class="detail-table">
-
-        <tr>
-          <td>Facade</td>
-          <td>${data.facadeId || ""}</td>
-        </tr>
-
-        <tr>
-          <td>Element</td>
-          <td>${data.subElementId || ""}</td>
-        </tr>
-
-        <tr>
-          <td>Operation</td>
-          <td>${data.stage || ""}</td>
-        </tr>
-
-        <tr>
-          <td>Employee</td>
-          <td>${data.employee || ""}</td>
-        </tr>
-
-        <tr>
-          <td>Time</td>
-          <td>${tsStr}</td>
-        </tr>
-
-        <tr>
-          <td>Note</td>
-          <td>${data.note || ""}</td>
-        </tr>
-
-      </table>
-
-      <div class="photo-section">
-
-        ${photos.map(photo => `
-
-          <div class="photo-card">
-
-            <div class="photo-placeholder">
-              ${photo}
             </div>
 
           </div>
 
-        `).join("")}
+        `;
 
-      </div>
+      }).join("")}
 
     </div>
 
@@ -178,11 +77,7 @@ function renderDetail(data) {
 
 }
 
-/* =====================================================
-   INIT
-===================================================== */
-
 window.addEventListener(
   "DOMContentLoaded",
-  loadDetail
+  renderPdf
 );
