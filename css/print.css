@@ -1,1 +1,75 @@
+.print-sheet {
 
+}
+
+.detail-table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+
+  margin-top: 20px;
+
+}
+
+.detail-table td {
+
+  border: 1px solid #ccc;
+
+  padding: 10px;
+
+}
+
+.photo-section {
+
+  margin-top: 30px;
+
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 20px;
+
+}
+
+.photo-card {
+
+  border: 1px solid #ccc;
+
+  height: 200px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+.print-toolbar {
+
+  position: sticky;
+
+  top: 0;
+
+  background: white;
+
+  padding: 10px;
+
+}
+
+@media print {
+
+  .print-toolbar {
+
+    display: none;
+
+  }
+
+  body {
+
+    background: white;
+
+  }
+
+}
