@@ -835,7 +835,7 @@ button {
 
 }
 
-/* ================= Admin Panel Grid ================= */
+/* ================== Admin Panel Grid ================== */
 .admin-layout {
   padding: 24px;
   display: grid;
@@ -849,10 +849,9 @@ button {
 .input-panel {
   background: var(--reynaers-white);
   border-radius: 18px;
-  padding: 24px;
+  padding: 16px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  min-width: 300px;
 }
 
 .input-panel h2 {
@@ -860,40 +859,10 @@ button {
   font-size: 18px;
 }
 
-button,
-.submit-btn {
-  background: var(--reynaers-blue);
-  color: var(--reynaers-white);
-  border: none;
-  border-radius: 12px;
-  padding: 12px 18px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: 0.2s;
-}
-
-button:hover,
-.submit-btn:hover {
-  background: var(--reynaers-lightblue);
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-ul li {
-  padding: 8px;
-  background: var(--reynaers-lightgray);
-  border-radius: 8px;
-  margin-bottom: 6px;
-}
-
-select,
-input[type=text],
-input[type=file],
-textarea {
+.input-panel input[type=text],
+.input-panel select,
+.input-panel input[type=file],
+.input-panel textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 12px;
@@ -901,19 +870,27 @@ textarea {
   border-radius: 12px;
   font-size: 14px;
   outline: none;
+  box-sizing: border-box;
 }
 
-textarea {
+.input-panel textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-@media (max-width: 900px) {
-  .admin-layout {
-    grid-template-columns: 1fr;
-    padding: 16px;
-  }
-  .input-panel {
-    width: 100%;
-  }
+.input-panel button {
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 14px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--reynaers-blue);
+  color: var(--reynaers-white);
+  transition: 0.2s;
 }
+
+.input-panel button:hover {
+  background-color: #2b3aeb;
+}
+
+@media
