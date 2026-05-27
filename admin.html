@@ -24,9 +24,8 @@
   </header>
 
   <!-- MAIN ADMIN PANEL -->
-  <main class="layout">
-
-    <!-- Projects -->
+<main class="admin-layout">
+  <div class="admin-grid">
     <section class="input-panel">
       <h2>Projects</h2>
       <input type="text" placeholder="Project Name" id="projectName" />
@@ -35,51 +34,44 @@
       <button onclick="addProject()">Add Project</button>
     </section>
 
-    <!-- Import TXT -->
     <section class="input-panel">
       <h2>Import TXT</h2>
       <input type="file" id="txtFile" />
       <button onclick="importTXT()">Import TXT</button>
     </section>
 
-    <!-- Add Facade -->
     <section class="input-panel">
       <h2>Add Facade</h2>
       <input type="text" placeholder="Facade Name" id="facadeName" />
       <button onclick="addFacade()">Add Facade</button>
     </section>
 
-    <!-- Facade List -->
     <section class="input-panel">
       <h2>Facade List</h2>
-      <select id="facadeList"></select>
+      <ul id="facadeList"></ul>
     </section>
 
-    <!-- Elements -->
     <section class="input-panel">
       <h2>Elements</h2>
-      <select id="selectFacade"></select>
       <input type="text" placeholder="Element Name" id="newElement" />
       <input type="file" id="elementFile" />
       <button onclick="addElement()">Add Element</button>
       <button onclick="importElementsTXT()">Import Elements TXT</button>
     </section>
 
-    <!-- Elements List -->
     <section class="input-panel">
       <h2>Elements List</h2>
       <ul id="elementsList"></ul>
     </section>
 
-    <!-- Employees -->
     <section class="input-panel">
       <h2>Employees</h2>
       <input type="text" placeholder="Employee Name" id="employeeName" />
       <button onclick="addEmployee()">Add Employee</button>
       <ul id="employeesList"></ul>
     </section>
-
-  </main>
+  </div>
+</main>
 
   <!-- JS -->
   <script type="module" src="js/firebase_check_current_project.js"></script>
