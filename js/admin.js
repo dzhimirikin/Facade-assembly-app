@@ -820,33 +820,37 @@ import { collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/fir
    CLEAR DATABASE
 ===================================================== */
 
-const clearDatabaseBtn = document.getElementById("clearDatabaseBtn");
+import { db } from "./firebase.js"; // ваш файл с инициализацией
+import {
+  collection,
+  getDocs,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-clearDatabaseBtn.addEventListener("click", async () => {
-  const confirmed = confirm(
-    "Вы точно хотите удалить все записи Firestore? Действие необратимо!"
-  );
-  if (!confirmed) return;
+// Функция очистки коллекции
+async function clearDatabase() {
+  const confirmDelete = confirm("⚠️ This will permanently delete all data. Are you sure?");
+  if (!confirmDelete) return;
 
-  const collections = ["projects", "facades", "elements", "employees", "assembly", "settings"];
   try {
-    for (const colName of collections) {
-      const snapshot = await getDocs(collection(db, colName));
-      for (const docItem of snapshot.docs) {
-        await deleteDoc(doc(db, colName, docItem.id));
-      }
-    }
-    alert("База данных успешно очищена!");
+    // Получаем все документы в коллекции "assembly"
+    const colSnap = await getDocs(collection(db, "assembly"));
+    const deletePromises = [];
 
-    // обновляем интерфейс после очистки
-    await loadProjects();
-    await loadFacades();
-    await loadFacadeSelect();
-    await loadElementsList();
-    await loadEmployees();
+    colSnap.forEach(docSnap => {
+      deletePromises.push(deleteDoc(doc(db, "assembly", docSnap.id)));
+    });
 
+    await Promise.all(deletePromises);
+    alert("Database cleared successfully!");
+    // Можно добавить перезагрузку страницы или обновление интерфейса
+    window.location.reload();
   } catch (err) {
-    console.error(err);
-    alert("Ошибка при очистке Firestore: " + err.message);
+    console.error("Error clearing database:", err);
+    alert("Error clearing database: " + err.message);
   }
-});
+}
+
+// Привязываем к кнопке
+document.getElementById("clearDatabaseBtn").addEventListener("click", clearDatabase);
