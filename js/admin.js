@@ -814,23 +814,30 @@ async function init() {
 init();
 
 /* =====================================================
-   ПОЛНАЯ ОЧИСТКА БАЗЫ FIREBASE
+   CLEAR DATABASE
 ===================================================== */
-
 const clearDatabaseBtn = document.getElementById("clearDatabaseBtn");
 
 clearDatabaseBtn.addEventListener("click", async () => {
   const confirmed = confirm(
-    "Вы точно хотите удалить все записи в базе? Действие необратимо!"
+    "Вы точно хотите удалить все записи Firestore? Действие необратимо!"
   );
   if (!confirmed) return;
 
+  const collections = ["projects", "facades", "elements", "employees", "assembly", "settings"];
   try {
-    const dbRef = firebase.database().ref("/"); // корень базы
-    await dbRef.remove();
+    for (const colName of collections) {
+      const snapshot = await getDocs(collection(db, colName));
+      for (const docItem of snapshot.docs) {
+        await deleteDoc(doc(db, colName, docItem.id));
+      }
+    }
     alert("База данных успешно очищена!");
+    // обновляем интерфейс после очистки
+    loadProjects();
+    // Можно добавить загрузку фасадов, элементов, сотрудников
   } catch (err) {
     console.error(err);
-    alert("Ошибка при очистке базы: " + err.message);
+    alert("Ошибка при очистке Firestore: " + err.message);
   }
 });
