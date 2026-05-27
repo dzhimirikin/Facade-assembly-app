@@ -1,9 +1,11 @@
-// app.js — обновлённая инициализация для главной страницы
+// app.js — рабочая инициализация для главной страницы
 import { ensureCurrentProject } from './firebase_check_current_project.js';
+import { db } from './firebase.js';
+import { collection, getDocs, getDoc, addDoc, doc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
-    await ensureCurrentProject();  // дождёмся проверки/создания currentProject
-    await init();                  // потом вызываем загрузку фасадов и элементов
+  await ensureCurrentProject(); // дождёмся проверки/создания currentProject
+  await init(); // загрузка фасадов, элементов и сотрудников
 });
 
 // ================== Индикатор загрузки ==================
@@ -44,16 +46,10 @@ async function loadFacades() {
   select.innerHTML = '';
 
   showLoader();
-  let currentProject;
   try {
     const settingsSnapshot = await getDoc(doc(db,'settings','currentProject'));
-    if (!settingsSnapshot.exists()) {
-      console.log('Current project not found');
-      hideLoader();
-      return;
-    }
-    currentProject = settingsSnapshot.data().name;
-    console.log('Current project:', currentProject);
+    if (!settingsSnapshot.exists()) { hideLoader(); return; }
+    const currentProject = settingsSnapshot.data().name;
 
     const snapshot = await getDocs(collection(db,'facades'));
     let hasFacades = false;
@@ -67,6 +63,8 @@ async function loadFacades() {
       select.appendChild(option);
     });
     if (!hasFacades) alert('Нет фасадов для текущего проекта');
+
+    await populateEmployeeSelect();
   } catch (err) {
     console.error('Error loading facades:',err);
   } finally {
@@ -82,11 +80,8 @@ async function loadElements() {
   elementSelect.innerHTML = '';
 
   showLoader();
-  let currentProject;
   try {
-    const settingsSnapshot = await getDoc(doc(db,'settings','currentProject'));
-    currentProject = settingsSnapshot.data()?.name;
-
+    const currentProject = (await getDoc(doc(db,'settings','currentProject'))).data()?.name;
     const currentFacade = facadeSelect.value;
     const snapshot = await getDocs(collection(db,'elements'));
     let hasElements = false;
@@ -107,6 +102,27 @@ async function loadElements() {
   }
 }
 
+// ================== LOAD EMPLOYEES ==================
+async function populateEmployeeSelect() {
+  const select = document.getElementById('employee');
+  if (!select) return;
+  select.innerHTML = '';
+
+  showLoader();
+  try {
+    const snapshot = await getDocs(collection(db,'employees'));
+    snapshot.forEach(docItem => {
+      const data = docItem.data();
+      const option = document.createElement('option');
+      option.value = data.name;
+      option.textContent = data.name;
+      select.appendChild(option);
+    });
+  } catch(err) {
+    console.error('Error loading employees:', err);
+  } finally { hideLoader(); }
+}
+
 // ================== SAVE DATA ==================
 window.saveData = async function(){
   const facadeId = document.getElementById('elementId').value;
@@ -124,11 +140,8 @@ window.saveData = async function(){
   }
 
   showLoader();
-  let currentProject;
   try {
-    const settingsDoc = await getDoc(doc(db,'settings','currentProject'));
-    currentProject = settingsDoc.data()?.name;
-
+    const currentProject = (await getDoc(doc(db,'settings','currentProject'))).data()?.name;
     const photos=[];
     for(const file of photosInputs){ if(file) photos.push(await fileToBase64(file)); }
 
