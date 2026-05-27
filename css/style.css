@@ -835,30 +835,37 @@ button {
 
 }
 
+:root {
+  --reynaers-white: #ffffff;
+  --reynaers-lightgray: #f0f0f0;
+  --reynaers-blue: #3344ff;
+  --reynaers-lightblue: #5a7fff;
+}
+
 /* ================= Admin Panel Vertical Wide Panels ================= */
 .admin-layout {
   display: flex;
-  flex-direction: column; /* вертикальное расположение */
-  gap: 36px; /* расстояние между панелями */
+  flex-direction: column;
+  gap: 36px;
   justify-content: flex-start;
   align-items: center;
   padding: 24px;
   max-width: 100%;
   margin: 0 auto;
-  overflow-y: auto; /* вертикальная прокрутка при переполнении */
-  height: 100vh; /* прокрутка на весь экран */
+  overflow-y: auto; /* прокрутка экрана */
+  height: 100vh;
 }
 
 .input-panel {
   background: var(--reynaers-white);
   border-radius: 18px;
-  padding: 36px; /* увеличенная подача */
+  padding: 36px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  width: 480px; /* ширина панели 1.5× */
+  width: 480px; /* панели шире на 1.5 раза */
   box-sizing: border-box;
-  overflow: hidden; /* убираем движки */
-  resize: none;      /* запрещаем растягивать */
+  overflow: visible; /* убираем прокрутку внутри панели */
+  resize: none; /* отключаем движки */
 }
 
 .input-panel h2 {
@@ -912,5 +919,16 @@ textarea {
 
 textarea {
   min-height: 120px;
-  resize: vertical;
+  resize: none; /* отключаем движок */
+}
+
+/* маленькие экраны */
+@media (max-width: 900px) {
+  .admin-layout {
+    padding: 16px;
+  }
+  .input-panel {
+    width: 100%;
+    padding: 24px;
+  }
 }
