@@ -1,9 +1,10 @@
-// app.js — доработка интерфейса: индикатор загрузки, уведомления о пустых фасадах/элементах, проверка размера фото
+// app.js — обновлённая инициализация для главной страницы
+import { ensureCurrentProject } from './firebase_check_current_project.js';
 
-import { db } from './firebase.js';
-import { collection, addDoc, getDocs, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
-
-console.log('APP START');
+document.addEventListener('DOMContentLoaded', async () => {
+    await ensureCurrentProject();  // дождёмся проверки/создания currentProject
+    await init();                  // потом вызываем загрузку фасадов и элементов
+});
 
 // ================== Индикатор загрузки ==================
 const loader = document.createElement('div');
