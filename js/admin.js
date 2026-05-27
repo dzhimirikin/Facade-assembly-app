@@ -4,6 +4,7 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
   doc,
   setDoc,
   getDoc
@@ -817,40 +818,40 @@ import { db } from "./firebase.js";
 import { collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* =====================================================
-   CLEAR DATABASE
+CLEAR DATABASE
 ===================================================== */
+const clearDatabaseBtn = document.getElementById('clearDatabaseBtn');
 
-import { db } from "./firebase.js"; // ваш файл с инициализацией
-import {
-  collection,
-  getDocs,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+clearDatabaseBtn.addEventListener('click', async () => {
+  const confirmed = confirm('⚠️ This will permanently delete all data. Are you sure?');
+  if (!confirmed) return;
 
-// Функция очистки коллекции
-async function clearDatabase() {
-  const confirmDelete = confirm("⚠️ This will permanently delete all data. Are you sure?");
-  if (!confirmDelete) return;
+  const collections = ['projects', 'facades', 'elements', 'employees', 'assembly', 'settings'];
 
   try {
-    // Получаем все документы в коллекции "assembly"
-    const colSnap = await getDocs(collection(db, "assembly"));
-    const deletePromises = [];
+    for (const colName of collections) {
+      const snapshot = await getDocs(collection(db, colName));
+      const deletePromises = [];
+      snapshot.forEach(docItem => {
+        deletePromises.push(deleteDoc(doc(db, colName, docItem.id)));
+      });
+      await Promise.all(deletePromises);
+    }
 
-    colSnap.forEach(docSnap => {
-      deletePromises.push(deleteDoc(doc(db, "assembly", docSnap.id)));
-    });
+    alert('Database cleared successfully!');
 
-    await Promise.all(deletePromises);
-    alert("Database cleared successfully!");
-    // Можно добавить перезагрузку страницы или обновление интерфейса
-    window.location.reload();
+    // Обновляем интерфейс после очистки (вызываем ваши функции загрузки данных)
+    loadProjects?.();
+    loadFacades?.();
+    loadFacadeSelect?.();
+    loadElementsList?.();
+    loadEmployees?.();
+
   } catch (err) {
-    console.error("Error clearing database:", err);
-    alert("Error clearing database: " + err.message);
+    console.error('Error clearing database:', err);
+    alert('Error clearing database: ' + err.message);
   }
-}
+});
 
 // Привязываем к кнопке
 document.getElementById("clearDatabaseBtn").addEventListener("click", clearDatabase);
