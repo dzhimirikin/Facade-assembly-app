@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -7,81 +6,150 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facade Control System - Admin</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css" /> <!-- Используем общий стиль -->
+  <style>
+    /* ================= Admin Panel Single Column ================= */
+    .admin-layout {
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+      justify-content: center;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .input-panel {
+      background: var(--reynaers-white);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      border: 1px solid var(--reynaers-lightgray);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .input-panel h2 {
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+
+    button,
+    .submit-btn {
+      background: var(--reynaers-blue);
+      color: var(--reynaers-white);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    button:hover,
+    .submit-btn:hover {
+      background: var(--reynaers-lightblue);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li {
+      padding: 8px;
+      background: var(--reynaers-lightgray);
+      border-radius: 8px;
+      margin-bottom: 6px;
+    }
+
+    select,
+    input[type=text],
+    input[type=file],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--reynaers-lightgray);
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+  </style>
 </head>
 
 <body>
 
   <!-- TOPBAR -->
-
   <header class="topbar">
     <div class="logo">Facade Control System</div>
+
     <nav class="menu">
       <a href="index.html" class="menu-btn">Assembly</a>
       <a href="admin.html" class="menu-btn active">Admin</a>
     </nav>
+
     <div class="user-role">Admin</div>
   </header>
 
   <!-- MAIN ADMIN PANEL -->
+  <main class="admin-layout">
+    <section class="input-panel">
+      <h2>Projects</h2>
+      <input type="text" placeholder="Project Name" id="projectName" />
+      <select id="projectList"></select>
+      <button onclick="setCurrentProject()">Set Current</button>
+      <button onclick="addProject()">Add Project</button>
+    </section>
 
-  <main class="admin-grid-container">
+    <section class="input-panel">
+      <h2>Import TXT</h2>
+      <input type="file" id="txtFile" />
+      <button onclick="importTXT()">Import TXT</button>
+    </section>
 
-```
-<section class="input-panel">
-  <h2>Projects</h2>
-  <input type="text" placeholder="Project Name" id="projectName" />
-  <select id="projectSelect"></select>
-  <button onclick="setCurrentProject()">Set Current</button>
-  <button onclick="addProject()">Add Project</button>
-</section>
+    <section class="input-panel">
+      <h2>Add Facade</h2>
+      <input type="text" placeholder="Facade Name" id="facadeName" />
+      <button onclick="addFacade()">Add Facade</button>
+    </section>
 
-<section class="input-panel">
-  <h2>Import TXT</h2>
-  <input type="file" id="txtFile" />
-  <button onclick="importTXT()">Import TXT</button>
-</section>
+    <section class="input-panel">
+      <h2>Facade List</h2>
+      <ul id="facadeList"></ul>
+    </section>
 
-<section class="input-panel">
-  <h2>Add Facade</h2>
-  <input type="text" placeholder="Facade Name" id="facadeName" />
-  <button onclick="addFacade()">Add Facade</button>
-</section>
+    <section class="input-panel">
+      <h2>Add Element</h2>
+      <input type="text" placeholder="Element Name" id="newElement" />
+      <input type="file" id="elementFile" />
+      <button onclick="addElement()">Add Element</button>
+      <button onclick="importElementsTXT()">Import Elements TXT</button>
+    </section>
 
-<section class="input-panel">
-  <h2>Facade List</h2>
-  <select id="facadeSelect"></select>
-</section>
+    <section class="input-panel">
+      <h2>Elements List</h2>
+      <ul id="elementsList"></ul>
+    </section>
 
-<section class="input-panel">
-  <h2>Add Element</h2>
-  <input type="text" placeholder="Element Name" id="newElement" />
-  <input type="file" id="elementFile" />
-  <button onclick="addElement()">Add Element</button>
-  <button onclick="importElementsTXT()">Import Elements TXT</button>
-</section>
-
-<section class="input-panel">
-  <h2>Elements List</h2>
-  <ul id="elementList"></ul>
-</section>
-
-<section class="input-panel">
-  <h2>Employees</h2>
-  <input type="text" placeholder="Employee Name" id="employeeName" />
-  <button onclick="addEmployee()">Add Employee</button>
-  <ul id="employeeList"></ul>
-</section>
-```
-
+    <section class="input-panel">
+      <h2>Employees</h2>
+      <input type="text" placeholder="Employee Name" id="employeeName" />
+      <button onclick="addEmployee()">Add Employee</button>
+      <ul id="employeesList"></ul>
+    </section>
   </main>
 
-  <!-- Подключаем старый рабочий JS -->
-
+  <!-- Подключаем Firebase и JS -->
   <script type="module" src="js/firebase.js"></script>
-
   <script type="module" src="js/firebase_check_current_project.js"></script>
-
   <script type="module" src="js/admin.js"></script>
 
 </body>
