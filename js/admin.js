@@ -812,3 +812,25 @@ async function init() {
 }
 
 init();
+
+/* =====================================================
+   ПОЛНАЯ ОЧИСТКА БАЗЫ FIREBASE
+===================================================== */
+
+const clearDatabaseBtn = document.getElementById("clearDatabaseBtn");
+
+clearDatabaseBtn.addEventListener("click", async () => {
+  const confirmed = confirm(
+    "Вы точно хотите удалить все записи в базе? Действие необратимо!"
+  );
+  if (!confirmed) return;
+
+  try {
+    const dbRef = firebase.database().ref("/"); // корень базы
+    await dbRef.remove();
+    alert("База данных успешно очищена!");
+  } catch (err) {
+    console.error(err);
+    alert("Ошибка при очистке базы: " + err.message);
+  }
+});
