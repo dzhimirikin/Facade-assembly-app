@@ -5,8 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facade Control System - Admin</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css" /> <!-- Главный стиль -->
   <style>
+    :root {
+      --reynaers-white: #ffffff;
+      --reynaers-lightgray: #f0f0f0;
+      --reynaers-blue: #3344ff;
+      --reynaers-lightblue: #5a7fff;
+    }
+
     /* ================= Admin Panel Vertical Wide Panels ================= */
     .admin-layout {
       display: flex;
@@ -17,7 +24,7 @@
       padding: 24px;
       max-width: 100%;
       margin: 0 auto;
-      overflow-y: auto;
+      overflow-y: auto; /* прокрутка экрана */
       height: 100vh;
     }
 
@@ -27,10 +34,10 @@
       padding: 36px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       border: 1px solid var(--reynaers-lightgray);
-      width: 480px;
+      width: 480px; /* панели в 1.5 раза шире */
       box-sizing: border-box;
-      overflow: hidden;
-      resize: none;
+      overflow: visible; /* убираем внутренние скроллы */
+      resize: none; /* убираем движки */
     }
 
     .input-panel h2 {
@@ -84,7 +91,17 @@
 
     textarea {
       min-height: 120px;
-      resize: vertical;
+      resize: none;
+    }
+
+    @media (max-width: 900px) {
+      .admin-layout {
+        padding: 16px;
+      }
+      .input-panel {
+        width: 100%;
+        padding: 24px;
+      }
     }
   </style>
 </head>
