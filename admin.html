@@ -1,36 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facade Control System - Admin</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/style.css" /> <!-- Используем общий стиль -->
+  <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ================= Admin Panel Single Column ================= */
+    /* ================= Admin Panel Vertical Wide Panels ================= */
     .admin-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+      justify-content: flex-start;
+      align-items: center;
       padding: 24px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 24px;
-      justify-content: center;
-      max-width: 800px;
+      max-width: 100%;
       margin: 0 auto;
+      overflow-y: auto;
+      height: 100vh;
     }
 
     .input-panel {
       background: var(--reynaers-white);
       border-radius: 18px;
-      padding: 24px;
+      padding: 36px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.08);
       border: 1px solid var(--reynaers-lightgray);
-      width: 100%;
+      width: 480px; /* панели в 1.5 раза шире */
       box-sizing: border-box;
+      overflow: hidden;
+      resize: none;
     }
 
     .input-panel h2 {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       font-size: 18px;
     }
 
@@ -84,27 +88,25 @@
     }
   </style>
 </head>
-
 <body>
 
   <!-- TOPBAR -->
   <header class="topbar">
     <div class="logo">Facade Control System</div>
-
     <nav class="menu">
       <a href="index.html" class="menu-btn">Assembly</a>
       <a href="admin.html" class="menu-btn active">Admin</a>
     </nav>
-
     <div class="user-role">Admin</div>
   </header>
 
   <!-- MAIN ADMIN PANEL -->
   <main class="admin-layout">
+
     <section class="input-panel">
       <h2>Projects</h2>
       <input type="text" placeholder="Project Name" id="projectName" />
-      <select id="projectList"></select>
+      <select id="projectSelect"></select>
       <button onclick="setCurrentProject()">Set Current</button>
       <button onclick="addProject()">Add Project</button>
     </section>
@@ -145,13 +147,15 @@
       <button onclick="addEmployee()">Add Employee</button>
       <ul id="employeesList"></ul>
     </section>
+
   </main>
 
-  <!-- Подключаем Firebase и JS -->
+  <!-- Подключаем старый рабочий JS -->
   <script type="module" src="js/firebase.js"></script>
   <script type="module" src="js/firebase_check_current_project.js"></script>
   <script type="module" src="js/admin.js"></script>
 
 </body>
+</html>
 
 </html>
