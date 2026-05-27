@@ -1,106 +1,368 @@
-/* =====================================================
-   VIEWER.JS - UPDATED
-===================================================== */
+import { db } from "./firebase.js";
 
-/* =====================================================
-   LOAD FILTERED DATA
-===================================================== */
-const filteredData = JSON.parse(
-  sessionStorage.getItem("filteredRows") || "[]"
-);
+import {
+  collection,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 /* =====================================================
    ELEMENTS
 ===================================================== */
-const viewerTable = document.getElementById("viewerTable");
+
+const table =
+  document.getElementById(
+    "viewerTable"
+  );
+
+const searchInput =
+  document.getElementById(
+    "searchInput"
+  );
+
+const viewPdfBtn =
+  document.getElementById(
+    "viewPdfBtn"
+  );
 
 /* =====================================================
-   RENDER VIEWER
+   DATA
 ===================================================== */
 
-function renderViewer({ mode = "facade" } = {}) {
-  if (!filteredData.length) {
-    viewerTable.innerHTML = `
-      <tr><td colspan="7" style="text-align:center;">No data available. Apply a filter first.</td></tr>
-    `;
-    return;
-  }
+let allRows = [];
 
-  // Group data by facade or element
-  const groups = {};
-  filteredData.forEach(item => {
-    const key = mode === "facade" ? item.facadeId : `${item.facadeId}.${item.subElementId}`;
-    if (!groups[key]) groups[key] = [];
-    groups[key].push(item);
-  });
+let filteredRows = [];
 
-  let html = "";
+let unsubscribe = null;
 
-  Object.keys(groups).forEach(groupKey => {
-    const groupItems = groups[groupKey];
+/* =====================================================
+   LOAD VIEWER
+===================================================== */
 
-    html += `
-      <tr class="group-header">
-        <td colspan="7" style="font-weight:600; background:#eee;">
-          ${mode === "facade" ? "Facade" : "Element"}: ${groupKey}
-        </td>
-      </tr>
-    `;
+function loadViewer() {
 
-    groupItems.forEach(item => {
-      const timestamp = item.timestamp?.seconds
-        ? new Date(item.timestamp.seconds * 1000).toLocaleString()
-        : item.timestamp || "";
+  if (unsubscribe)
+    unsubscribe();
 
-      const photos = (item.photos || []).filter(p => p);
+  const assemblyQuery = query(
 
-      html += `
-        <tr>
-          <td>${item.facadeId || ""}</td>
-          <td>${item.subElementId || ""}</td>
-          <td>${item.stage || ""}</td>
-          <td>${item.employee || ""}</td>
-          <td>${item.note || ""}</td>
-          <td>
-            ${photos
-              .map(photo =>
-                typeof photo === "string"
-                  ? `<div class="old-photo">${photo}</div>`
-                  : `<img src="${photo.data}" style="max-width:100px; max-height:80px; display:block; margin-bottom:4px;" />`
-              ).join("")
-            }
-          </td>
-          <td>${timestamp}</td>
-        </tr>
-      `;
-    });
-  });
+    collection(db, "assembly"),
 
-  viewerTable.innerHTML = html;
+    orderBy("timestamp", "desc")
+
+  );
+
+  unsubscribe = onSnapshot(
+
+    assemblyQuery,
+
+    (snapshot) => {
+
+      allRows = [];
+
+      snapshot.forEach((docItem) => {
+
+        try {
+
+          const data =
+            docItem.data();
+
+          allRows.push({
+
+            id: docItem.id,
+
+            ...data
+
+          });
+
+        }
+
+        catch (error) {
+
+          console.error(
+            "ROW ERROR:",
+            error
+          );
+
+        }
+
+      });
+
+      console.log(
+        "ROWS:",
+        allRows
+      );
+
+      renderTable(allRows);
+
+    },
+
+    (error) => {
+
+      console.error(
+        "SNAPSHOT ERROR:",
+        error
+      );
+
+    }
+
+  );
+
 }
 
 /* =====================================================
-   BUTTONS - Switch Mode
+   PHOTO COUNT
 ===================================================== */
-const previewFacadeBtn = document.createElement("button");
-previewFacadeBtn.textContent = "Preview Facade";
-previewFacadeBtn.className = "menu-btn";
-previewFacadeBtn.style.marginRight = "8px";
-previewFacadeBtn.onclick = () => renderViewer({ mode: "facade" });
 
-const previewElementBtn = document.createElement("button");
-previewElementBtn.textContent = "Preview Element";
-previewElementBtn.className = "menu-btn";
-previewElementBtn.onclick = () => renderViewer({ mode: "element" });
+function getPhotoCount(photos) {
 
-// Add buttons dynamically after DOM loads
-window.addEventListener("DOMContentLoaded", () => {
-  const menu = document.querySelector(".menu");
-  if (menu) {
-    menu.insertBefore(previewFacadeBtn, menu.children[1]);
-    menu.insertBefore(previewElementBtn, menu.children[2]);
+  return (photos || [])
+    .filter((photo) => {
+
+      if (!photo)
+        return false;
+
+      /* OLD FORMAT */
+
+      if (
+        typeof photo === "string"
+      )
+        return true;
+
+      /* NEW FORMAT */
+
+      return !!photo.data;
+
+    })
+    .length;
+
+}
+
+/* =====================================================
+   TIMESTAMP
+===================================================== */
+
+function formatTimestamp(timestamp) {
+
+  try {
+
+    if (!timestamp)
+      return "";
+
+    const ts =
+      timestamp?.toDate?.()
+      || new Date(timestamp);
+
+    return ts.toLocaleString();
+
   }
 
-  // Initial render in facade mode
-  renderViewer({ mode: "facade" });
-});
+  catch (error) {
+
+    console.error(
+      "TIMESTAMP ERROR:",
+      error
+    );
+
+    return "";
+
+  }
+
+}
+
+/* =====================================================
+   RENDER TABLE
+===================================================== */
+
+function renderTable(dataArray) {
+
+  table.innerHTML = "";
+
+  dataArray.forEach((data) => {
+
+    try {
+
+      const row =
+        document.createElement("tr");
+
+      const photoCount =
+        getPhotoCount(
+          data.photos
+        );
+
+      const tsStr =
+        formatTimestamp(
+          data.timestamp
+        );
+
+      row.innerHTML = `
+
+        <td>${data.facadeId || ""}</td>
+
+        <td>${data.subElementId || ""}</td>
+
+        <td>${data.stage || ""}</td>
+
+        <td>${data.employee || ""}</td>
+
+        <td>${data.note || ""}</td>
+
+        <td>${photoCount}</td>
+
+        <td>${tsStr}</td>
+
+      `;
+
+      /* EDIT MODE */
+
+      row.addEventListener(
+
+        "dblclick",
+
+        () => {
+
+          window.open(
+
+            `editor.html?id=${data.id}`,
+
+            "_blank"
+
+          );
+
+        }
+
+      );
+
+      table.appendChild(row);
+
+    }
+
+    catch (error) {
+
+      console.error(
+        "RENDER ERROR:",
+        error
+      );
+
+    }
+
+  });
+
+}
+
+/* =====================================================
+   FILTER
+===================================================== */
+
+window.searchData = function () {
+
+  const q =
+    searchInput.value
+      .toLowerCase()
+      .trim();
+
+  if (!q) {
+
+    filteredRows =
+      [...allRows];
+
+  }
+
+  else {
+
+    filteredRows =
+      allRows.filter((item) => {
+
+        const text = `
+
+          ${item.facadeId || ""}
+          ${item.subElementId || ""}
+          ${item.stage || ""}
+          ${item.employee || ""}
+          ${item.note || ""}
+
+        `
+          .toLowerCase();
+
+        return text.includes(q);
+
+      });
+
+  }
+
+  renderTable(filteredRows);
+
+  /* ENABLE PDF */
+
+  if (
+    filteredRows.length > 0
+  ) {
+
+    viewPdfBtn?.classList.remove(
+      "disabled"
+    );
+
+  }
+
+  else {
+
+    viewPdfBtn?.classList.add(
+      "disabled"
+    );
+
+  }
+
+};
+
+/* =====================================================
+   VIEW PDF
+===================================================== */
+
+viewPdfBtn?.addEventListener(
+
+  "click",
+
+  () => {
+
+    if (
+      viewPdfBtn.classList.contains(
+        "disabled"
+      )
+    )
+      return;
+
+    if (!filteredRows.length)
+      return;
+
+    sessionStorage.setItem(
+
+      "filteredRows",
+
+      JSON.stringify(filteredRows)
+
+    );
+
+    window.open(
+
+      "viewer_detail.html",
+
+      "_blank"
+
+    );
+
+  }
+
+);
+
+/* =====================================================
+   INIT
+===================================================== */
+
+window.addEventListener(
+
+  "DOMContentLoaded",
+
+  loadViewer
+
+);
