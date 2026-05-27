@@ -1,6 +1,32 @@
-<link rel="stylesheet" href="css/style.css">
-<main class="admin-layout">
-  <div class="admin-grid">
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facade Control System - Admin</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/style.css" /> <!-- Используем стиль главной страницы -->
+</head>
+
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo">Facade Control System</div>
+
+    <nav class="menu">
+      <a href="index.html" class="menu-btn">Assembly</a>
+      <a href="admin.html" class="menu-btn active">Admin</a>
+    </nav>
+
+    <div class="user-role">Admin</div>
+  </header>
+
+  <!-- MAIN ADMIN PANEL -->
+  <main class="layout">
+
+    <!-- Projects -->
     <section class="input-panel">
       <h2>Projects</h2>
       <input type="text" placeholder="Project Name" id="projectName" />
@@ -9,41 +35,56 @@
       <button onclick="addProject()">Add Project</button>
     </section>
 
+    <!-- Import TXT -->
     <section class="input-panel">
       <h2>Import TXT</h2>
       <input type="file" id="txtFile" />
       <button onclick="importTXT()">Import TXT</button>
     </section>
 
+    <!-- Add Facade -->
     <section class="input-panel">
       <h2>Add Facade</h2>
       <input type="text" placeholder="Facade Name" id="facadeName" />
       <button onclick="addFacade()">Add Facade</button>
     </section>
 
+    <!-- Facade List -->
     <section class="input-panel">
       <h2>Facade List</h2>
-      <ul id="facadeList"></ul>
+      <select id="facadeList"></select>
     </section>
 
+    <!-- Elements -->
     <section class="input-panel">
       <h2>Elements</h2>
+      <select id="selectFacade"></select>
       <input type="text" placeholder="Element Name" id="newElement" />
       <input type="file" id="elementFile" />
       <button onclick="addElement()">Add Element</button>
       <button onclick="importElementsTXT()">Import Elements TXT</button>
     </section>
 
+    <!-- Elements List -->
     <section class="input-panel">
       <h2>Elements List</h2>
       <ul id="elementsList"></ul>
     </section>
 
+    <!-- Employees -->
     <section class="input-panel">
       <h2>Employees</h2>
       <input type="text" placeholder="Employee Name" id="employeeName" />
       <button onclick="addEmployee()">Add Employee</button>
       <ul id="employeesList"></ul>
     </section>
-  </div>
-</main>
+
+  </main>
+
+  <!-- JS -->
+  <script type="module" src="js/firebase_check_current_project.js"></script>
+  <script type="module" src="js/admin.js"></script>
+
+</body>
+
+</html>
