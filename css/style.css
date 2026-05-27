@@ -859,7 +859,7 @@ button {
   padding: 36px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  width: 640px; /* панели в 2 раза шире */
+  width: 1200px; 
   max-width: 90%; /* не вылезать за экран */
   box-sizing: border-box;
   overflow: hidden; /* убираем движки */
