@@ -813,9 +813,13 @@ async function init() {
 
 init();
 
+import { db } from "./firebase.js";
+import { collection, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 /* =====================================================
    CLEAR DATABASE
 ===================================================== */
+
 const clearDatabaseBtn = document.getElementById("clearDatabaseBtn");
 
 clearDatabaseBtn.addEventListener("click", async () => {
@@ -833,9 +837,14 @@ clearDatabaseBtn.addEventListener("click", async () => {
       }
     }
     alert("База данных успешно очищена!");
+
     // обновляем интерфейс после очистки
-    loadProjects();
-    // Можно добавить загрузку фасадов, элементов, сотрудников
+    await loadProjects();
+    await loadFacades();
+    await loadFacadeSelect();
+    await loadElementsList();
+    await loadEmployees();
+
   } catch (err) {
     console.error(err);
     alert("Ошибка при очистке Firestore: " + err.message);
