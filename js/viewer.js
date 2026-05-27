@@ -1,105 +1,106 @@
 /* =====================================================
-   VIEWER FOR PDF / PRINT
+   VIEWER.JS - UPDATED
 ===================================================== */
-
-const data = JSON.parse(sessionStorage.getItem("filteredRows") || "[]");
-
-const container = document.getElementById("detailContainer");
 
 /* =====================================================
-   RENDER REPORT
+   LOAD FILTERED DATA
+===================================================== */
+const filteredData = JSON.parse(
+  sessionStorage.getItem("filteredRows") || "[]"
+);
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+const viewerTable = document.getElementById("viewerTable");
+
+/* =====================================================
+   RENDER VIEWER
 ===================================================== */
 
-function renderViewer(viewBy = "facade") {
-  if (!data.length) {
-    container.innerHTML = `<div class="print-sheet"><h1>No filtered data</h1></div>`;
+function renderViewer({ mode = "facade" } = {}) {
+  if (!filteredData.length) {
+    viewerTable.innerHTML = `
+      <tr><td colspan="7" style="text-align:center;">No data available. Apply a filter first.</td></tr>
+    `;
     return;
   }
 
-  // Группировка данных
-  let grouped;
-  if (viewBy === "facade") {
-    grouped = data.reduce((acc, item) => {
-      const key = item.facadeId || "Unknown";
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {});
-  } else if (viewBy === "element") {
-    grouped = data.reduce((acc, item) => {
-      const key = `${item.facadeId || "Unknown"}_${item.subElementId || "Unknown"}`;
-      if (!acc[key]) acc[key] = [];
-      acc[key].push(item);
-      return acc;
-    }, {});
-  }
+  // Group data by facade or element
+  const groups = {};
+  filteredData.forEach(item => {
+    const key = mode === "facade" ? item.facadeId : `${item.facadeId}.${item.subElementId}`;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push(item);
+  });
 
-  container.innerHTML = `
-    <div class="print-toolbar">
-      <button onclick="window.print()">Print / PDF</button>
-    </div>
-    ${Object.keys(grouped).map(groupKey => {
-      const items = grouped[groupKey];
-      // Название фасада или элемента
-      const headerTitle = viewBy === "facade"
-        ? `ASSEMBLY REPORT<br>${groupKey}`
-        : `ASSEMBLY REPORT<br>${items[0].subElementId || groupKey} of facade ${items[0].facadeId || ""}`;
+  let html = "";
 
-      return `
-        <div class="print-sheet">
-          <h1>${headerTitle}</h1>
-          ${items.map(item => {
-            const photos = (item.photos || []).filter(p => p);
-            let tsStr = "";
-            try {
-              const ts = item.timestamp?.seconds
-                ? new Date(item.timestamp.seconds * 1000)
-                : new Date(item.timestamp || "");
-              tsStr = ts ? ts.toLocaleString() : "";
-            } catch {
-              tsStr = item.timestamp || "";
+  Object.keys(groups).forEach(groupKey => {
+    const groupItems = groups[groupKey];
+
+    html += `
+      <tr class="group-header">
+        <td colspan="7" style="font-weight:600; background:#eee;">
+          ${mode === "facade" ? "Facade" : "Element"}: ${groupKey}
+        </td>
+      </tr>
+    `;
+
+    groupItems.forEach(item => {
+      const timestamp = item.timestamp?.seconds
+        ? new Date(item.timestamp.seconds * 1000).toLocaleString()
+        : item.timestamp || "";
+
+      const photos = (item.photos || []).filter(p => p);
+
+      html += `
+        <tr>
+          <td>${item.facadeId || ""}</td>
+          <td>${item.subElementId || ""}</td>
+          <td>${item.stage || ""}</td>
+          <td>${item.employee || ""}</td>
+          <td>${item.note || ""}</td>
+          <td>
+            ${photos
+              .map(photo =>
+                typeof photo === "string"
+                  ? `<div class="old-photo">${photo}</div>`
+                  : `<img src="${photo.data}" style="max-width:100px; max-height:80px; display:block; margin-bottom:4px;" />`
+              ).join("")
             }
-
-            return `
-              <table class="detail-table">
-                <tr><td>Operation</td><td>${item.stage || ""}</td></tr>
-                <tr><td>Employee</td><td>${item.employee || ""}</td></tr>
-                <tr><td>Time</td><td>${tsStr}</td></tr>
-                <tr><td>Note</td><td>${item.note || ""}</td></tr>
-              </table>
-              <div class="photo-section">
-                ${photos.map(photo => `
-                  <div class="photo-card">
-                    ${typeof photo === "string"
-                      ? `<div class="old-photo">${photo}</div>`
-                      : `<img src="${photo.data}" class="pdf-photo" />`}
-                  </div>
-                `).join("")}
-              </div>
-              <hr />
-            `;
-          }).join("")}
-        </div>
+          </td>
+          <td>${timestamp}</td>
+        </tr>
       `;
-    }).join("")}
-  `;
+    });
+  });
+
+  viewerTable.innerHTML = html;
 }
 
 /* =====================================================
-   BUTTONS / INIT
+   BUTTONS - Switch Mode
 ===================================================== */
+const previewFacadeBtn = document.createElement("button");
+previewFacadeBtn.textContent = "Preview Facade";
+previewFacadeBtn.className = "menu-btn";
+previewFacadeBtn.style.marginRight = "8px";
+previewFacadeBtn.onclick = () => renderViewer({ mode: "facade" });
 
-// Создаем кнопки для выбора режима
-const toolbar = document.createElement("div");
-toolbar.className = "print-toolbar";
-toolbar.innerHTML = `
-  <button id="viewFacadeBtn">Preview Facade</button>
-  <button id="viewElementBtn">Preview Element</button>
-`;
-container.parentNode.insertBefore(toolbar, container);
+const previewElementBtn = document.createElement("button");
+previewElementBtn.textContent = "Preview Element";
+previewElementBtn.className = "menu-btn";
+previewElementBtn.onclick = () => renderViewer({ mode: "element" });
 
-document.getElementById("viewFacadeBtn").addEventListener("click", () => renderViewer("facade"));
-document.getElementById("viewElementBtn").addEventListener("click", () => renderViewer("element"));
+// Add buttons dynamically after DOM loads
+window.addEventListener("DOMContentLoaded", () => {
+  const menu = document.querySelector(".menu");
+  if (menu) {
+    menu.insertBefore(previewFacadeBtn, menu.children[1]);
+    menu.insertBefore(previewElementBtn, menu.children[2]);
+  }
 
-// Автозагрузка по фасаду
-window.addEventListener("DOMContentLoaded", () => renderViewer("facade"));
+  // Initial render in facade mode
+  renderViewer({ mode: "facade" });
+});
