@@ -835,34 +835,25 @@ button {
 
 }
 
-:root {
-  --reynaers-white: #ffffff;
-  --reynaers-lightgray: #f0f0f0;
-  --reynaers-blue: #3344ff;
-  --reynaers-lightblue: #5a7fff;
-}
-
-/* ================= Admin Panel New Grid ================= */
-.admin-grid-container {
+/* ================= Admin Panel Single Column ================= */
+.admin-layout {
+  padding: 24px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: 1fr; /* один столбец */
   gap: 24px;
   justify-content: center;
-  max-width: 1200px;
+  max-width: 800px; /* ограничиваем ширину панели */
   margin: 0 auto;
-  padding: 24px;
 }
 
-/* ================= Input Panels ================= */
 .input-panel {
   background: var(--reynaers-white);
-  border-radius: 12px;
+  border-radius: 18px;
   padding: 24px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  min-width: 300px;
-  overflow: hidden; /* убираем движки */
-  resize: none;      /* запрещаем растягивать */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input-panel h2 {
@@ -870,14 +861,13 @@ button {
   font-size: 18px;
 }
 
-/* ================= Buttons ================= */
 button,
 .submit-btn {
   background: var(--reynaers-blue);
   color: var(--reynaers-white);
   border: none;
-  border-radius: 8px;
-  padding: 10px 16px;
+  border-radius: 12px;
+  padding: 12px 18px;
   cursor: pointer;
   font-size: 14px;
   transition: 0.2s;
@@ -888,7 +878,6 @@ button:hover,
   background: var(--reynaers-lightblue);
 }
 
-/* ================= Lists ================= */
 ul {
   list-style: none;
   padding: 0;
@@ -898,11 +887,10 @@ ul {
 ul li {
   padding: 8px;
   background: var(--reynaers-lightgray);
-  border-radius: 6px;
+  border-radius: 8px;
   margin-bottom: 6px;
 }
 
-/* ================= Form Controls ================= */
 select,
 input[type=text],
 input[type=file],
@@ -911,7 +899,7 @@ textarea {
   padding: 12px;
   margin-bottom: 12px;
   border: 1px solid var(--reynaers-lightgray);
-  border-radius: 8px;
+  border-radius: 12px;
   font-size: 14px;
   outline: none;
   box-sizing: border-box;
@@ -922,13 +910,8 @@ textarea {
   resize: vertical;
 }
 
-/* ================= Responsive ================= */
 @media (max-width: 900px) {
-  .admin-grid-container {
-    grid-template-columns: 1fr;
+  .admin-layout {
     padding: 16px;
-  }
-  .input-panel {
-    width: 100%;
   }
 }
