@@ -6,70 +6,91 @@
 <title>Admin Panel</title>
 <link rel="stylesheet" href="css/admin.css">
 <style>
-body { font-family: Arial, sans-serif; margin:0; background:#f0f2f5; color:#333; }
-.container { max-width: 1200px; margin: auto; padding: 20px; }
+/* Верхняя панель как на главной странице */
+header { display:flex; justify-content:space-between; align-items:center; background:#111; color:#fff; padding:10px 20px; border-bottom:1px solid #333; }
+header .logo { font-weight:bold; font-size:1.2em; }
+header nav button { background:transparent; color:#fff; border:1px solid #fff; padding:6px 12px; margin-left:5px; border-radius:5px; cursor:pointer; }
+header nav button.active { background:#4f46e5; border-color:#4f46e5; }
+header nav button:hover { background:#4338ca; border-color:#4338ca; }
+header .user { font-size:0.9em; }
+
+.container { max-width: 1200px; margin:auto; padding:20px; background:#f0f2f5; }
 .card { background:#fff; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
 h1,h2,h3 { margin-top:0; }
-input, select, button { padding:10px; margin-top:5px; margin-bottom:15px; border-radius:6px; border:1px solid #ccc; width:100%; box-sizing:border-box; }
+input, select, button, textarea { padding:10px; width:100%; margin-bottom:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
 button { background:#4f46e5; color:#fff; border:none; cursor:pointer; }
 button:hover { background:#4338ca; }
 .flex { display:flex; gap:20px; flex-wrap:wrap; }
 .flex .card { flex:1 1 45%; }
-.section-title { font-size:1.2em; margin-bottom:10px; font-weight:bold; }
+.section-title { font-size:1.2em; font-weight:bold; margin-bottom:10px; }
+.back-btn { background:#111; color:#fff; border:1px solid #fff; padding:6px 12px; border-radius:5px; cursor:pointer; float:right; }
+.back-btn:hover { background:#4f46e5; border-color:#4f46e5; }
 </style>
 </head>
 <body>
+<header>
+  <div class="logo">Facade Control System</div>
+  <nav>
+    <button>Assembly</button>
+    <button>Viewer</button>
+    <button class="active">Admin</button>
+  </nav>
+  <div class="user">Worker</div>
+</header>
+
 <div class="container">
+  <button class="back-btn" onclick="window.location.href='index.html'">Back to Worker UI</button>
+  <h1>Admin Panel</h1>
 
-<div class="card">
-  <div class="section-title">Projects</div>
-  <input type="text" id="projectName" placeholder="Project Name">
-  <div class="flex">
-    <select id="currentProjectSelect"></select>
-    <button onclick="setCurrentProject()">Set Current</button>
+  <div class="card">
+    <div class="section-title">Projects</div>
+    <input type="text" id="projectName" placeholder="Project Name">
+    <div class="flex">
+      <select id="currentProjectSelect"></select>
+      <button onclick="setCurrentProject()">Set Current</button>
+    </div>
+    <button onclick="addProject()">Add Project</button>
   </div>
-  <button onclick="addProject()">Add Project</button>
-</div>
 
-<div class="card">
-  <div class="section-title">Import TXT</div>
-  <input type="file" id="importTxtFile">
-  <button onclick="importTXT()">Import TXT</button>
-</div>
+  <div class="card">
+    <div class="section-title">Import TXT</div>
+    <input type="file" id="importTxtFile">
+    <button onclick="importTXT()">Import TXT</button>
+  </div>
 
-<div class="card">
-  <div class="section-title">Add Facade</div>
-  <input type="text" id="facadeName" placeholder="Facade Name">
-  <button onclick="addFacade()">Add Facade</button>
-</div>
+  <div class="card">
+    <div class="section-title">Add Facade</div>
+    <input type="text" id="facadeName" placeholder="Facade Name">
+    <button onclick="addFacade()">Add Facade</button>
+  </div>
 
-<div class="card">
-  <div class="section-title">Facade List</div>
-  <ul id="facadeList"></ul>
-</div>
+  <div class="card">
+    <div class="section-title">Facade List</div>
+    <ul id="facadeList"></ul>
+  </div>
 
-<div class="card">
-  <div class="section-title">Elements</div>
-  <select id="facadeSelect" onchange="loadElements()"></select>
-  <input type="text" id="elementName" placeholder="Element Name">
-  <input type="file" id="elementsFile">
-  <button onclick="importElementsTXT()">Import Elements TXT</button>
-  <button onclick="addElement()">Add Element</button>
-</div>
+  <div class="card">
+    <div class="section-title">Elements</div>
+    <select id="facadeSelect" onchange="loadElements()"></select>
+    <input type="text" id="elementName" placeholder="Element Name">
+    <input type="file" id="elementsFile">
+    <button onclick="importElementsTXT()">Import Elements TXT</button>
+    <button onclick="addElement()">Add Element</button>
+  </div>
 
-<div class="card">
-  <div class="section-title">Elements List</div>
-  <ul id="elementsList"></ul>
-</div>
+  <div class="card">
+    <div class="section-title">Elements List</div>
+    <ul id="elementsList"></ul>
+  </div>
 
-<div class="card">
-  <div class="section-title">Employees</div>
-  <input type="text" id="employeeName" placeholder="Employee Name">
-  <button onclick="addEmployee()">Add Employee</button>
-  <ul id="employeesList"></ul>
+  <div class="card">
+    <div class="section-title">Employees</div>
+    <input type="text" id="employeeName" placeholder="Employee Name">
+    <button onclick="addEmployee()">Add Employee</button>
+    <ul id="employeesList"></ul>
+  </div>
 </div>
 
 <script type="module" src="js/admin.js"></script>
-</div>
 </body>
 </html>
