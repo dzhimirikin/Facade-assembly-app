@@ -842,18 +842,14 @@ button {
   --reynaers-lightblue: #5a7fff;
 }
 
-/* ================= Admin Panel Vertical Wide Panels ================= */
+/* ================= Admin Panel Wide Centered Panels ================= */
 .admin-layout {
   display: flex;
   flex-direction: column;
-  gap: 36px;
-  justify-content: flex-start;
-  align-items: center;
+  align-items: center; /* центрируем панели */
+  gap: 36px; /* расстояние между панелями */
   padding: 24px;
   max-width: 100%;
-  margin: 0 auto;
-  overflow-y: auto; /* прокрутка экрана */
-  height: 100vh;
 }
 
 .input-panel {
@@ -862,10 +858,10 @@ button {
   padding: 36px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  width: 480px; /* панели шире на 1.5 раза */
+  width: 640px; /* панели в 2 раза шире текущих 320px */
   box-sizing: border-box;
-  overflow: visible; /* убираем прокрутку внутри панели */
-  resize: none; /* отключаем движки */
+  overflow: hidden;
+  resize: none; /* убираем движки */
 }
 
 .input-panel h2 {
@@ -919,16 +915,10 @@ textarea {
 
 textarea {
   min-height: 120px;
-  resize: none; /* отключаем движок */
+  resize: vertical;
 }
 
-/* маленькие экраны */
-@media (max-width: 900px) {
-  .admin-layout {
-    padding: 16px;
-  }
-  .input-panel {
-    width: 100%;
-    padding: 24px;
-  }
+/* Скролл по экрану */
+body {
+  overflow-y: auto;
 }
