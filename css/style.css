@@ -835,23 +835,31 @@ button {
 
 }
 
-/* ================== Admin Panel Grid ================== */
+:root {
+  --reynaers-white: #ffffff;
+  --reynaers-lightgray: #f0f0f0;
+  --reynaers-blue: #3344ff;
+  --reynaers-lightblue: #5a7fff;
+}
+
+/* ================= Admin Panel Grid ================= */
 .admin-layout {
   padding: 24px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
   justify-content: center;
-  max-width: 1200px; /* ограничиваем ширину под заголовком */
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .input-panel {
   background: var(--reynaers-white);
   border-radius: 18px;
-  padding: 16px;
+  padding: 24px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
+  min-width: 300px;
 }
 
 .input-panel h2 {
@@ -859,10 +867,40 @@ button {
   font-size: 18px;
 }
 
-.input-panel input[type=text],
-.input-panel select,
-.input-panel input[type=file],
-.input-panel textarea {
+button,
+.submit-btn {
+  background: var(--reynaers-blue);
+  color: var(--reynaers-white);
+  border: none;
+  border-radius: 12px;
+  padding: 12px 18px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+button:hover,
+.submit-btn:hover {
+  background: var(--reynaers-lightblue);
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+ul li {
+  padding: 8px;
+  background: var(--reynaers-lightgray);
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+select,
+input[type=text],
+input[type=file],
+textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 12px;
@@ -873,24 +911,18 @@ button {
   box-sizing: border-box;
 }
 
-.input-panel textarea {
+textarea {
   min-height: 120px;
   resize: vertical;
 }
 
-.input-panel button {
-  padding: 12px 18px;
-  cursor: pointer;
-  font-size: 14px;
-  border: none;
-  border-radius: 12px;
-  background-color: var(--reynaers-blue);
-  color: var(--reynaers-white);
-  transition: 0.2s;
+@media (max-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+    padding: 16px;
+  }
+  .input-panel {
+    width: 100%;
+  }
 }
 
-.input-panel button:hover {
-  background-color: #2b3aeb;
-}
-
-@media
