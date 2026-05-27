@@ -835,29 +835,32 @@ button {
 
 }
 
-/* ================= Admin Panel Single Column ================= */
+/* ================= Admin Panel Grid - Vertical ================= */
 .admin-layout {
   padding: 24px;
-  display: grid;
-  grid-template-columns: 1fr; /* один столбец */
-  gap: 24px;
-  justify-content: center;
-  max-width: 800px; /* ограничиваем ширину панели */
+  display: flex;
+  flex-direction: column; /* вертикальное расположение */
+  gap: 36px; /* расстояние между панелями */
+  justify-content: flex-start;
+  align-items: center;
+  max-width: 1200px; 
   margin: 0 auto;
+  overflow-y: auto; /* вертикальная прокрутка при переполнении */
+  height: 100vh; /* чтобы прокрутка работала на весь экран */
 }
 
 .input-panel {
   background: var(--reynaers-white);
   border-radius: 18px;
-  padding: 24px;
+  padding: 36px; /* увеличенная подача */
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  width: 100%;
+  width: 480px; /* примерно в 1.5 раза шире стандартной панели 320px */
   box-sizing: border-box;
 }
 
 .input-panel h2 {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
   font-size: 18px;
 }
 
@@ -908,10 +911,4 @@ textarea {
 textarea {
   min-height: 120px;
   resize: vertical;
-}
-
-@media (max-width: 900px) {
-  .admin-layout {
-    padding: 16px;
-  }
 }
