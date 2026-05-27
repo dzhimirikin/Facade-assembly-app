@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facade Control System - Admin</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style.css" /> <!-- Используем стиль главной страницы -->
 </head>
 
 <body>
@@ -22,7 +22,7 @@
   </header>
 
   <!-- MAIN ADMIN PANEL -->
-  <main class="layout">
+  <main class="layout"> <!-- используем layout как на главной -->
 
     <!-- Projects -->
     <section class="input-panel">
@@ -43,7 +43,7 @@
     <!-- Add Facade -->
     <section class="input-panel">
       <h2>Add Facade</h2>
-      <input type="text" placeholder="Facade Name" id="facadeName" />
+      <input type="text" placeholder="Facade Name" id="newFacade" />
       <button onclick="addFacade()">Add Facade</button>
     </section>
 
@@ -51,13 +51,13 @@
     <section class="input-panel">
       <h2>Facade List</h2>
       <ul id="facadeList"></ul>
+      <select id="facadeSelect"></select>
     </section>
 
     <!-- Elements -->
     <section class="input-panel">
       <h2>Elements</h2>
-      <select id="selectFacade"></select>
-      <input type="text" placeholder="Element Name" id="elementName" />
+      <input type="text" placeholder="Element Name" id="newElement" />
       <input type="file" id="elementFile" />
       <button onclick="addElement()">Add Element</button>
       <button onclick="importElementsTXT()">Import Elements TXT</button>
@@ -79,8 +79,9 @@
 
   </main>
 
+  <!-- Подключаем старый рабочий JS -->
+  <script type="module" src="js/admin_old.js"></script>
   <script type="module" src="js/firebase_check_current_project.js"></script>
-  <script type="module" src="js/admin.js"></script>
 
 </body>
 
