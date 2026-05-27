@@ -842,37 +842,27 @@ button {
   --reynaers-lightblue: #5a7fff;
 }
 
-/* ================= Admin Panel Grid ================= */
-:root {
-  --reynaers-white: #ffffff;
-  --reynaers-lightgray: #f0f0f0;
-  --reynaers-blue: #3344ff;
-  --reynaers-lightblue: #5a7fff;
-}
-
-/* Основная сетка админки */
-.admin-layout {
-  display: flex;
-  justify-content: center;
-  padding: 24px;
-}
-
-.admin-grid {
+/* ================= Admin Panel New Grid ================= */
+.admin-grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
+  justify-content: center;
   max-width: 1200px;
-  width: 100%;
+  margin: 0 auto;
+  padding: 24px;
 }
 
-/* Панели модулей */
+/* ================= Input Panels ================= */
 .input-panel {
   background: var(--reynaers-white);
-  border-radius: 18px;
+  border-radius: 12px;
   padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border: 1px solid var(--reynaers-lightgray);
   min-width: 300px;
+  overflow: hidden; /* убираем движки */
+  resize: none;      /* запрещаем растягивать */
 }
 
 .input-panel h2 {
@@ -880,33 +870,14 @@ button {
   font-size: 18px;
 }
 
-/* Формы и кнопки */
-select,
-input[type=text],
-input[type=file],
-textarea {
-  width: 100%;
-  padding: 12px;
-  margin-bottom: 12px;
-  border: 1px solid var(--reynaers-lightgray);
-  border-radius: 12px;
-  font-size: 14px;
-  outline: none;
-  box-sizing: border-box;
-}
-
-textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
+/* ================= Buttons ================= */
 button,
 .submit-btn {
   background: var(--reynaers-blue);
   color: var(--reynaers-white);
   border: none;
-  border-radius: 12px;
-  padding: 12px 18px;
+  border-radius: 8px;
+  padding: 10px 16px;
   cursor: pointer;
   font-size: 14px;
   transition: 0.2s;
@@ -917,7 +888,7 @@ button:hover,
   background: var(--reynaers-lightblue);
 }
 
-/* Списки элементов */
+/* ================= Lists ================= */
 ul {
   list-style: none;
   padding: 0;
@@ -927,14 +898,35 @@ ul {
 ul li {
   padding: 8px;
   background: var(--reynaers-lightgray);
-  border-radius: 8px;
+  border-radius: 6px;
   margin-bottom: 6px;
 }
 
-/* Адаптивность */
+/* ================= Form Controls ================= */
+select,
+input[type=text],
+input[type=file],
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 12px;
+  border: 1px solid var(--reynaers-lightgray);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* ================= Responsive ================= */
 @media (max-width: 900px) {
-  .admin-grid {
+  .admin-grid-container {
     grid-template-columns: 1fr;
+    padding: 16px;
   }
   .input-panel {
     width: 100%;
