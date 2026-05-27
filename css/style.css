@@ -835,18 +835,18 @@ button {
 
 }
 
-/* ================= Admin Panel Grid - Vertical ================= */
+/* ================= Admin Panel Vertical Wide Panels ================= */
 .admin-layout {
-  padding: 24px;
   display: flex;
   flex-direction: column; /* вертикальное расположение */
   gap: 36px; /* расстояние между панелями */
   justify-content: flex-start;
   align-items: center;
-  max-width: 1200px; 
+  padding: 24px;
+  max-width: 100%;
   margin: 0 auto;
   overflow-y: auto; /* вертикальная прокрутка при переполнении */
-  height: 100vh; /* чтобы прокрутка работала на весь экран */
+  height: 100vh; /* прокрутка на весь экран */
 }
 
 .input-panel {
@@ -855,8 +855,10 @@ button {
   padding: 36px; /* увеличенная подача */
   box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   border: 1px solid var(--reynaers-lightgray);
-  width: 480px; /* примерно в 1.5 раза шире стандартной панели 320px */
+  width: 480px; /* ширина панели 1.5× */
   box-sizing: border-box;
+  overflow: hidden; /* убираем движки */
+  resize: none;      /* запрещаем растягивать */
 }
 
 .input-panel h2 {
