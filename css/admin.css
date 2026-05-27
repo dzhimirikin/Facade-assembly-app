@@ -1,126 +1,113 @@
-/* admin.css — гармонизированный стиль для административной панели */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f5f7;
+  margin: 0;
+}
 
-/* Верхняя панель */
-header {
+.topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: #111;
   color: #fff;
   padding: 10px 20px;
-  border-bottom: 1px solid #333;
 }
-header .logo {
+
+.topbar .logo {
   font-weight: bold;
-  font-size: 1.2em;
 }
-header nav button {
-  background: transparent;
+
+.menu {
+  display: flex;
+  gap: 5px;
+}
+
+.menu-btn {
+  background-color: transparent;
   color: #fff;
   border: 1px solid #fff;
-  padding: 6px 12px;
-  margin-left: 5px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s, border-color 0.3s;
-}
-header nav button.active {
-  background-color: #4f46e5;
-  border-color: #4f46e5;
-}
-header nav button:hover {
-  background-color: #4338ca;
-  border-color: #4338ca;
-}
-header .user {
-  font-size: 0.9em;
+  padding: 5px 12px;
+  text-decoration: none;
+  border-radius: 4px;
 }
 
-/* Основной контейнер */
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
-  background-color: #f0f2f5;
+.menu-btn.active {
+  background-color: #5a49ff;
+  border-color: #5a49ff;
 }
 
-/* Карточки блоков */
-.card {
-  background-color: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-h1,h2,h3 {
-  margin-top: 0;
-}
-
-input, select, textarea {
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
-button {
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  background-color: #4f46e5;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-button:hover {
-  background-color: #4338ca;
-}
-
-.flex {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-.flex .card {
-  flex: 1 1 45%;
-}
-
-.section-title {
-  font-size: 1.2em;
+.user-role {
   font-weight: bold;
-  margin-bottom: 10px;
 }
 
-ul {
-  padding-left: 20px;
-}
-ul li {
-  margin-bottom: 5px;
+.back-btn-container {
+  width: 100%;
+  text-align: center;
+  margin: 10px 0;
 }
 
 .back-btn {
+  display: inline-block;
   background-color: #111;
   color: #fff;
-  border: 1px solid #fff;
   padding: 6px 12px;
-  border-radius: 5px;
-  cursor: pointer;
-  float: right;
-  margin-bottom: 10px;
-  transition: background 0.3s, border-color 0.3s;
-}
-.back-btn:hover {
-  background-color: #4f46e5;
-  border-color: #4f46e5;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
-  .flex .card {
-    flex: 1 1 100%;
-  }
+.back-btn:hover {
+  background-color: #333;
+}
+
+.admin-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 15px;
+}
+
+.panel {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+.panel input,
+.panel select,
+.panel button {
+  display: block;
+  width: 100%;
+  margin: 5px 0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.panel button {
+  background-color: #5a49ff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.panel button:hover {
+  background-color: #4236c3;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+ul li {
+  background-color: #f4f5f7;
+  padding: 6px;
+  margin: 3px 0;
+  border-radius: 4px;
 }
