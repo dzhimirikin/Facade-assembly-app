@@ -1,136 +1,105 @@
 /* =====================================================
-   ELEMENTS
+   VIEWER FOR PDF / PRINT
 ===================================================== */
-const table = document.getElementById("viewerTable");
-const searchInput = document.getElementById("searchInput");
 
-// Создаем контейнер для новых кнопок
-const toolbarContainer = document.createElement("div");
-toolbarContainer.className = "viewer-toolbar";
-table.parentNode.parentNode.insertBefore(toolbarContainer, table.parentNode);
+const data = JSON.parse(sessionStorage.getItem("filteredRows") || "[]");
+
+const container = document.getElementById("detailContainer");
 
 /* =====================================================
-   DATA
+   RENDER REPORT
 ===================================================== */
-let allRows = [];
-let filteredRows = [];
-let unsubscribe = null;
 
-/* =====================================================
-   LOAD VIEWER
-===================================================== */
-function loadViewer() {
-  if (unsubscribe) unsubscribe();
-
-  const assemblyQuery = query(
-    collection(db, "assembly"),
-    orderBy("timestamp", "asc")
-  );
-
-  unsubscribe = onSnapshot(assemblyQuery, (snapshot) => {
-    allRows = [];
-    snapshot.forEach((docItem) => {
-      allRows.push({ id: docItem.id, ...docItem.data() });
-    });
-
-    renderTable(allRows);
-    updateButtons();
-  });
-}
-
-/* =====================================================
-   RENDER TABLE
-===================================================== */
-function renderTable(dataArray) {
-  table.innerHTML = "";
-
-  dataArray.forEach((data) => {
-    const row = document.createElement("tr");
-    const photoCount = (data.photos || []).filter(p => p).length;
-
-    let tsStr = "";
-    try {
-      const ts = data.timestamp?.toDate?.() || new Date(data.timestamp);
-      tsStr = ts.toLocaleString();
-    } catch {
-      tsStr = data.timestamp || "";
-    }
-
-    row.innerHTML = `
-      <td>${data.facadeId || ""}</td>
-      <td>${data.subElementId || ""}</td>
-      <td>${data.stage || ""}</td>
-      <td>${data.employee || ""}</td>
-      <td>${data.note || ""}</td>
-      <td>${photoCount}</td>
-      <td>${tsStr}</td>
-    `;
-
-    row.addEventListener("dblclick", () => {
-      window.open(`editor.html?id=${data.id}`, "_blank");
-    });
-
-    table.appendChild(row);
-  });
-}
-
-/* =====================================================
-   FILTER
-===================================================== */
-window.searchData = function () {
-  const q = searchInput.value.toLowerCase().trim();
-
-  if (!q) {
-    filteredRows = [...allRows];
-  } else {
-    filteredRows = allRows.filter(item => {
-      const text = `
-        ${item.facadeId || ""}
-        ${item.subElementId || ""}
-        ${item.stage || ""}
-        ${item.employee || ""}
-        ${item.note || ""}
-      `.toLowerCase();
-      return text.includes(q);
-    });
+function renderViewer(viewBy = "facade") {
+  if (!data.length) {
+    container.innerHTML = `<div class="print-sheet"><h1>No filtered data</h1></div>`;
+    return;
   }
 
-  renderTable(filteredRows);
-  updateButtons();
-};
+  // Группировка данных
+  let grouped;
+  if (viewBy === "facade") {
+    grouped = data.reduce((acc, item) => {
+      const key = item.facadeId || "Unknown";
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+  } else if (viewBy === "element") {
+    grouped = data.reduce((acc, item) => {
+      const key = `${item.facadeId || "Unknown"}_${item.subElementId || "Unknown"}`;
+      if (!acc[key]) acc[key] = [];
+      acc[key].push(item);
+      return acc;
+    }, {});
+  }
 
-/* =====================================================
-   UPDATE BUTTONS
-===================================================== */
-function updateButtons() {
-  toolbarContainer.innerHTML = "";
+  container.innerHTML = `
+    <div class="print-toolbar">
+      <button onclick="window.print()">Print / PDF</button>
+    </div>
+    ${Object.keys(grouped).map(groupKey => {
+      const items = grouped[groupKey];
+      // Название фасада или элемента
+      const headerTitle = viewBy === "facade"
+        ? `ASSEMBLY REPORT<br>${groupKey}`
+        : `ASSEMBLY REPORT<br>${items[0].subElementId || groupKey} of facade ${items[0].facadeId || ""}`;
 
-  if (!filteredRows.length) return;
+      return `
+        <div class="print-sheet">
+          <h1>${headerTitle}</h1>
+          ${items.map(item => {
+            const photos = (item.photos || []).filter(p => p);
+            let tsStr = "";
+            try {
+              const ts = item.timestamp?.seconds
+                ? new Date(item.timestamp.seconds * 1000)
+                : new Date(item.timestamp || "");
+              tsStr = ts ? ts.toLocaleString() : "";
+            } catch {
+              tsStr = item.timestamp || "";
+            }
 
-  const facadeBtn = document.createElement("button");
-  facadeBtn.textContent = "Preview Facade";
-  facadeBtn.className = "preview-btn";
-  facadeBtn.onclick = () => openDetail("facade");
-
-  const elementBtn = document.createElement("button");
-  elementBtn.textContent = "Preview Element";
-  elementBtn.className = "preview-btn";
-  elementBtn.onclick = () => openDetail("element");
-
-  toolbarContainer.appendChild(facadeBtn);
-  toolbarContainer.appendChild(elementBtn);
+            return `
+              <table class="detail-table">
+                <tr><td>Operation</td><td>${item.stage || ""}</td></tr>
+                <tr><td>Employee</td><td>${item.employee || ""}</td></tr>
+                <tr><td>Time</td><td>${tsStr}</td></tr>
+                <tr><td>Note</td><td>${item.note || ""}</td></tr>
+              </table>
+              <div class="photo-section">
+                ${photos.map(photo => `
+                  <div class="photo-card">
+                    ${typeof photo === "string"
+                      ? `<div class="old-photo">${photo}</div>`
+                      : `<img src="${photo.data}" class="pdf-photo" />`}
+                  </div>
+                `).join("")}
+              </div>
+              <hr />
+            `;
+          }).join("")}
+        </div>
+      `;
+    }).join("")}
+  `;
 }
 
 /* =====================================================
-   OPEN DETAIL
+   BUTTONS / INIT
 ===================================================== */
-function openDetail(mode) {
-  sessionStorage.setItem("filteredRows", JSON.stringify(filteredRows));
-  sessionStorage.setItem("reportMode", mode); // "facade" или "element"
-  window.open("viewer_detail.html", "_blank");
-}
 
-/* =====================================================
-   INIT
-===================================================== */
-window.addEventListener("DOMContentLoaded", loadViewer);
+// Создаем кнопки для выбора режима
+const toolbar = document.createElement("div");
+toolbar.className = "print-toolbar";
+toolbar.innerHTML = `
+  <button id="viewFacadeBtn">Preview Facade</button>
+  <button id="viewElementBtn">Preview Element</button>
+`;
+container.parentNode.insertBefore(toolbar, container);
+
+document.getElementById("viewFacadeBtn").addEventListener("click", () => renderViewer("facade"));
+document.getElementById("viewElementBtn").addEventListener("click", () => renderViewer("element"));
+
+// Автозагрузка по фасаду
+window.addEventListener("DOMContentLoaded", () => renderViewer("facade"));
