@@ -2,243 +2,131 @@
 <html lang="en">
 
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Panel</title>
-
-  <link
-    rel="stylesheet"
-    href="css/admin.css"
-  />
-
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
 
 <body>
 
   <header class="topbar">
-
-    <div class="logo">
-      Admin Panel
-    </div>
-
+    <div class="logo">Admin Panel</div>
     <nav class="menu">
-
-      <a
-        href="index.html"
-        class="menu-btn"
-      >
-        Back to Worker UI
-      </a>
-
+      <a href="index.html" class="menu-btn">Back to Worker UI</a>
     </nav>
-
   </header>
 
   <main class="admin-layout">
 
-    
     <!-- PROJECTS -->
-
-<section class="admin-card">
-
-  <h2>Projects</h2>
-
-  <div class="add-row">
-
-    <input
-      type="text"
-      id="projectName"
-      placeholder="034.1580"
-    />
-
-    <button onclick="addProject()">
-      Add Project
-    </button>
-
-  </div>
-
-  <label class="current-project-label">
-    Current Project
-  </label>
-
-  <select id="projectSelect">
-
-  </select>
-
-  <button onclick="setCurrentProject()">
-    Set Current
-  </button>
-
-</section>
-    
-    
-    <!-- IMPORT -->
-
     <section class="admin-card">
-
-      <h2>Import TXT</h2>
-
-      <input
-        type="file"
-        id="txtFile"
-        accept=".txt"
-      />
-
-      <button onclick="importTxt()">
-        Import TXT
-      </button>
-
-    </section>
-
-    <!-- MANUAL -->
-
-    <section class="admin-card">
-
-      <h2>Add Facade</h2>
-
+      <h2>Projects</h2>
       <div class="add-row">
-
-        <input
-          type="text"
-          id="newFacade"
-          placeholder="KF1"
-        />
-
-        <button onclick="addFacade()">
-          Add
-        </button>
-
+        <input type="text" id="projectName" placeholder="034.1580" />
+        <button onclick="addProject()">Add Project</button>
       </div>
-
+      <label class="current-project-label">Current Project</label>
+      <select id="projectSelect"></select>
+      <button onclick="setCurrentProject()">Set Current</button>
     </section>
 
-<!-- FACADE LIST -->
+    <!-- IMPORT TXT -->
+    <section class="admin-card">
+      <h2>Import TXT</h2>
+      <input type="file" id="txtFile" accept=".txt" />
+      <button onclick="importTxt()">Import TXT</button>
+    </section>
 
-<section class="admin-card">
+    <!-- ADD FACADE -->
+    <section class="admin-card">
+      <h2>Add Facade</h2>
+      <div class="add-row">
+        <input type="text" id="newFacade" placeholder="KF1" />
+        <button onclick="addFacade()">Add</button>
+      </div>
+    </section>
 
-  <h2>Facade List</h2>
+    <!-- FACADE LIST -->
+    <section class="admin-card">
+      <h2>Facade List</h2>
+      <div class="facade-list" id="facadeList"></div>
+    </section>
 
-  <div
-    class="facade-list"
-    id="facadeList"
-  ></div>
+    <!-- ELEMENTS -->
+    <section class="admin-card">
+      <h2>Elements</h2>
+      <label>Select Facade</label>
+      <select id="facadeSelect"></select>
+      <label>Element Name</label>
+      <div class="add-row">
+        <input type="text" id="newElement" placeholder="M1" />
+        <button onclick="addElement()">Add</button>
+      </div>
+      <label>Import TXT</label>
+      <input type="file" id="elementTxt" accept=".txt" />
+      <button onclick="importElementsTxt()">Import Elements TXT</button>
+    </section>
 
-</section>
+    <!-- ELEMENT LIST -->
+    <section class="admin-card">
+      <h2>Elements List</h2>
+      <div class="facade-list" id="elementList"></div>
+    </section>
 
-<!-- ELEMENTS -->
+    <!-- EMPLOYEES -->
+    <section class="admin-card">
+      <h2>Employees</h2>
+      <input type="text" id="employeeName" placeholder="Dmitry" />
+      <button onclick="addEmployee()">Add Employee</button>
+      <div class="facade-list" id="employeeList"></div>
+    </section>
 
-<section class="admin-card">
-
-  <h2>Elements</h2>
-
-  <label>Select Facade</label>
-
-  <select id="facadeSelect">
-
-  </select>
-
-  <label>Element Name</label>
-
-  <div class="add-row">
-
-    <input
-      type="text"
-      id="newElement"
-      placeholder="M1"
-    />
-
-    <button onclick="addElement()">
-      Add
-    </button>
-
-  </div>
-
-  <label>Import TXT</label>
-
-  <input
-    type="file"
-    id="elementTxt"
-    accept=".txt"
-  />
-
-  <button onclick="importElementsTxt()">
-    Import Elements TXT
-  </button>
-
-</section>
-
-<!-- ELEMENT LIST -->
-
-<section class="admin-card">
-
-  <h2>Elements List</h2>
-
-  <div
-    class="facade-list"
-    id="elementList"
-  ></div>
-
-</section>
-
-<!-- EMPLOYEES -->
-
-<section class="admin-card">
-
-  <h2>Employees</h2>
-
-    <input
-      type="text"
-      id="employeeName"
-      placeholder="Dmitry"
-    />
-
-<button onclick="addEmployee()">
-  Add Employee
-</button>
-
-</div>
-
-<div
-  class="facade-list"
-  id="employeeList"
-></div>
-
-</section>
-
-<!-- CLEAR DATABASE -->
-
-<section class="admin-card">
-
-  <h2>Database</h2>
-
-  <p>
-    ⚠️ Warning: This will permanently delete all data in the database.
-  </p>
-
-  <button
-    id="clearDatabaseBtn"
-    class="admin-btn"
-  >
-    Clear Database
-  </button>
-
-</section>
-    
-
+    <!-- CLEAR DATABASE -->
+    <section class="admin-card">
+      <h2>Database</h2>
+      <p>⚠️ Warning: This will permanently delete all data in the database.</p>
+      <button id="clearDatabaseBtn" class="admin-btn">Clear Database</button>
+    </section>
 
   </main>
 
-  <script
-    type="module"
-    src="js/admin.js"
-  ></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+  <script>
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_AUTH_DOMAIN",
+      databaseURL: "YOUR_DATABASE_URL",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_STORAGE_BUCKET",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Clear Database Button
+    document.getElementById('clearDatabaseBtn').addEventListener('click', async () => {
+      if (confirm('⚠️ This will delete all data. Are you sure?')) {
+        try {
+          await firebase.database().ref('/assembly').remove();
+          await firebase.database().ref('/elements').remove();
+          await firebase.database().ref('/employees').remove();
+          await firebase.database().ref('/facades').remove();
+          await firebase.database().ref('/projects').remove();
+          await firebase.database().ref('/settings').remove();
+          alert('Database cleared!');
+        } catch (e) {
+          alert('Error clearing database: ' + e.message);
+        }
+      }
+    });
+  </script>
+
+  <script type="module" src="js/admin.js"></script>
 
 </body>
-
 </html>
