@@ -1,0 +1,188 @@
+body {
+
+  margin: 0;
+
+  background: #e9edf2;
+
+  font-family: Arial, sans-serif;
+
+  color: #111;
+
+}
+
+/* =====================================================
+   PRINT SHEET
+===================================================== */
+
+.print-sheet {
+  width: 297mm; /* ширина A4 в ландшафт */
+  min-height: 210mm; /* высота A4 */
+  margin: 15mm auto;
+  background: white;
+  padding: 15mm;
+  box-sizing: border-box;
+  box-shadow: 0 0 20px rgba(0,0,0,0.15);
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   TOOLBAR
+===================================================== */
+
+.print-toolbar {
+
+  position: sticky;
+
+  top: 0;
+
+  background: white;
+
+  padding: 15px;
+
+  border-bottom: 1px solid #ddd;
+
+  z-index: 100;
+
+}
+
+.print-toolbar button {
+
+  padding: 10px 20px;
+
+  border: none;
+
+  background: black;
+
+  color: white;
+
+  cursor: pointer;
+
+  border-radius: 6px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+}
+
+.print-toolbar button:hover {
+
+  opacity: 0.9;
+
+}
+
+/* =====================================================
+   OPERATION BLOCK
+===================================================== */
+
+.operation-block {
+
+  margin-bottom: 60px;
+
+  padding-bottom: 40px;
+
+  border-bottom: 2px solid #ddd;
+
+}
+
+.operation-block h2 {
+
+  margin: 0 0 20px 0;
+
+  font-size: 34px;
+
+  line-height: 1.2;
+
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+
+.detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  table-layout: fixed; /* фиксированная ширина для ячеек */
+  word-break: break-word; /* перенос слов */
+}
+
+.detail-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  vertical-align: top;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.detail-table td:first-child {
+  width: 120px; /* можно уменьшить для горизонтального листа */
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.detail-table td:last-child {
+  width: auto;
+}
+
+/* =====================================================
+   PHOTOS
+===================================================== */
+
+.photo-section {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+.photo-card {
+  border: 1px solid #ccc;
+  background: #f7f7f7;
+  overflow: hidden;
+  box-sizing: border-box;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.photo-card img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: contain;
+  display: block;
+}
+
+.old-photo {
+  font-size: 14px;
+  color: #555;
+  padding: 10px;
+  text-align: center;
+}
+
+/* =====================================================
+   PRINT MODE
+===================================================== */
+
+@media print {
+  body {
+    background: white;
+  }
+  .print-toolbar {
+    display: none;
+  }
+  .print-sheet {
+    width: 297mm;
+    min-height: 210mm;
+    margin: 0;
+    padding: 15mm;
+    box-shadow: none;
+    overflow: visible;
+  }
+  .photo-section {
+    grid-template-columns: repeat(3, 1fr); /* больше фото в ряд */
+  }
+}
