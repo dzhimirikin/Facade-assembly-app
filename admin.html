@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Facade Control System - Admin</title>
   <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <link rel="stylesheet" href="css/style.css" /> <!-- Используем стиль главной страницы -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
@@ -22,13 +22,13 @@
   </header>
 
   <!-- MAIN ADMIN PANEL -->
-  <main class="layout"> <!-- используем layout как на главной -->
+  <main class="layout">
 
     <!-- Projects -->
     <section class="input-panel">
       <h2>Projects</h2>
       <input type="text" placeholder="Project Name" id="projectName" />
-      <select id="projectList"></select>
+      <select id="projectSelect"></select>
       <button onclick="setCurrentProject()">Set Current</button>
       <button onclick="addProject()">Add Project</button>
     </section>
