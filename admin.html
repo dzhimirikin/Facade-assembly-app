@@ -1,94 +1,93 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Panel</title>
-<link rel="stylesheet" href="css/admin.css">
-<style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin:0; background:#f0f2f5; color:#333; }
-header { display:flex; justify-content:space-between; align-items:center; background:#111; color:#fff; padding:10px 20px; border-bottom:1px solid #333; }
-header .logo { font-weight:bold; font-size:1.2em; }
-header nav button { background:transparent; color:#fff; border:1px solid #fff; padding:6px 12px; margin-left:5px; border-radius:5px; cursor:pointer; }
-header nav button.active { background:#4f46e5; border-color:#4f46e5; }
-header nav button:hover { background:#4338ca; border-color:#4338ca; }
-header .user { font-size:0.9em; }
-.container { max-width:1200px; margin:auto; padding:20px; }
-.card { background:#fff; padding:20px; margin-bottom:20px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
-h1,h2,h3 { margin-top:0; }
-input, select, button { padding:10px; width:100%; margin-bottom:10px; border-radius:6px; border:1px solid #ccc; box-sizing:border-box; }
-button { background:#4f46e5; color:#fff; border:none; cursor:pointer; }
-button:hover { background:#4338ca; }
-.flex { display:flex; gap:20px; flex-wrap:wrap; }
-.flex .card { flex:1 1 45%; }
-.section-title { font-size:1.2em; font-weight:bold; margin-bottom:10px; }
-.back-btn { background:#111; color:#fff; border:1px solid #fff; padding:6px 12px; border-radius:5px; cursor:pointer; float:right; margin-bottom:10px; }
-.back-btn:hover { background:#4f46e5; border-color:#4f46e5; }
-@media(max-width:768px) { .flex .card { flex:1 1 100%; } }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facade Control System - Admin</title>
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/admin.css" />
 </head>
+
 <body>
-<header>
-  <div class="logo">Facade Control System</div>
-  <nav>
-    <button>Assembly</button>
-    <button>Viewer</button>
-    <button class="active">Admin</button>
-  </nav>
-  <div class="user">Worker</div>
-</header>
-<div class="container">
-  <button class="back-btn" onclick="window.location.href='index.html'">Back to Worker UI</button>
-  <h1>Admin Panel</h1>
 
-  <div class="card">
-    <div class="section-title">Projects</div>
-    <input type="text" id="newProject" placeholder="Project Name">
-    <div class="flex">
-      <select id="projectSelect"></select>
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="logo">Facade Control System</div>
+    <nav class="menu">
+      <a href="index.html" class="menu-btn">Assembly</a>
+      <a href="viewer.html" class="menu-btn">Viewer</a>
+      <a href="admin.html" class="menu-btn active">Admin</a>
+    </nav>
+    <div class="user-role">Admin</div>
+  </header>
+
+  <!-- BACK BUTTON -->
+  <div class="back-btn-container">
+    <a href="index.html" class="back-btn">Back to Worker UI</a>
+  </div>
+
+  <!-- MAIN ADMIN PANEL -->
+  <main class="admin-layout">
+
+    <!-- Projects -->
+    <section class="panel">
+      <h2>Projects</h2>
+      <input type="text" placeholder="Project Name" id="projectName" />
+      <select id="projectList"></select>
       <button onclick="setCurrentProject()">Set Current</button>
-    </div>
-    <button onclick="addProject()">Add Project</button>
-  </div>
+      <button onclick="addProject()">Add Project</button>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Import TXT</div>
-    <input type="file" id="txtFile">
-    <button onclick="importTXT()">Import TXT</button>
-  </div>
+    <!-- Import TXT -->
+    <section class="panel">
+      <h2>Import TXT</h2>
+      <input type="file" id="txtFile" />
+      <button onclick="importTXT()">Import TXT</button>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Add Facade</div>
-    <input type="text" id="newFacade" placeholder="Facade Name">
-    <button onclick="addFacade()">Add Facade</button>
-  </div>
+    <!-- Add Facade -->
+    <section class="panel">
+      <h2>Add Facade</h2>
+      <input type="text" placeholder="Facade Name" id="facadeName" />
+      <button onclick="addFacade()">Add Facade</button>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Facade List</div>
-    <ul id="facadeList"></ul>
-  </div>
+    <!-- Facade List -->
+    <section class="panel">
+      <h2>Facade List</h2>
+      <ul id="facadeList"></ul>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Elements</div>
-    <select id="facadeSelect" onchange="loadElementsList()"></select>
-    <input type="text" id="newElement" placeholder="Element Name">
-    <input type="file" id="elementTxt">
-    <button onclick="importElementsTXT()">Import Elements TXT</button>
-    <button onclick="addElement()">Add Element</button>
-  </div>
+    <!-- Elements -->
+    <section class="panel">
+      <h2>Elements</h2>
+      <select id="selectFacade"></select>
+      <input type="text" placeholder="Element Name" id="elementName" />
+      <input type="file" id="elementFile" />
+      <button onclick="addElement()">Add Element</button>
+      <button onclick="importElementsTXT()">Import Elements TXT</button>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Elements List</div>
-    <ul id="elementList"></ul>
-  </div>
+    <!-- Elements List -->
+    <section class="panel">
+      <h2>Elements List</h2>
+      <ul id="elementsList"></ul>
+    </section>
 
-  <div class="card">
-    <div class="section-title">Employees</div>
-    <input type="text" id="employeeName" placeholder="Employee Name">
-    <button onclick="addEmployee()">Add Employee</button>
-    <ul id="employeeList"></ul>
-  </div>
-</div>
-<script type="module" src="js/admin.js"></script>
+    <!-- Employees -->
+    <section class="panel">
+      <h2>Employees</h2>
+      <input type="text" placeholder="Employee Name" id="employeeName" />
+      <button onclick="addEmployee()">Add Employee</button>
+      <ul id="employeesList"></ul>
+    </section>
+
+  </main>
+
+  <script type="module" src="js/firebase_check_current_project.js"></script>
+  <script type="module" src="js/admin.js"></script>
+
 </body>
+
 </html>
